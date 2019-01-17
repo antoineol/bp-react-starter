@@ -3,6 +3,10 @@ import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 export const appTheme: ThemeOptions = {
   typography: {
     useNextVariants: true,
+    button: {
+      textTransform: 'none',
+    },
+    // fontSize: 24, // Instead, this example uses a dynamic font size in index.css
   },
   palette: {
     type: 'dark',
@@ -21,7 +25,6 @@ export const appTheme: ThemeOptions = {
     },
     MuiButton: {
       text: {
-        textTransform: 'none',
         textDecoration: 'underline',
         '&:hover': {
           textDecoration: 'underline',

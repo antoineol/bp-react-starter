@@ -9,10 +9,7 @@
     ]
   },
   "rules": {
-    "semicolon": [
-      true,
-      "always"
-    ],
+    "semicolon": false,
     "trailing-comma": [
       true,
       {
