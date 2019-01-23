@@ -2,7 +2,7 @@ import { createMuiTheme, CssBaseline, MuiThemeProvider } from '@material-ui/core
 import { History } from 'history';
 import React, { Component } from 'react';
 import { appTheme } from './_core/app.theme';
-import Home from './home/Home';
+import ConnectedHome from './home/ConnectedHome';
 
 const muiTheme = createMuiTheme(appTheme);
 
@@ -16,7 +16,7 @@ export default class App extends Component<Props> {
     return (
       <MuiThemeProvider theme={muiTheme}>
         <CssBaseline />
-        <Home />
+        <ConnectedHome />
       </MuiThemeProvider>
     );
   }

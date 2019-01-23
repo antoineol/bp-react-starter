@@ -13,7 +13,7 @@ export interface Counter {
 }
 
 export interface CounterModel {
-  count?: Counter;
+  count: Counter;
   loading?: boolean;
   error?: any | false;
 }
@@ -50,33 +50,34 @@ export function increment(): IncrementAction {
 
 // Selector
 
-function selectCounter(state: AppStore): CounterStore {
+function selectCountObj(state: AppStore): CounterStore {
   return state.get(COUNTER_REDUCER);
 }
 
 export function selectCount() {
   return createSelector(
-    selectCounter,
-    secured => toJS(secured.get('count')),
+    selectCountObj,
+    countObj => toJS(countObj.get('count')),
   );
 }
 
 export function selectIncrementLoading() {
   return createSelector(
-    selectCounter,
-    secured => toJS(secured.get('loading')),
+    selectCountObj,
+    countObj => toJS(countObj.get('loading')),
   );
 }
 
 // Saga
 
-async function fakeFetchCount(oldCount: number): Promise<Counter> {
-  return new Promise(resolve => setTimeout(() => resolve({ count: oldCount + 1 }), 500));
+function fakeFetchCount(oldCount: Counter): Promise<Counter> {
+  return new Promise(resolve => setTimeout(() => resolve({ count: oldCount.count }), 500));
 }
 
 function* incrementCount(): Generator {
   try {
-    const oldCount = yield select(selectCount);
+    // Let's pretend it's very hard to get current count: read from store and fetch from remote
+    const oldCount: Counter = yield select(selectCount());
     const countResp: Counter = yield call(fakeFetchCount, oldCount);
     const successAction: IncrementSuccessAction = {
       type: INCREMENT_SUCCESS,
@@ -100,7 +101,7 @@ export const counterSagas = [
 
 // Reducer
 
-const initialState: CounterStore = fromJS({} as CounterModel);
+const initialState: CounterStore = fromJS({ count: { count: 0 } } as CounterModel);
 
 export const counterReducer: Reducer<CounterStore> = (state: CounterStore = initialState,
                                                       action: IncrementAction | IncrementSuccessAction | IncrementErrorAction) => {
