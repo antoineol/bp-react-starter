@@ -16,28 +16,20 @@ declare global {
 const sagaMiddleware = createSagaMiddleware();
 
 export function configureStore(initialSore: Partial<AppStoreDirectModel> = {}, history: History) {
-  const middlewares = [
-    sagaMiddleware,
-    routerMiddleware(history),
-    // Add here extra middlewares, like router middleware to sync URL to state
-  ];
-
-  const enhancers = [
-    applyMiddleware(...middlewares),
-  ];
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
-  /* eslint-disable no-underscore-dangle */
-  const composeEnhancers: any =
-    typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
-  /* eslint-enable */
+  const composeEnhancer: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const store = createStore(
     createRootReducer(history),
     fromJS(initialSore),
-    composeEnhancers(...enhancers),
+    composeEnhancer(
+      applyMiddleware(
+        sagaMiddleware,
+        routerMiddleware(history),
+        // Add here extra middleware
+      ),
+    ),
   );
 
   // Saga injection
