@@ -1,3 +1,4 @@
+import axios, { AxiosRequestConfig } from 'axios';
 import { Record } from 'immutable';
 
 /**
@@ -15,4 +16,17 @@ export function toJS<T>(selectorImmutable: Record<T>): Readonly<T> {
   // Primitives are also assumed to be wrapped into a record, but it's not the case in reality,
   // so we use a cast in implementation for this specific case not to break the safe typing.
   return selectorImmutable as unknown as T;
+}
+
+/**
+ * Send a request to the app API. Ensures the user is authenticated and includes the authorization
+ * token into the request header.
+ * @param url
+ * @param config
+ */
+export function* apiGet<T>(url: string, config?: AxiosRequestConfig): IterableIterator<any> {
+  // You can wrap it in a securedRequest method to add security. Example:
+  // return yield securedRequest(conf => axios.get<T>(`${env.apiPath}${url}`, conf), config);
+  return yield axios.get<T>(`https://jsonplaceholder.typicode.com${url}`, config)
+    .then(resp => resp.data);
 }

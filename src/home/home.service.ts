@@ -5,7 +5,7 @@ import { Reducer } from 'redux';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { AppStore, StoreOf } from '../common/app.models';
-import { toJS } from '../common/app.utils';
+import { apiGet, toJS } from '../common/app.utils';
 import { handleError } from '../common/error.service';
 
 export interface Counter {
@@ -34,7 +34,7 @@ interface IncrementAction {
 
 interface IncrementSuccessAction {
   type: typeof INCREMENT_SUCCESS;
-  data: Counter;
+  count: number;
 }
 
 interface IncrementErrorAction {
@@ -70,18 +70,16 @@ export function selectIncrementLoading() {
 
 // Saga
 
-function fakeFetchCount(oldCount: Counter): Promise<Counter> {
-  return new Promise(resolve => setTimeout(() => resolve({ count: oldCount.count }), 500));
-}
-
 function* incrementCount(): Generator {
   try {
-    // Let's pretend it's very hard to get current count: read from store and fetch from remote
     const oldCount: Counter = yield select(selectCount());
-    const countResp: Counter = yield call(fakeFetchCount, oldCount);
+    // Let's pretend we need to get the id from remote to compute the next count
+    const [{ id, title }]: { id: number, title: string }[]
+      = yield call(apiGet, `/todos`, { params: { id: oldCount.count } });
+    console.log(`Title ${id}:`, title);
     const successAction: IncrementSuccessAction = {
       type: INCREMENT_SUCCESS,
-      data: countResp,
+      count: id,
     };
     yield put(successAction);
   } catch (err) {
@@ -101,7 +99,7 @@ export const counterSagas = [
 
 // Reducer
 
-const initialState: CounterStore = fromJS({ count: { count: 0 } } as CounterModel);
+const initialState: CounterStore = fromJS({ count: { count: 1 } } as CounterModel);
 
 export const counterReducer: Reducer<CounterStore> = (state: CounterStore = initialState,
                                                       action: IncrementAction | IncrementSuccessAction | IncrementErrorAction) => {
@@ -113,7 +111,7 @@ export const counterReducer: Reducer<CounterStore> = (state: CounterStore = init
     case INCREMENT_SUCCESS:
       return state
         .set('loading', false)
-        .set('count', fromJS({ count: action.data.count + 1 } as Counter));
+        .set('count', fromJS({ count: action.count + 1 } as Counter));
     case INCREMENT_ERROR:
       return state
         .set('loading', false)

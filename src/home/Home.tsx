@@ -73,7 +73,7 @@ class Home extends Component<Props> {
                 className={classes.incrButton}
                 disabled={loading}
                 onClick={increment}>
-          Increment ({count.count})
+          Fetch n°{count.count}
           {loading && <CircularProgress className={classes.loader} />}
         </Button>
       </div>
