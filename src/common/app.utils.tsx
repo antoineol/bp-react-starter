@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { Record } from 'immutable';
+import React from 'react';
 
 /**
  * Selectors utility, to wrap values returned by reselect selectors to convert immutable object

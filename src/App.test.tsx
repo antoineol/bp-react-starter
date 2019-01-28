@@ -1,10 +1,9 @@
 import { createBrowserHistory } from 'history';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import App, { Props } from './App';
+import { shallowMui } from './common/test.utils';
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App history={createBrowserHistory()} />, div);
-  ReactDOM.unmountComponentAtNode(div);
+  const component = shallowMui<Props>(<App history={createBrowserHistory()} />);
+  expect(component).toMatchSnapshot();
 });

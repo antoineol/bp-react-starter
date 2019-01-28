@@ -46,7 +46,7 @@ const styles = ({ palette, spacing }: Theme) => createStyles(
     },
   });
 
-interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles> {
   increment: () => void;
   count: Counter;
   loading?: boolean;

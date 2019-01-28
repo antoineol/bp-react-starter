@@ -2,12 +2,18 @@ import { createMount, createShallow } from '@material-ui/core/test-utils';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ReactWrapper, shallow } from 'enzyme';
-import { createBrowserHistory, History } from 'history';
 import React, { ComponentClass, ReactElement } from 'react';
-import { Provider } from 'react-redux';
-import { configureStore } from '../_core/app.store';
-import App from '../App';
+import { makeApp } from '../App';
 import { AppStoreDirectModel } from './app.models';
+
+export function renderTestApp(initialStore?: Partial<AppStoreDirectModel>,
+                              initialLocalStorage?: LocalStorageModel) {
+  mockLocalStorage(initialLocalStorage);
+  const mountMui = createMount();
+  const { app, history, store } = makeApp(initialStore || {});
+  const wrapper = mountMui(app);
+  return { history, store, app: wrapper };
+}
 
 export function shallowMui<T>(this: any, node: ReactElement<T>) {
   if (node && node.type) {
@@ -41,20 +47,6 @@ export function mockLocalStorage(initialLocalStorage?: LocalStorageModel): void 
       global.localStorage[k] = initialLocalStorage[k];
     }
   }
-}
-
-export function renderApp(initialStore: Partial<AppStoreDirectModel>,
-                          initialLocalStorage?: LocalStorageModel) {
-  mockLocalStorage(initialLocalStorage);
-  const history: History = createBrowserHistory();
-  const store = configureStore(initialStore, history);
-  const mountMui = createMount();
-  const wrapper = mountMui(
-    <Provider store={store}>
-      <App history={history} />
-    </Provider>,
-  );
-  return { wrapper, history, store };
 }
 
 export function flushAllPromises() {
