@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-snapshot';
 import 'typeface-roboto';
 import { unregister } from './_core/serviceWorker';
 import App, { makeApp } from './App';
@@ -8,14 +8,14 @@ import './index.css';
 // Init the app.
 const rootElt = document.getElementById('root');
 
-render(App);
+renderApp(App);
 
 // Hot Module Replacement (HMR) to update the app content while developing without refreshing the
 // whole Web page
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default;
-    render(NextApp);
+    renderApp(NextApp);
   });
 }
 
@@ -24,7 +24,7 @@ if (module.hot) {
 // Learn more about service workers: http://bit.ly/CRA-PWA
 unregister();
 
-function render(AppComp: typeof App) {
+function renderApp(AppComp: typeof App) {
   const { app } = makeApp(AppComp);
-  return ReactDOM.render(app, rootElt);
+  return render(app, rootElt);
 }
