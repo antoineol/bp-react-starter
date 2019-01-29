@@ -2,7 +2,7 @@ import { connectRouter } from 'connected-react-router/immutable';
 import { History } from 'history';
 import { combineReducers } from 'redux-immutable';
 import { AppStoreModel } from '../common/app.models';
-import { COUNTER_REDUCER, counterReducer } from '../home/home.service';
+import { COUNTER_REDUCER, counterReducer } from '../home/count.service';
 
 export function createRootReducer(history: History) {
   // const rootReducer = combineReducers<Partial<AppStoreModel>, Action<void>>({

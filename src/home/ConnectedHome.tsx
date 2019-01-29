@@ -2,8 +2,8 @@ import React, { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppStore } from '../common/app.models';
+import { CounterModel, increment, selectCount, selectIncrementLoading } from './count.service';
 import Home from './Home';
-import { CounterModel, increment, selectCount, selectIncrementLoading } from './home.service';
 
 type Selection = CounterModel;
 

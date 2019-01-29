@@ -1,6 +1,6 @@
 import { RouterState } from 'connected-react-router/immutable';
 import { Record } from 'immutable';
-import { COUNTER_REDUCER, CounterModel } from '../home/home.service';
+import { COUNTER_REDUCER, CounterModel } from '../home/count.service';
 import { ROUTER_REDUCER } from './routes.service';
 
 export interface StoreOf<T> {

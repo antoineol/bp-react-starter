@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { Record } from 'immutable';
 import React from 'react';
+import { env } from '../environment/env';
 
 /**
  * Selectors utility, to wrap values returned by reselect selectors to convert immutable object
@@ -28,6 +29,6 @@ export function toJS<T>(selectorImmutable: Record<T>): Readonly<T> {
 export function* apiGet<T>(url: string, config?: AxiosRequestConfig): IterableIterator<any> {
   // You can wrap it in a securedRequest method to add security. Example:
   // return yield securedRequest(conf => axios.get<T>(`${env.apiPath}${url}`, conf), config);
-  return yield axios.get<T>(`https://jsonplaceholder.typicode.com${url}`, config)
+  return yield axios.get<T>(`${env.apiPath}${url}`, config)
     .then(resp => resp.data);
 }

@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import React, { Component, ReactNode } from 'react';
-import { Counter } from './home.service';
+import { Counter } from './count.service';
 import logo from './logo.svg';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can

@@ -27,7 +27,7 @@ it('should initialize the button with count 1', async () => {
 });
 
 it('should increment the count by 1 when clicking its button', async () => {
-  mockHttpGet('https://jsonplaceholder.typicode.com/todos', 200,
+  mockHttpGet('https://jsonplaceholder.typicode.com/todos',
               [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }]);
   const { app } = renderTestApp();
   const home: ReactWrapper<Props> = app.find(Home);

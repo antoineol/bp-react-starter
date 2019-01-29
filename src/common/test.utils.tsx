@@ -3,14 +3,14 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ReactWrapper, shallow } from 'enzyme';
 import React, { ComponentClass, ReactElement } from 'react';
-import { makeApp } from '../App';
+import App, { makeApp } from '../App';
 import { AppStoreDirectModel } from './app.models';
 
-export function renderTestApp(initialStore?: Partial<AppStoreDirectModel>,
-                              initialLocalStorage?: LocalStorageModel) {
+export function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},
+                              initialLocalStorage: LocalStorageModel = {}) {
   mockLocalStorage(initialLocalStorage);
   const mountMui = createMount();
-  const { app, history, store } = makeApp(initialStore || {});
+  const { app, history, store } = makeApp(App, initialStore);
   const wrapper = mountMui(app);
   return { history, store, app: wrapper };
 }
@@ -53,9 +53,16 @@ export function flushAllPromises() {
   return new Promise(resolve => setImmediate(resolve));
 }
 
-export function mockHttpGet(url: string, status: number, response: any) {
+export interface MockHttpOptions {
+  status?: number;
+}
+
+const defaultMockHttpOptions = { status: 200 };
+
+export function mockHttpGet(url: string, response: any, mockHttpOptions?: MockHttpOptions) {
+  const opt = { ...defaultMockHttpOptions, ...mockHttpOptions };
   const mock = new MockAdapter(axios);
-  mock.onGet(url).reply(status, response);
+  mock.onGet(url).reply(opt.status, response);
 }
 
 // In case we need to debug something

@@ -32,6 +32,14 @@ export function configureStore(initialSore: Partial<AppStoreDirectModel> = {}, h
     ),
   );
 
+  if (process.env.NODE_ENV !== 'production') {
+    if (module.hot) {
+      module.hot.accept('./app.reducers', () => {
+        store.replaceReducer(createRootReducer(history));
+      });
+    }
+  }
+
   // Saga injection
   if (Array.isArray(appSagas)) {
     appSagas.forEach((saga) => sagaMiddleware.run(saga));

@@ -10,11 +10,11 @@ import { AppStoreDirectModel } from './common/app.models';
 import ConnectedHome from './home/ConnectedHome';
 
 // App creation is in a function so that we can reuse it in integration tests
-export function makeApp(initialStore: Partial<AppStoreDirectModel>) {
+export function makeApp(AppComp = App, initialStore: Partial<AppStoreDirectModel> = {}) {
   const history: History = createBrowserHistory();
   const store = configureStore(initialStore, history);
   const app = <Provider store={store}>
-    <App history={history} />
+    <AppComp history={history} />
   </Provider>;
   return { app, history, store };
 }
