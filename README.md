@@ -22,6 +22,8 @@ Pour mettre à jour les bibliothèques (node modules) : `yarn upgrade-interactiv
 
 ## Avancé : reconstruction du starter
 
+Certaines étapes demandent de copier des fichiers de ce dépôt directement pour éviter de les réimplémenter (e.g. src/common/test.utils.tsx).
+
 ### Initialiser le projet
 
 Utiliser [Create React App](https://facebook.github.io/create-react-app/docs/getting-started). Pour créer un projet nommé “my-app” :
