@@ -117,7 +117,7 @@ Pour les tests unitaires avec des snapshots.
 - `yarn add -DE enzyme enzyme-adapter-react-16 enzyme-to-json @types/enzyme @types/enzyme-adapter-react-16`
 - Ajouter dans `package.json` :
 
-```json
+```
 {
   // ...
   "jest": {
