@@ -1,4 +1,4 @@
-Ce projet est basé sur [Create React App](https://facebook.github.io/create-react-app/docs/getting-started) (CRA) et [Material UI](https://material-ui.com/getting-started/installation/) (MUI) dont la lecture de la documentation est fortement recommendée, surtout pour les Tech Leads et Dev Leads.
+Ce projet est basé sur [Create React App](https://facebook.github.io/create-react-app/docs/getting-started) (CRA) et [Material UI](https://material-ui.com/getting-started/installation/) (MUI) dont la lecture de la documentation est fortement recommandée, surtout pour les Tech Leads et Dev Leads.
 
 ## Usage
 
