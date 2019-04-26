@@ -49,7 +49,7 @@ it('should update the count when inputting a number', async () => {
   const instance = home.instance() as HomeComp;
   instance.handleChange('count')({ target: { value: '12' } } as any);
 
-  // app.update(); // Not required here?
+  // app.update(); // Not required here
   await flushAllPromises();
 
   expect(home.find(Button).last().text()).toEqual('Fetch n°12');
@@ -57,21 +57,18 @@ it('should update the count when inputting a number', async () => {
 
 it('should double the count when submitting the form (enter)', async () => {
   mockWebService();
-  const { app } = renderTestApp();
+  const { app } = renderTestApp({ counter: { count: { count: 12 } } });
   const home: ReactWrapper<Props, State> = app.find(HomeComp);
 
-  // Ideally, we should simulate a 'change' event, but it doesn't trigger onChange - to fix
-  // const countInput = home.find(TextField).first();
-  // countInput.simulate('change', { target: { value: '12' } });
+  // Could also provide an initial value to the input field instead of initial store:
+  // const instance = home.instance() as HomeComp;
+  // instance.handleChange('count')({ target: { value: '12' } } as any);
 
-  const instance = home.instance() as HomeComp;
-  instance.handleChange('count')({ target: { value: '12' } } as any);
-  instance.handleSubmit({
-                          preventDefault: () => { /* do nothing */
-                          },
-                        } as any);
+  const form = home.find('form');
+  expect(form).toHaveLength(1);
+  form.simulate('submit');
 
-  // app.update(); // Not required here?
+  // app.update(); // Not required here
   await flushAllPromises();
 
   expect(home.find(Button).last().text()).toEqual('Fetch n°24');
