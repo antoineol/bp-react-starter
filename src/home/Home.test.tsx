@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import { ReactWrapper } from 'enzyme';
 import React from 'react';
 import { flushAllPromises, mockHttpGet, renderTestApp } from '../common/test.utils';
-import Home, { Props } from './Home';
+import Home, { HomeComp, Props, State } from './Home';
 
 it('should display the home page by default', async () => {
   const { app } = renderTestApp();
@@ -27,8 +27,7 @@ it('should initialize the button with count 1', async () => {
 });
 
 it('should increment the count by 1 when clicking its button', async () => {
-  mockHttpGet('https://jsonplaceholder.typicode.com/todos',
-              [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }]);
+  mockWebService();
   const { app } = renderTestApp();
   const home: ReactWrapper<Props> = app.find(Home);
   const countButton = home.find(Button).last();
@@ -37,3 +36,48 @@ it('should increment the count by 1 when clicking its button', async () => {
   await flushAllPromises();
   expect(home.find(Button).last().text()).toEqual('Fetch n°2');
 });
+
+it('should update the count when inputting a number', async () => {
+  mockWebService();
+  const { app } = renderTestApp();
+  const home: ReactWrapper<Props, State> = app.find(HomeComp);
+
+  // Ideally, we should simulate a 'change' event, but it doesn't trigger onChange - to fix
+  // const countInput = home.find(TextField).first();
+  // countInput.simulate('change', { target: { value: '12' } });
+
+  const instance = home.instance() as HomeComp;
+  instance.handleChange('count')({ target: { value: '12' } } as any);
+
+  // app.update(); // Not required here?
+  await flushAllPromises();
+
+  expect(home.find(Button).last().text()).toEqual('Fetch n°12');
+});
+
+it('should double the count when submitting the form (enter)', async () => {
+  mockWebService();
+  const { app } = renderTestApp();
+  const home: ReactWrapper<Props, State> = app.find(HomeComp);
+
+  // Ideally, we should simulate a 'change' event, but it doesn't trigger onChange - to fix
+  // const countInput = home.find(TextField).first();
+  // countInput.simulate('change', { target: { value: '12' } });
+
+  const instance = home.instance() as HomeComp;
+  instance.handleChange('count')({ target: { value: '12' } } as any);
+  instance.handleSubmit({
+                          preventDefault: () => { /* do nothing */
+                          },
+                        } as any);
+
+  // app.update(); // Not required here?
+  await flushAllPromises();
+
+  expect(home.find(Button).last().text()).toEqual('Fetch n°24');
+});
+
+function mockWebService(): void {
+  mockHttpGet('https://jsonplaceholder.typicode.com/todos',
+              [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }]);
+}

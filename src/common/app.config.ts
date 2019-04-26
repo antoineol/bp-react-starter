@@ -1,1 +1,1 @@
-export const useRealWebService = false;
+export const useRealWebService = true;

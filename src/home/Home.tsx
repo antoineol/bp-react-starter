@@ -83,7 +83,7 @@ export interface State {
 
 // Component
 
-class Home extends Component<Props, State> {
+export class HomeComp extends Component<Props, State> {
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.props.dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);
@@ -141,4 +141,4 @@ class Home extends Component<Props, State> {
 //   withStyles(styles),
 // )(Home);
 // export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Home));
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HomeComp));
