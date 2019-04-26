@@ -2,6 +2,7 @@ import {
   Button,
   CircularProgress,
   createStyles,
+  TextField,
   Theme,
   Typography,
   WithStyles,
@@ -9,7 +10,19 @@ import {
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import React, { Component, ReactNode } from 'react';
-import { Counter } from './count.service';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { AppStore } from '../common/app.models';
+import {
+  CountActionTypes,
+  CounterModel,
+  dispatchCount,
+  DoubleCountAction,
+  IncrementAction,
+  selectCount,
+  selectIncrementLoading,
+  UpdateAction,
+} from './count.service';
 import logo from './logo.svg';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
@@ -46,21 +59,62 @@ const styles = ({ palette, spacing }: Theme) => createStyles(
     },
   });
 
-export interface Props extends WithStyles<typeof styles> {
-  increment: () => void;
-  count: Counter;
-  loading?: boolean;
+// Redux bindings
+
+type Selection = CounterModel;
+
+const mapStateToProps = createStructuredSelector<AppStore, Selection>(
+  {
+    count: selectCount(),
+    loading: selectIncrementLoading(),
+  });
+const mapDispatchToProps = {
+  dispatch: dispatchCount,
+};
+type Dispatcher = typeof mapDispatchToProps;
+
+// Props and State definition
+
+export interface Props extends WithStyles<typeof styles>, Selection, Dispatcher {
 }
 
-class Home extends Component<Props> {
+export interface State {
+}
+
+// Component
+
+class Home extends Component<Props, State> {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    this.props.dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);
+  };
+
+  handleChange = (name: keyof Props) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    // name argument: in case we need to know it in the service
+    this.props.dispatch(
+      {
+        type: CountActionTypes.UpdateCount,
+        count: parseFloat(event.target.value),
+      } as UpdateAction);
+  };
+
   render(): ReactNode {
-    const { classes, count, loading, increment } = this.props;
+    const { classes, count, loading, dispatch } = this.props;
+    const c = count.count;
     return (
       <div className={classes.root}>
         <img src={logo} className={classes.logo} alt="logo" />
         <Typography variant="body1">
           Edit <code>src/home/Home.tsx</code> and save to reload.
         </Typography>
+        <form onSubmit={this.handleSubmit}>
+          <TextField
+            label="Count"
+            value={isNaN(c) ? '' : c}
+            onChange={this.handleChange('count')}
+            type={'number'}
+          />
+        </form>
         {/* TODO we should use the Link MUI component as soon as there is no
           typing issue with href. Then remove useless Button theme customization
           in src/_core/app.theme.ts */}
@@ -72,8 +126,8 @@ class Home extends Component<Props> {
                 color={'primary'}
                 className={classes.incrButton}
                 disabled={loading}
-                onClick={increment}>
-          Fetch n°{count.count}
+                onClick={() => dispatch({ type: CountActionTypes.Increment } as IncrementAction)}>
+          Fetch n°{isNaN(c) ? '-' : c}
           {loading && <CircularProgress className={classes.loader} />}
         </Button>
       </div>
@@ -81,4 +135,10 @@ class Home extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(Home);
+// TODO find the syntax with compose() that don't throw TS errors in App.tsx
+// export default compose(
+//   connect(mapStateToProps, mapDispatchToProps),
+//   withStyles(styles),
+// )(Home);
+// export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));

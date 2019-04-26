@@ -16,6 +16,7 @@
         "multiline": "always",
         "singleline": "never"
       }
-    ]
+    ],
+    "no-shadowed-variable": false
   }
 }

@@ -100,7 +100,7 @@ La [documentation Material UI](https://material-ui.com/getting-started/installat
 - Dans `src/common/app.utils.ts`, supprimer pour le moment la méthode `apiGet` et ses dépendances. Nous la verrons plus tard avec les variables d’environnement et Axios.
 - Copier `src/index.tsx` ou ajuster la différence (history, store, provider).
 - Mettons en place un exemple de service : copier `src/home/home.service.ts`. Ce fichier liste les éléments de redux nécessaires à la fonctionnalité d’incrément (sélecteurs, actions, reducers, saga, constantes/modèles).
-- Copier `src/home/ConnectedHome.tsx` et copier ou ajuster `src/home/Home.tsx` si besoin.
+- Copier ou ajuster `src/home/Home.tsx` si besoin.
 
 Note : Un article mentionnait l’utilité de la bibliothèque `typesafe-actions`. Elle n’est pas utilisée dans ce template, mais si un bénéfice est identifié, elle est la bienvenue.
 

@@ -3,7 +3,8 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { ReactWrapper, shallow } from 'enzyme';
 import React, { ComponentClass, ReactElement } from 'react';
-import App, { makeApp } from '../App';
+import App from '../App';
+import { makeApp } from '../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from './app.models';
 
 export function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},

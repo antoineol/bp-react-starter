@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from 'react-snapshot';
 import 'typeface-roboto';
-import { unregister } from './_core/serviceWorker';
-import App, { makeApp } from './App';
+import App from './App';
+import { makeApp } from './core/_bootstrap/core.utils';
+import { unregister } from './core/_bootstrap/serviceWorker';
 import './index.css';
 
 // Init the app.

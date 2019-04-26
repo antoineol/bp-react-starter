@@ -3,9 +3,9 @@ import { History } from 'history';
 import { fromJS } from 'immutable';
 import { applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { AppStoreDirectModel } from '../common/app.models';
-import { createRootReducer } from './app.reducers';
-import { appSagas } from './app.sagas';
+import { AppStoreDirectModel } from '../../common/app.models';
+import { createRootReducer } from '../app.reducers';
+import { appSagas } from '../app.sagas';
 
 declare global {
   interface Window {
@@ -34,7 +34,7 @@ export function configureStore(initialSore: Partial<AppStoreDirectModel> = {}, h
 
   if (process.env.NODE_ENV !== 'production') {
     if (module.hot) {
-      module.hot.accept('./app.reducers', () => {
+      module.hot.accept('../app.reducers', () => {
         store.replaceReducer(createRootReducer(history));
       });
     }
