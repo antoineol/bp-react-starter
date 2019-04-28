@@ -1,8 +1,9 @@
 import { Button } from '@material-ui/core';
+import axios, { AxiosRequestConfig } from 'axios';
 import { push } from 'connected-react-router';
 import { ReactWrapper } from 'enzyme';
 import React from 'react';
-import { flushAllPromises, mockHttpGet, renderTestApp } from '../common/test.utils';
+import { flushAllPromises, mocked, renderTestApp } from '../common/test.utils';
 import Home, { HomeComp, Props, State } from './Home';
 
 it('should display the home page by default', async () => {
@@ -26,55 +27,71 @@ it('should initialize the button with count 1', async () => {
   expect(countButton.text()).toEqual('Fetch n°1');
 });
 
-it('should increment the count by 1 when clicking its button', async () => {
-  mockWebService();
-  const { app } = renderTestApp();
-  const home: ReactWrapper<Props> = app.find(Home);
-  const countButton = home.find(Button).last();
-  countButton.simulate('click');
-  // app.update(); // Not required here
-  await flushAllPromises();
-  expect(home.find(Button).last().text()).toEqual('Fetch n°2');
-});
+// Should be at top-level to be in the same scope as 'axios' module. It's a requirement
+// from jest mock.
+jest.mock('axios');
 
-it('should update the count when inputting a number', async () => {
-  mockWebService();
-  const { app } = renderTestApp();
-  const home: ReactWrapper<Props, State> = app.find(HomeComp);
+describe('Webservice interactions', () => {
+  beforeEach(mockWebService);
+  afterEach(() => jest.resetAllMocks());
+  afterAll(() => jest.unmock('axios'));
 
-  // Ideally, we should simulate a 'change' event, but it doesn't trigger onChange - to fix
-  // const countInput = home.find(TextField).first();
-  // countInput.simulate('change', { target: { value: '12' } });
+  it('should increment the count by 1 when clicking its button', async () => {
+    const expectedRequestParams = { id: 1 };
+    const { app } = renderTestApp();
+    const home: ReactWrapper<Props> = app.find(Home);
+    const countButton = home.find(Button).last();
+    countButton.simulate('click');
+    // app.update(); // Not required here
+    await flushAllPromises();
 
-  const instance = home.instance() as HomeComp;
-  instance.handleChange('count')({ target: { value: '12' } } as any);
+    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(axios.get).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/todos',
+                                           { params: expectedRequestParams } as AxiosRequestConfig);
+    expect(home.find(Button).last().text()).toEqual('Fetch n°2');
+  });
 
-  // app.update(); // Not required here
-  await flushAllPromises();
+  it('should update the count when inputting a number', async () => {
+    const { app } = renderTestApp();
+    const home: ReactWrapper<Props, State> = app.find(HomeComp);
+    // HomeComp instead of Home to access its handleChange method
 
-  expect(home.find(Button).last().text()).toEqual('Fetch n°12');
-});
+    // Ideally, we should simulate a 'change' event, but it doesn't trigger onChange - to fix
+    // const countInput = home.find(TextField).first();
+    // countInput.simulate('change', { target: { value: '12' } });
 
-it('should double the count when submitting the form (enter)', async () => {
-  mockWebService();
-  const { app } = renderTestApp({ counter: { count: { count: 12 } } });
-  const home: ReactWrapper<Props, State> = app.find(HomeComp);
+    const instance = home.instance() as HomeComp;
+    instance.handleChange('count')({ target: { value: '12' } } as any);
 
-  // Could also provide an initial value to the input field instead of initial store:
-  // const instance = home.instance() as HomeComp;
-  // instance.handleChange('count')({ target: { value: '12' } } as any);
+    // app.update(); // Not required here
+    await flushAllPromises();
 
-  const form = home.find('form');
-  expect(form).toHaveLength(1);
-  form.simulate('submit');
+    expect(axios.get).toHaveBeenCalledTimes(0);
+    expect(home.find(Button).last().text()).toEqual('Fetch n°12');
+  });
 
-  // app.update(); // Not required here
-  await flushAllPromises();
+  it('should double the count when submitting the form (enter)', async () => {
+    const { app } = renderTestApp({ counter: { count: { count: 12 } } });
+    const home: ReactWrapper<Props, State> = app.find(Home);
 
-  expect(home.find(Button).last().text()).toEqual('Fetch n°24');
+    // Could also provide an initial value to the input field instead of initial store:
+    // const instance = home.instance() as HomeComp;
+    // instance.handleChange('count')({ target: { value: '12' } } as any);
+
+    const form = home.find('form');
+    expect(form).toHaveLength(1);
+    form.simulate('submit');
+
+    // app.update(); // Not required here
+    await flushAllPromises();
+
+    expect(axios.get).toHaveBeenCalledTimes(0);
+    expect(home.find(Button).last().text()).toEqual('Fetch n°24');
+  });
 });
 
 function mockWebService(): void {
-  mockHttpGet('https://jsonplaceholder.typicode.com/todos',
-              [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }]);
+  const axiosMocked = mocked(axios);
+  axiosMocked.get.mockResolvedValueOnce(
+    { data: [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }] });
 }

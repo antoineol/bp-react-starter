@@ -1,6 +1,4 @@
 import { createMount, createShallow } from '@material-ui/core/test-utils';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import { ReactWrapper, shallow } from 'enzyme';
 import React, { ComponentClass, ReactElement } from 'react';
 import App from '../App';
@@ -27,6 +25,15 @@ export function shallowMui<T>(this: any, node: ReactElement<T>) {
   return shallow.apply(this, arguments as any);
 }
 
+/**
+ * Dirty utility in case we want to wait for a predicate to be true (e.g. that a component
+ * appears in the view). In other words, it runs the `predicate` function every `timeout` ms
+ * until it returns `true`
+ * @param wrapper - a parent component on which the predicate will be evaluated.
+ * @param predicate - function to know if the should keep watching or not
+ * @param timeout - runs the `predicate` every `timeout` ms until it returns `true`
+ */
+//
 export function wait(wrapper: ReactWrapper, predicate: (wrapper: ReactWrapper) => boolean,
                      timeout: number = 10) {
   return new Promise((resolve, reject) => {
@@ -54,16 +61,15 @@ export function flushAllPromises() {
   return new Promise(resolve => setImmediate(resolve));
 }
 
-export interface MockHttpOptions {
-  status?: number;
-}
-
-const defaultMockHttpOptions = { status: 200 };
-
-export function mockHttpGet(url: string, response: any, mockHttpOptions?: MockHttpOptions) {
-  const opt = { ...defaultMockHttpOptions, ...mockHttpOptions };
-  const mock = new MockAdapter(axios);
-  mock.onGet(url).reply(opt.status, response);
+/**
+ * Type utility only. It does nothing at runtime, just cast to the right mocked type.
+ * `const axiosMocked = mocked(axios);`
+ * is equivalent to
+ * `const axiosMocked = axios as jest.Mock<typeof axios>;`
+ * @param module
+ */
+export function mocked<T>(module: T): jest.Mocked<T> {
+  return module as jest.Mocked<T>;
 }
 
 // In case we need to debug something
