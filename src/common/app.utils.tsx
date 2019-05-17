@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { Record } from 'immutable';
-import React from 'react';
 import { env } from '../environment/env';
 
 /**

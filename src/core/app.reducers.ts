@@ -3,6 +3,7 @@ import { History } from 'history';
 import { combineReducers } from 'redux-immutable';
 import { AppStoreModel } from '../common/app.models';
 import { COUNTER_REDUCER, counterReducer } from '../home/count.service';
+import { SECRET_REDUCER, secretReducer } from '../home/secret/secret.service';
 
 export function createRootReducer(history: History) {
   // const rootReducer = combineReducers<Partial<AppStoreModel>, Action<void>>({
@@ -19,5 +20,6 @@ export function createRootReducer(history: History) {
     {
       router: connectRouter(history),
       [COUNTER_REDUCER]: counterReducer,
+      [SECRET_REDUCER]: secretReducer,
     });
 }

@@ -69,21 +69,21 @@ export const dispatchCount = (action: CountActions) => action;
 
 // Selectors
 
-function selectCountObj(state: AppStore): CounterStore {
+function selectCountState(state: AppStore): CounterStore {
   return state.get(COUNTER_REDUCER);
 }
 
 export function selectCount() {
   return createSelector(
-    selectCountObj,
-    countObj => toJS(countObj.get('count')),
+    selectCountState,
+    countState => toJS(countState.get('count')),
   );
 }
 
 export function selectIncrementLoading() {
   return createSelector(
-    selectCountObj,
-    countObj => toJS(countObj.get('loading')),
+    selectCountState,
+    countState => toJS(countState.get('loading')),
   );
 }
 
@@ -129,8 +129,8 @@ export const counterSagas = [
 
 const initialState: CounterStore = fromJS({ count: { count: 1 } } as CounterModel);
 
-export const counterReducer: Reducer<CounterStore> = (state: CounterStore = initialState,
-                                                      action: CountActions) => {
+export const counterReducer: Reducer<CounterStore, CountActions> = (state: CounterStore = initialState,
+                                                                    action: CountActions) => {
   switch (action.type) {
     case CountActionTypes.Increment:
       return state

@@ -1,6 +1,7 @@
+import { Checkbox } from '@material-ui/core';
 import { createMount, createShallow } from '@material-ui/core/test-utils';
 import { ReactWrapper, shallow } from 'enzyme';
-import React, { ComponentClass, ReactElement } from 'react';
+import React, { ComponentClass, ComponentType, ReactElement } from 'react';
 import App from '../App';
 import { makeApp } from '../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from './app.models';
@@ -59,6 +60,36 @@ export function mockLocalStorage(initialLocalStorage?: LocalStorageModel): void 
 
 export function flushAllPromises() {
   return new Promise(resolve => setImmediate(resolve));
+}
+
+// For debug purpose only. Don't use for real test / code!
+export function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function updateRadio(wrapper: ReactWrapper<any, any>, nameProp: string, value: string) {
+  wrapper
+  // For a text input, remove the `[value="${value}"]` part from the CSS selector.
+    .find(`input[name="${nameProp}"][value="${value}"]`)
+    .simulate('change', { target: { value, name: nameProp } });
+}
+
+export function compByName(wrapper: ReactWrapper<any, any>, comp: ComponentType<any>,
+                           nameProp: string) {
+  return wrapper.findWhere(n => isTargetComp(n, comp, nameProp));
+}
+
+export function compValue(wrapper: ReactWrapper<any, any>, comp: ComponentType<any>,
+                          nameProp: string) {
+  const valueProp = comp === Checkbox ? 'checked' : 'value';
+  const compWrapper = isTargetComp(wrapper, comp, nameProp) ? wrapper :
+    compByName(wrapper, comp, nameProp);
+  return compWrapper.prop(valueProp);
+}
+
+function isTargetComp(wrapper: ReactWrapper<any, any>, comp: ComponentType<any>,
+                      nameProp: string): boolean {
+  return wrapper.name() === (comp.displayName || comp.name) && wrapper.prop('name') === nameProp;
 }
 
 /**

@@ -24,6 +24,7 @@ import {
   UpdateAction,
 } from './count.service';
 import logo from './logo.svg';
+import SecretArea from './secret/SecretArea';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
 // hope to have a fix in TypeScript 3.3. Issues to follow up:
@@ -130,6 +131,7 @@ export class HomeComp extends Component<Props, State> {
           Fetch n°{isNaN(c) ? '-' : c}
           {loading && <CircularProgress className={classes.loader} />}
         </Button>
+        <SecretArea />
       </div>
     );
   }

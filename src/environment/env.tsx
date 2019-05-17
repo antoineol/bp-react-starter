@@ -1,7 +1,12 @@
+const processEnv = process.env;
+
 export const env = {
-  production: process.env.REACT_APP_PROD && process.env.REACT_APP_PROD.toLowerCase() !== 'false',
-  apiPath: process.env.REACT_APP_API_PATH,
-  stagingVar: process.env.REACT_APP_STAGING_VAR,
+  production: processEnv.REACT_APP_PROD && processEnv.REACT_APP_PROD.toLowerCase() !== 'false',
+  apiPath: processEnv.REACT_APP_API_PATH,
+  stagingVar: processEnv.REACT_APP_STAGING_VAR,
+  isJest: processEnv.JEST_WORKER_ID !== undefined,
 };
 
-console.log('Environment:', env);
+if (!env.isJest) { // If not jest
+  console.log('Environment:', env);
+}

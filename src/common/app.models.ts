@@ -1,6 +1,7 @@
 import { RouterState } from 'connected-react-router/immutable';
 import { Record } from 'immutable';
 import { COUNTER_REDUCER, CounterModel } from '../home/count.service';
+import { SECRET_REDUCER, SecretModel } from '../home/secret/secret.service';
 import { ROUTER_REDUCER } from './routes.service';
 
 export interface StoreOf<T> {
@@ -12,6 +13,7 @@ export interface StoreOf<T> {
 export interface AppStoreDirectModel {
   [ROUTER_REDUCER]: RouterState;
   [COUNTER_REDUCER]: CounterModel;
+  [SECRET_REDUCER]: SecretModel;
 }
 
 export type AppStoreModel = {
