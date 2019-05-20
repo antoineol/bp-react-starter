@@ -9,13 +9,13 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import React, { Component, ReactNode } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppStore } from '../common/app.models';
+import { Dispatcher, mapDispatchToProps } from '../common/app.utils';
 import {
   CountActionTypes,
-  dispatchCount,
   DoubleCountAction,
   IncrementAction,
   selectCount,
@@ -71,10 +71,6 @@ const mapStateToProps = createStructuredSelector<AppStore, Selection>(
     count: selectCount,
     loading: selectIncrementLoading,
   });
-const mapDispatchToProps = {
-  dispatch: dispatchCount,
-};
-type Dispatcher = typeof mapDispatchToProps;
 
 // Props and State definition
 
@@ -86,7 +82,7 @@ export interface State {
 
 // Component
 
-export class HomeComp extends Component<Props, State> {
+export class HomeComp extends PureComponent<Props, State> {
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.props.dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);

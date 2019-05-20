@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { Action } from 'redux';
 import { env } from '../environment/env';
 import { ToStoreEntry } from './app.models';
 
@@ -22,6 +23,13 @@ export function toJS<T>(selectorImmutable: ToStoreEntry<T>): Readonly<T> {
   // so we use a cast in implementation for this specific case not to break the safe typing.
   return selectorImmutable as any;
 }
+
+export function dispatch<T extends Action>(action: T) {
+  return action;
+}
+
+export const mapDispatchToProps = { dispatch };
+export type Dispatcher = typeof mapDispatchToProps;
 
 /**
  * Send a request to the app API. Ensures the user is authenticated and includes the authorization

@@ -63,10 +63,6 @@ export type CountActions =
   | IncrementErrorAction
   | DoubleCountAction;
 
-// Action dispatcher bount to allowed action types for this service
-
-export const dispatchCount = (action: CountActions) => action;
-
 // Selectors
 
 function getCountState(state: AppStore): CounterStore {

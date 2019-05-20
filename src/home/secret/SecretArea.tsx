@@ -10,17 +10,12 @@ import {
   WithStyles,
   withStyles,
 } from '@material-ui/core';
-import React, { Component, Fragment, ReactNode } from 'react';
+import React, { Fragment, PureComponent, ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppStore } from '../../common/app.models';
-import {
-  dispatchSecret,
-  SecretAT,
-  SecretModel,
-  selectShowSecret,
-  ShowAction,
-} from './secret.service';
+import { Dispatcher, mapDispatchToProps } from '../../common/app.utils';
+import { SecretAT, SecretModel, selectShowSecret, ShowAction } from './secret.service';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
 // hope to have a fix in TypeScript 3.3. Issues to follow up:
@@ -40,10 +35,6 @@ type Selection = SecretModel;
 const mapStateToProps = createStructuredSelector<AppStore, Selection>({
   show: selectShowSecret(),
 });
-const mapDispatchToProps = {
-  dispatch: dispatchSecret,
-};
-type Dispatcher = typeof mapDispatchToProps;
 
 // Props and State definition
 
@@ -59,7 +50,7 @@ export enum SecretStatus {
 
 // Component
 
-export class SecretAreaComp extends Component<Props, State> {
+export class SecretAreaComp extends PureComponent<Props, State> {
   handleChange = (e: React.ChangeEvent</*HTMLInputElement*/ any>) => {
     this.props.dispatch(
       { type: SecretAT.Show, show: e.target.value === SecretStatus.Show } as ShowAction);
