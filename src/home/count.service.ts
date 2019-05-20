@@ -4,7 +4,7 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { useRealWebService } from '../common/app.config';
 import { AppStore, StoreOf } from '../common/app.models';
-import { apiGet, toJS } from '../common/app.utils';
+import { apiGet } from '../common/app.utils';
 import { handleError } from '../common/error.service';
 
 // Model
@@ -14,7 +14,7 @@ export interface Counter {
 }
 
 export interface CounterModel {
-  count: Counter;
+  counter: Counter;
   loading?: boolean;
   error?: any | false;
 }
@@ -69,40 +69,43 @@ export const dispatchCount = (action: CountActions) => action;
 
 // Selectors
 
-function selectCountState(state: AppStore): CounterStore {
+function getCountState(state: AppStore): CounterStore {
   return state.get(COUNTER_REDUCER);
 }
 
-export function selectCount() {
-  return createSelector(
-    selectCountState,
-    countState => toJS(countState.get('count')),
-  );
-}
+export const selectCount = createSelector(
+  getCountState,
+  countState => countState.get('counter').get('count'),
+);
 
-export function selectIncrementLoading() {
-  return createSelector(
-    selectCountState,
-    countState => toJS(countState.get('loading')),
-  );
-}
+// toJS
+
+export const selectIncrementLoading = createSelector(
+  getCountState,
+  countState => countState.get('loading'),
+);
 
 // Saga
+
+export interface TodoItem {
+  id: number;
+  title: string;
+}
 
 function* incrementSaga() {
   yield takeLatest(CountActionTypes.Increment, function* () {
     try {
-      const oldCount: Counter = yield select(selectCount());
+      const oldCount: number = yield select(selectCount);
 
       let count: number;
       if (useRealWebService) {
         // Let's pretend we need to get an id from remote to compute the next count
-        const [{ id, title }]: { id: number, title: string }[]
-          = yield call(apiGet, `/todos`, { params: { id: oldCount.count } });
+        const [{ id, title }]: TodoItem[]
+          = yield call(apiGet, `/todos`, { params: { id: oldCount } });
         console.log(`Title ${id}:`, title);
         count = id;
       } else {
-        count = oldCount.count;
+        count = oldCount;
       }
 
       const successAction: IncrementSuccessAction = {
@@ -127,7 +130,7 @@ export const counterSagas = [
 
 // Reducer
 
-const initialState: CounterStore = fromJS({ count: { count: 1 } } as CounterModel);
+const initialState: CounterStore = fromJS({ counter: { count: 1 } } as CounterModel);
 
 export const counterReducer: Reducer<CounterStore, CountActions> = (state: CounterStore = initialState,
                                                                     action: CountActions) => {
@@ -139,17 +142,17 @@ export const counterReducer: Reducer<CounterStore, CountActions> = (state: Count
     case CountActionTypes.IncrementSuccess:
       return state
         .set('loading', false)
-        .set('count', fromJS({ count: action.count + 1 } as Counter));
+        .set('counter', fromJS({ count: action.count + 1 } as Counter));
     case CountActionTypes.IncrementError:
       return state
         .set('loading', false)
         .set('error', action.error);
     case CountActionTypes.UpdateCount:
       return state
-        .set('count', fromJS({ count: action.count } as Counter));
+        .set('counter', fromJS({ count: action.count } as Counter));
     case CountActionTypes.DoubleCount:
       return state
-        .set('count', fromJS({ count: state.get('count').toJS().count * 2 } as Counter));
+        .set('counter', fromJS({ count: state.get('counter').get('count') * 2 } as Counter));
     default:
       return state;
   }

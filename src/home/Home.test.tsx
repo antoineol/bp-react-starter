@@ -9,6 +9,7 @@ import {
   renderTestApp,
   updateRadio,
 } from '../common/test.utils';
+import { TodoItem } from './count.service';
 import Home, { HomeComp, Props, State } from './Home';
 import SecretArea, { SecretStatus } from './secret/SecretArea';
 
@@ -102,7 +103,7 @@ describe('Webservice interactions', () => {
   });
 
   it('should double the count when submitting the form (enter)', async () => {
-    const { app } = renderTestApp({ counter: { count: { count: 12 } } });
+    const { app } = renderTestApp({ counter: { counter: { count: 12 } } });
     const home: ReactWrapper<Props, State> = app.find(Home);
 
     // Could also provide an initial value to the input field instead of initial store:
@@ -125,5 +126,5 @@ describe('Webservice interactions', () => {
 function mockWebService(): void {
   const axiosMocked = mocked(axios);
   axiosMocked.get.mockResolvedValueOnce(
-    { data: [{ 'userId': 1, 'id': 1, 'title': 'delectus aut autem', 'completed': false }] });
+    { data: [{ 'id': 1, 'title': 'delectus aut autem' } as TodoItem] } as any);
 }

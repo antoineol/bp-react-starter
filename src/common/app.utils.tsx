@@ -1,22 +1,26 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { Record } from 'immutable';
 import { env } from '../environment/env';
+import { ToStoreEntry } from './app.models';
 
 /**
  * Selectors utility, to wrap values returned by reselect selectors to convert immutable object
  * into JavaScript values.
  * @param selectorImmutable
  */
-export function toJS<T>(selectorImmutable: Record<T>): Readonly<T> {
-  const record = selectorImmutable as Record<T>;
-  if (record && typeof record.toJS === 'function') {
-    return record.toJS();
+// TODO find a better typing that don't require consumer to provide the generic type (should be
+// inferred)
+// type ExtractGeneric<Type> = Type extends TypeWithGeneric<infer X> ? X : Type;
+// Extra notes: https://itnext.io/typescript-extract-unpack-a-type-from-a-generic-baca7af14e51
+export function toJS<T>(selectorImmutable: ToStoreEntry<T>): Readonly<T> {
+  const record = selectorImmutable;
+  if (record && typeof (record as any).toJS === 'function') {
+    return (record as any).toJS();
   }
   // It's a bit hard to handle primitives well, so we make a shortcut: always assume it's a Record
   // (cf. app.models.ts) and return encapsulated type.
   // Primitives are also assumed to be wrapped into a record, but it's not the case in reality,
   // so we use a cast in implementation for this specific case not to break the safe typing.
-  return selectorImmutable as unknown as T;
+  return selectorImmutable as any;
 }
 
 /**

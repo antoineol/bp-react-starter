@@ -15,7 +15,6 @@ import { createStructuredSelector } from 'reselect';
 import { AppStore } from '../common/app.models';
 import {
   CountActionTypes,
-  CounterModel,
   dispatchCount,
   DoubleCountAction,
   IncrementAction,
@@ -62,12 +61,15 @@ const styles = ({ palette, spacing }: Theme) => createStyles(
 
 // Redux bindings
 
-type Selection = CounterModel;
+interface Selection {
+  count: number;
+  loading?: boolean;
+}
 
 const mapStateToProps = createStructuredSelector<AppStore, Selection>(
   {
-    count: selectCount(),
-    loading: selectIncrementLoading(),
+    count: selectCount,
+    loading: selectIncrementLoading,
   });
 const mapDispatchToProps = {
   dispatch: dispatchCount,
@@ -101,7 +103,7 @@ export class HomeComp extends Component<Props, State> {
 
   render(): ReactNode {
     const { classes, count, loading, dispatch } = this.props;
-    const c = count.count;
+    const c = count;
     return (
       <div className={classes.root}>
         <img src={logo} className={classes.logo} alt="logo" />

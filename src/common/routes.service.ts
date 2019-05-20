@@ -1,7 +1,6 @@
 import { RouterState } from 'connected-react-router/immutable';
 import { createSelector } from 'reselect';
 import { AppStore, StoreOf } from './app.models';
-import { toJS } from './app.utils';
 
 // Route selector
 
@@ -15,7 +14,6 @@ function selectRouter(state: AppStore): RouterStore {
 }
 
 export function selectLocation() {
-  return createSelector(selectRouter, routerState =>
-    toJS(routerState.get('location')),
+  return createSelector(selectRouter, routerState => routerState.get('location'),
   );
 }

@@ -2,7 +2,6 @@ import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
 import { createSelector } from 'reselect';
 import { AppStore, StoreOf } from '../../common/app.models';
-import { toJS } from '../../common/app.utils';
 
 // Model
 
@@ -40,7 +39,7 @@ function selectSecretState(state: AppStore): SecretStore {
 export function selectShowSecret() {
   return createSelector(
     selectSecretState,
-    secret => toJS(secret.get('show')),
+    secret => secret.get('show'),
   );
 }
 
