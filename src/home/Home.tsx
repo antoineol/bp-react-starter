@@ -88,7 +88,7 @@ export class HomeComp extends PureComponent<Props, State> {
     this.props.dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);
   };
 
-  handleChange = (name: keyof Props) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // name argument: in case we need to know it in the service
     this.props.dispatch(
       {
@@ -108,9 +108,10 @@ export class HomeComp extends PureComponent<Props, State> {
         </Typography>
         <form onSubmit={this.handleSubmit}>
           <TextField
+            name={'count'}
             label="Count"
             value={isNaN(c) ? '' : c}
-            onChange={this.handleChange('count')}
+            onChange={this.handleChange}
             type={'number'}
           />
         </form>

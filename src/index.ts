@@ -1,5 +1,12 @@
+// Remove polyfills if you don't need IE11 support.
+// Also adjust package.json browserslist entry to adjust what is transpiled at build time
+// (https://facebook.github.io/create-react-app/docs/supported-browsers-features)
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+// If all users are on internet, consider using polyfill.io instead to dynamically detect the user's
+// browser and the polyfills he needs. A sample usage is in index.html. But don't use both
+// react-app-polyfill and polyfill.io.
 import { render } from 'react-snapshot';
-import 'typeface-roboto';
 import App from './App';
 import { makeApp } from './core/_bootstrap/core.utils';
 import { unregister } from './core/_bootstrap/serviceWorker';

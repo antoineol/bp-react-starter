@@ -22,7 +22,7 @@ Pour mettre à jour les bibliothèques (node modules) : `yarn upgrade-interactiv
 
 ## Avancé : reconstruction du starter
 
-Certaines étapes demandent de copier des fichiers de ce dépôt directement pour éviter de les réimplémenter (e.g. src/common/test.utils.tsx).
+Certaines étapes demandent de copier des fichiers de ce dépôt directement pour éviter de les réimplémenter (e.g. src/common/test.utils.ts).
 
 ### Initialiser le projet
 
@@ -81,7 +81,7 @@ Cf. [la BP React du Drive](https://docs.google.com/document/d/1RdFwITlHl1AUxXmE1
       content="width=device-width, minimum-scale=1, initial-scale=1, shrink-to-fit=no">
 ```
 
-- Ajouter un import dans `src/index.tsx` :
+- Ajouter un import dans `src/index.ts` :
 
 ```typescript jsx
 import 'typeface-roboto';
@@ -96,9 +96,9 @@ La [documentation Material UI](https://material-ui.com/getting-started/installat
 
 - `yarn add -E react-redux redux redux-immutable immutable redux-saga reselect history react-router react-router-dom connected-react-router`
 - `yarn add -DE @types/history @types/react-redux @types/redux-immutable @types/react-router @types/react-router-dom`
-- Pour la structure de base Redux et saga, copier `src/_core/app.reducers.tsx`, `src/_core/app.sagas.tsx`, `src/_core/app.store.tsx`, `src/common/app.models.ts`, `src/common/routes.service.tsx`, `src/common/app.utils.tsx`
+- Pour la structure de base Redux et saga, copier `src/_core/app.reducers.tsx`, `src/_core/app.sagas.tsx`, `src/_core/app.store.tsx`, `src/common/app.models.ts`, `src/common/routes.service.tsx`, `src/common/app.utils.ts`
 - Dans `src/common/app.utils.ts`, supprimer pour le moment la méthode `apiGet` et ses dépendances. Nous la verrons plus tard avec les variables d’environnement et Axios.
-- Copier `src/index.tsx` ou ajuster la différence (history, store, provider).
+- Copier `src/index.ts` ou ajuster la différence (history, store, provider).
 - Mettons en place un exemple de service : copier `src/home/home.service.ts`. Ce fichier liste les éléments de redux nécessaires à la fonctionnalité d’incrément (sélecteurs, actions, reducers, saga, constantes/modèles).
 - Copier ou ajuster `src/home/Home.tsx` si besoin.
 
@@ -130,8 +130,8 @@ Pour les tests unitaires avec des snapshots.
 }
 ```
 
-- Copier `src/setupTests.js`, `src/common/test.utils.tsx`, 
-- Copier les tests : `src/App.test.tsx` et `src/home/Home.test.tsx`
+- Copier `src/setupTests.js`, `src/common/test.utils.ts`, 
+- Copier les tests : `src/App.test.ts` et `src/home/Home.test.ts`
 - Lancer les tests et vérifier qu’ils passent tous
 
 ### Variables d’environnement
@@ -168,7 +168,7 @@ Les mises à jour des bibliothèques sont encouragées, mais l’application doi
 
 Le HMR a été ajouté au projet pour accélérer les cycles de dév/test. Deux fichiers sont impactés :
 
-- `src/index.tsx` : re-render le composant `App` en cas de changement
+- `src/index.ts` : re-render le composant `App` en cas de changement
 - `src/_core/app.store.ts` : recharge les reducers pour que ça fonctionne avec Redux
 
 ### React Snapshots
@@ -176,7 +176,7 @@ Le HMR a été ajouté au projet pour accélérer les cycles de dév/test. Deux 
 Cet outil permet de faire un pré-rendu statique des pages React. C’est notamment utile pour l’hébergement statique, sans server-side rendering.
 
 - `yarn add -DE react-snapshot`
-- Mettre à jour `src/index.tsx` en utilisant la méthode render de react-snapshot :
+- Mettre à jour `src/index.ts` en utilisant la méthode render de react-snapshot :
 
 ```typescript jsx
 import { render } from 'react-snapshot';
