@@ -10,7 +10,7 @@ import {
   renderTestApp,
   updateInput,
   updateRadio,
-} from '../common/test.utils';
+} from '../common/test/test.utils';
 import { TodoItem } from './count.service';
 import Home, { Props, State } from './Home';
 import SecretArea, { SecretStatus } from './secret/SecretArea';

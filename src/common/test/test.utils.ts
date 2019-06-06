@@ -2,9 +2,9 @@ import { Checkbox } from '@material-ui/core';
 import axios, { AxiosResponse } from 'axios';
 import { mount, ReactWrapper } from 'enzyme';
 import { ComponentType } from 'react';
-import App from '../App';
-import { makeApp } from '../core/_bootstrap/core.utils';
-import { AppStoreDirectModel } from './app.models';
+import App from '../../App';
+import { makeApp } from '../../core/_bootstrap/core.utils';
+import { AppStoreDirectModel } from '../app.models';
 
 // Default HTTP mocks. Can be overridden in each test.
 mockApiGet(() => ({}));
