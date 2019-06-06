@@ -1,4 +1,5 @@
-import { createMuiTheme, CssBaseline, MuiThemeProvider } from '@material-ui/core';
+import { createMuiTheme, CssBaseline } from '@material-ui/core';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { History } from 'history';
 import React, { PureComponent } from 'react';

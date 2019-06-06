@@ -1,7 +1,8 @@
-import { Button, RadioGroup, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { AxiosRequestConfig } from 'axios';
 import { push } from 'connected-react-router';
 import { ReactWrapper } from 'enzyme';
+import { defaultOptions } from '../common/app.utils';
 import {
   compValue,
   flushAllPromises,
@@ -38,8 +39,16 @@ it('should display the home page by default and with / URL', async () => {
   // Previous references are outdated and may not give the right result with `compValue()`,
   // .debug(), .html()...
   secret = app.find(SecretArea);
-  // Check that the radio itself was updated
-  expect(compValue(secret.find(SecretArea), RadioGroup, 'secret')).toEqual(SecretStatus.Show);
+
+  // Check that the radio itself was updated.
+  // We should normally use RadioGroup reference directly, instead of 'RadioGroup', but it seems
+  // that this component does not implement correctly RadioGroup.displayName nor RadioGroup.name
+  // (both undefined). So we provide the string ourselves.
+  // For our own components, we won't have the issue:
+  // - for class components (displayName is added automatically by React)
+  // - for functional components, if you use named functions instead of lambda functions. Otherwise
+  // you need to bind the displayName manually to exported component when declaring it.
+  expect(compValue(secret, 'RadioGroup', 'secret')).toEqual(SecretStatus.Show);
   // Then check that the secret area is displayed as expected
   expect(secret.find(Typography).last().text()).toContain('Voici le secret tant attendu !');
   // Just using `secret.text()` won't provide the full text because its parent tag is a Fragment,
@@ -64,7 +73,7 @@ describe('Webservice interactions', () => {
 
     expect(apiMock).toHaveBeenCalledTimes(1);
     expect(apiMock).toHaveBeenCalledWith('https://jsonplaceholder.typicode.com/todos',
-      { params: expectedRequestParams } as AxiosRequestConfig);
+      { ...defaultOptions, params: expectedRequestParams } as AxiosRequestConfig);
     expect(home.find(Button).last().text()).toEqual('Fetch n°2');
   });
 

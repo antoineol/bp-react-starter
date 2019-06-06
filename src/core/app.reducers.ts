@@ -16,7 +16,7 @@ export function createRootReducer(history: History) {
 
   // connected-react-router v5 - KO, has an issue:
   // https://github.com/supasate/connected-react-router/issues/115
-  return combineReducers<Partial<AppStoreModel>, any /*extends Action<any>*/>(
+  return combineReducers<AppStoreModel, any /*extends Action<any>*/>(
     {
       router: connectRouter(history),
       [COUNTER_REDUCER]: counterReducer,

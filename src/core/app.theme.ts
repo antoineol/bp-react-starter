@@ -10,7 +10,6 @@ import 'typeface-roboto';
 
 export const appTheme: ThemeOptions = {
   typography: {
-    useNextVariants: true,
     button: {
       textTransform: 'none',
     },

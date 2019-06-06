@@ -1,20 +1,20 @@
 import { Checkbox } from '@material-ui/core';
-import { createMount } from '@material-ui/core/test-utils';
 import axios, { AxiosResponse } from 'axios';
-import { ReactWrapper } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { ComponentType } from 'react';
 import App from '../App';
 import { makeApp } from '../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from './app.models';
 
+// Default HTTP mocks. Can be overridden in each test.
+mockApiGet(() => ({}));
+mockApiPost(() => ({ success: true }));
+
 export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},
                                     initialLocalStorage: LocalStorageModel = {}) {
   mockLocalStorage(initialLocalStorage);
-  const mountMui = createMount();
   const { app, history, store } = makeApp(App, initialStore);
-  const wrapper = mountMui(app);
-  await flushAllPromises();
-  wrapper.update();
+  const wrapper = mount(app);
   return { history, store, app: wrapper };
 }
 
@@ -30,12 +30,12 @@ export function updateSlider(wrapper: ReactWrapper<any, any>, nameProp: string, 
   return updateField(wrapper, nameProp, value, `Slider[name="${nameProp}"]`);
 }
 
-export function getCompByName(wrapper: ReactWrapper<any, any>, comp: ComponentType<any>,
+export function getCompByName(wrapper: ReactWrapper<any, any>, comp: ComponentType<any> | string,
                               nameProp: string) {
   return wrapper.findWhere(n => isTargetComp(n, comp, nameProp));
 }
 
-export function compValue(wrapper: ReactWrapper<any, any>, comp: ComponentType<any>,
+export function compValue(wrapper: ReactWrapper<any, any>, comp: ComponentType<any> | string,
                           nameProp: string) {
   const valueProp = comp === Checkbox ? 'checked' : 'value';
   const compWrapper = isTargetComp(wrapper, comp, nameProp) ? wrapper :
@@ -112,7 +112,8 @@ export function mockLocalStorage(initialLocalStorage?: LocalStorageModel): void 
 }
 
 export class LocalStorageModel {
-  jwt?: string;
+  // Declare local storage fields here. Use string as type.
+  foo?: string;
 }
 
 // Implementation details
@@ -131,10 +132,13 @@ function updateField(wrapper: ReactWrapper<any, any>, nameProp: string, value: a
     });
 }
 
-function isTargetComp(comp: ReactWrapper<any, any>, targetComp: ComponentType<any>,
+function isTargetComp(comp: ReactWrapper<any, any>, targetComp: ComponentType<any> | string,
                       nameProp: string): boolean {
-  return comp.name() === (targetComp.displayName || targetComp.name) && comp.prop('name') ===
-    nameProp;
+  const compName = comp.name();
+  const targetName = typeof targetComp === 'string' ? targetComp :
+    targetComp.displayName || targetComp.name;
+  return (compName === targetName || compName === `ForwardRef(${targetName})`) &&
+    comp.prop('name') === nameProp;
 }
 
 function mockApi<T>(method: 'get' | 'post') {
@@ -150,8 +154,7 @@ function mockApi<T>(method: 'get' | 'post') {
           config: {},
         } as AxiosResponse<T>;
       } catch (e) {
-        // eslint-disable-next-line no-throw-literal
-        throw {
+        throw Object.assign(new Error('Fake Axios Error'), {
           response: {
             status: e.status || 400,
             statusText: 'Bad Request',
@@ -159,7 +162,7 @@ function mockApi<T>(method: 'get' | 'post') {
             headers: {},
             config: {},
           },
-        };
+        });
       }
     });
   };

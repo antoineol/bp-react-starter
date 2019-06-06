@@ -7,18 +7,11 @@ import { AppStoreDirectModel } from '../../common/app.models';
 import { createRootReducer } from '../app.reducers';
 import { appSagas } from '../app.sagas';
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__<R>(...args: any): (...args: any[]) => R;
-  }
-}
-
-const sagaMiddleware = createSagaMiddleware();
-
 export function configureStore(initialSore: Partial<AppStoreDirectModel> = {}, history: History) {
 
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   const composeEnhancer: typeof compose = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const sagaMiddleware = createSagaMiddleware();
 
   const store = createStore(
     createRootReducer(history),

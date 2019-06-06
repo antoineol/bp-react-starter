@@ -22,9 +22,9 @@ import { SecretAT, SecretModel, selectShowSecret, ShowAction } from './secret.se
 // https://github.com/Microsoft/TypeScript/issues/22077
 // https://github.com/mui-org/material-ui/issues/11693
 // A workaround to have auto-completion is to set CSSProperties type to class values as below.
-const styles = ({ palette, spacing: { unit } }: Theme) => createStyles({
+const styles = ({ palette, spacing }: Theme) => createStyles({
   formControl: {
-    margin: unit * 3,
+    margin: spacing(3),
   },
 });
 
