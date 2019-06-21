@@ -3,7 +3,9 @@ import { History } from 'history';
 import { fromJS } from 'immutable';
 import { applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { useHotModuleReplacement } from '../../common/app.config';
 import { AppStoreDirectModel } from '../../common/app.models';
+import { env } from '../../environment/env';
 import { createRootReducer } from '../app.reducers';
 import { appSagas } from '../app.sagas';
 
@@ -25,12 +27,10 @@ export function configureStore(initialSore: Partial<AppStoreDirectModel> = {}, h
     ),
   );
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (module.hot) {
-      module.hot.accept('../app.reducers', () => {
-        store.replaceReducer(createRootReducer(history));
-      });
-    }
+  if (!env.isNodeProduction && useHotModuleReplacement && module.hot) {
+    module.hot.accept('../app.reducers', () => {
+      store.replaceReducer(createRootReducer(history));
+    });
   }
 
   // Saga injection
