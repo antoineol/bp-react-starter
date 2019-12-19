@@ -1,6 +1,6 @@
 import { MySyncPromise } from './MySyncPromise';
 
-// Usage: in src/setupTests.js, to import before everything else.
+// Usage: in src/setupTests.ts, to import before everything else.
 
 // It's breaking a few tests, we will need to investigate what's wrong when promises become sync.
 // Incomplete implementation? Side effects in the app where parts run in the wrong order?

@@ -20,6 +20,11 @@ Scripts disponibles :
 
 Pour mettre à jour les bibliothèques (node modules) : `yarn upgrade-interactive --latest`. Après ça, testez bien que tous les tests passent et que l'app tourne.
 
+## Améliorations possibles
+
+- Migrate to functional components?
+- @testing-library (CRA template, check package.json, setupTests.ts and tests)
+
 ## Avancé : reconstruction du starter
 
 Certaines étapes demandent de copier des fichiers de ce dépôt directement pour éviter de les réimplémenter (e.g. src/common/test.utils.ts).
@@ -130,7 +135,7 @@ Pour les tests unitaires avec des snapshots.
 }
 ```
 
-- Copier `src/setupTests.js`, `src/common/test.utils.ts`, 
+- Copier `src/setupTests.ts`, `src/common/test.utils.ts`, 
 - Copier les tests : `src/App.test.ts` et `src/home/Home.test.ts`
 - Lancer les tests et vérifier qu’ils passent tous
 
