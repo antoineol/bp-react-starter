@@ -22,8 +22,7 @@ Pour mettre à jour les bibliothèques (node modules) : `yarn upgrade-interactiv
 
 ## Améliorations possibles
 
-- Migrate to functional components?
-- @testing-library (CRA template, check package.json, setupTests.ts and tests)
+- Check what can be improved with hooks
 
 ## Avancé : reconstruction du starter
 

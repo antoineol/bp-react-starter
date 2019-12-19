@@ -1,7 +1,5 @@
-import { Checkbox } from '@material-ui/core';
+import { fireEvent, render } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
-import { mount, ReactWrapper } from 'enzyme';
-import { ComponentType } from 'react';
 import App from '../../App';
 import { makeApp } from '../../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from '../app.models';
@@ -14,33 +12,33 @@ export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> =
                                     initialLocalStorage: LocalStorageModel = {}) {
   mockLocalStorage(initialLocalStorage);
   const { app, history, store } = makeApp(App, initialStore);
-  const wrapper = mount(app);
-  return { history, store, app: wrapper };
+  const wrapper = render(app);
+  return { history, store, ...wrapper };
 }
 
-export function updateInput(wrapper: ReactWrapper<any, any>, nameProp: string, value: string) {
-  return updateField(wrapper, nameProp, value, `input[name="${nameProp}"]`);
+/**
+ * Simulates a click on an element
+ * @param element element to click
+ */
+export function clickElt(element: Document | Element | Window) {
+  fireEvent.click(element, { button: 0 });
 }
 
-export function updateRadio(wrapper: ReactWrapper<any, any>, nameProp: string, value: string) {
-  return updateField(wrapper, nameProp, value, `input[name="${nameProp}"][value="${value}"]`);
+/**
+ * Simulates a value change in an input
+ * @param element input element
+ * @param value new value emitted
+ */
+export function changeInput(element: Document | Element | Window, value: any) {
+  fireEvent.change(element, { target: { value } });
 }
 
-export function updateSlider(wrapper: ReactWrapper<any, any>, nameProp: string, value: number) {
-  return updateField(wrapper, nameProp, value, `Slider[name="${nameProp}"]`);
-}
-
-export function getCompByName(wrapper: ReactWrapper<any, any>, comp: ComponentType<any> | string,
-                              nameProp: string) {
-  return wrapper.findWhere(n => isTargetComp(n, comp, nameProp));
-}
-
-export function compValue(wrapper: ReactWrapper<any, any>, comp: ComponentType<any> | string,
-                          nameProp: string) {
-  const valueProp = comp === Checkbox ? 'checked' : 'value';
-  const compWrapper = isTargetComp(wrapper, comp, nameProp) ? wrapper :
-    getCompByName(wrapper, comp, nameProp);
-  return compWrapper.prop(valueProp);
+/**
+ * Submit the form which the given element belongs to
+ * @param element
+ */
+export function submitInput(element: Document | Element | Window) {
+  fireEvent.submit(element);
 }
 
 /**
@@ -77,29 +75,6 @@ export function flushAllPromises() {
   return new Promise(resolve => setImmediate(resolve));
 }
 
-/**
- * Dirty utility in case we want to wait for a predicate to be true (e.g. that a component
- * appears in the view). It runs the `predicate` function initially and after `timeout` ms.
- * If still not true after that, it fails.
- * @param wrapper - a parent component on which the predicate will be evaluated.
- * @param predicate - function to know if what we are waiting for is here.
- * @param timeout - runs the `predicate` after `timeout` ms and fail after this timeout if the
- * predicate still fails.
- */
-//
-export function wait(wrapper: ReactWrapper, predicate: (wrapper: ReactWrapper) => boolean,
-                     timeout: number = 10) {
-  return new Promise((resolve, reject) => {
-    if (predicate(wrapper)) {
-      return resolve(true);
-    }
-    setTimeout(() => {
-      wrapper.update();
-      return predicate(wrapper) ? resolve(true) : reject(new Error('Timeout expired'));
-    }, timeout);
-  });
-}
-
 // For debug purpose only. Don't use for real test / code!
 // function timeout(duration: number): Promise<void> {
 //   return new Promise(resolve => setTimeout(resolve, duration));
@@ -117,29 +92,6 @@ export class LocalStorageModel {
 }
 
 // Implementation details
-
-function updateField(wrapper: ReactWrapper<any, any>, nameProp: string, value: any,
-                     selector: string) {
-  return wrapper
-    .find(selector)
-    .simulate('change', {
-      target: {
-        value,
-        name: nameProp,
-        focus: () => {
-        },
-      },
-    });
-}
-
-function isTargetComp(comp: ReactWrapper<any, any>, targetComp: ComponentType<any> | string,
-                      nameProp: string): boolean {
-  const compName = comp.name();
-  const targetName = typeof targetComp === 'string' ? targetComp :
-    targetComp.displayName || targetComp.name;
-  return (compName === targetName || compName === `ForwardRef(${targetName})`) &&
-    comp.prop('name') === nameProp;
-}
 
 function mockApi<T>(method: 'get' | 'post') {
   return (mockImplementation: (...args: any) => T | Promise<T>) => {

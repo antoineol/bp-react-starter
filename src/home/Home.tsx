@@ -9,7 +9,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import React, { PureComponent, ReactNode } from 'react';
+import React, { memo } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { AppStore } from '../common/app.models';
@@ -82,59 +82,57 @@ export interface State {
 
 // Component
 
-export class HomeComp extends PureComponent<Props, State> {
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+const HomeComp: React.FC<Props> = ({ classes, count, loading, dispatch }: Props) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.props.dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);
+    dispatch({ type: CountActionTypes.DoubleCount } as DoubleCountAction);
   };
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // name argument: in case we need to know it in the service
-    this.props.dispatch(
+    dispatch(
       {
         type: CountActionTypes.UpdateCount,
         count: parseFloat(event.target.value),
       } as UpdateAction);
   };
 
-  render(): ReactNode {
-    const { classes, count, loading, dispatch } = this.props;
-    const c = count;
-    return (
-      <div className={classes.root}>
-        <img src={logo} className={classes.logo} alt="logo" />
-        <Typography variant="body1">
-          Edit <code>src/home/Home.tsx</code> and save to reload.
-        </Typography>
-        <form onSubmit={this.handleSubmit}>
-          <TextField
-            name={'count'}
-            label="Count"
-            value={isNaN(c) ? '' : c}
-            onChange={this.handleChange}
-            type={'number'}
-          />
-        </form>
-        {/* TODO we should use the Link MUI component as soon as there is no
+  const c = count;
+  return (
+    <div className={classes.root}>
+      <img src={logo} className={classes.logo} alt="logo" />
+      <Typography variant="body1">
+        Edit <code>src/home/Home.tsx</code> and save to reload.
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          id={'count'}
+          name={'count'}
+          label="Count"
+          value={isNaN(c) ? '' : c}
+          onChange={handleChange}
+          type={'number'}
+        />
+      </form>
+      {/* TODO we should use the Link MUI component as soon as there is no
           typing issue with href. Then remove useless Button theme customization
           in src/_core/app.theme.ts */}
-        <Button color={'primary'} href="https://reactjs.org" target="_blank"
-                rel="noopener noreferrer">
-          Learn React
-        </Button>
-        <Button variant={'outlined'}
-                color={'primary'}
-                className={classes.incrButton}
-                disabled={loading}
-                onClick={() => dispatch({ type: CountActionTypes.Increment } as IncrementAction)}>
-          Fetch n°{isNaN(c) ? '-' : c}
-          {loading && <CircularProgress className={classes.loader} />}
-        </Button>
-        <SecretArea />
-      </div>
-    );
-  }
-}
+      <Button color={'primary'} href="https://reactjs.org" target="_blank"
+              rel="noopener noreferrer">
+        Learn React
+      </Button>
+      <Button variant={'outlined'}
+              color={'primary'}
+              className={classes.incrButton}
+              disabled={loading}
+              onClick={() => dispatch({ type: CountActionTypes.Increment } as IncrementAction)}>
+        Fetch n°{isNaN(c) ? '-' : c}
+        {loading && <CircularProgress className={classes.loader} />}
+      </Button>
+      <SecretArea />
+    </div>
+  );
+};
 
 // TODO find the syntax with compose() that don't throw TS errors in App.tsx
 // export default compose(
@@ -142,4 +140,4 @@ export class HomeComp extends PureComponent<Props, State> {
 //   withStyles(styles),
 // )(Home);
 // export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Home));
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(HomeComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(memo(HomeComp)));

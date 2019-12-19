@@ -2,7 +2,7 @@ import { createMuiTheme, CssBaseline } from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { History } from 'history';
-import React, { PureComponent } from 'react';
+import React, { memo } from 'react';
 import { Route, Switch } from 'react-router';
 import { appTheme } from './core/app.theme';
 import Home from './home/Home';
@@ -13,18 +13,16 @@ export interface Props {
   history: History;
 }
 
-export default class App extends PureComponent<Props> {
-  render() {
-    const { history } = this.props;
-    return (
-      <MuiThemeProvider theme={muiTheme}>
-        <CssBaseline />
-        <ConnectedRouter history={history}>
-          <Switch>
-            <Route exact path="/" component={Home} />
-          </Switch>
-        </ConnectedRouter>
-      </MuiThemeProvider>
-    );
-  }
-}
+const App: React.FC<Props> = ({ history }: Props) => {
+  return (
+    <MuiThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      <ConnectedRouter history={history}>
+        <Switch>
+          <Route exact path="/" component={Home} />
+        </Switch>
+      </ConnectedRouter>
+    </MuiThemeProvider>
+  );
+};
+export default memo(App);
