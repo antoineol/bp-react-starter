@@ -21,7 +21,8 @@ export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> =
  * @param element element to click
  */
 export function clickElt(element: Document | Element | Window) {
-  fireEvent.click(element, { button: 0 });
+  const leftClick = { button: 0 };
+  fireEvent.click(element, leftClick);
 }
 
 /**
