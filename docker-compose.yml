@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:10.6-alpine
+    container_name: db
+    environment:
+      # Credentials must differ from the main database in order to avoid Programming by Coincidence
+      # https://pragprog.com/the-pragmatic-programmer/extracts/coincidence
+      - POSTGRES_DB=seed
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user
+    ports:
+      - '5432:5432'
+  pgadmin:
+    image: dpage/pgadmin4:4.14
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-antoine_ol@earlymetrics.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-postgres}
+    ports:
+      - "5400:80"
+    # Tried to predefine the DB server, which didn't work well on Windows
+    # https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+#    volumes:
+#      - "./utils/pgadmin-servers.json:/servers.json"
