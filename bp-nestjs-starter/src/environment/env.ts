@@ -14,4 +14,6 @@ export const env = {
   allowedHosts: process.env.ALLOWED_HOST,
   airTableApiKey: process.env.AIRTABLE_API_KEY,
   secretKey: process.env.SECRET_KEY,
+  googleClientID: process.env.GOOGLE_CLIENT_ID,
+  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
 };
