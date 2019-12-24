@@ -13,7 +13,7 @@ export class AppController {
   }
 
   @Get()
-  isAlive(): string {
+  isAlive() {
     return this.appService.isAlive();
   }
 

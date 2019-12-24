@@ -1,22 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { testGet } from './test/test.utils';
 
 describe('AppController', () => {
-  let appController: AppController;
-
-  beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
-    }).compile();
-
-    appController = app.get<AppController>(AppController);
-  });
-
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.isAlive()).toBe('Hello World!');
-    });
+  it('/ should return isAlive', async () => {
+    const { req } = await testGet('/');
+    return req
+      .expect(200)
+      .expect({ isAlive: true });
   });
 });

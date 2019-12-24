@@ -18,6 +18,7 @@
       }
     ],
     "no-shadowed-variable": false,
-    "no-empty": false
+    "no-empty": false,
+    "function-name": false
   }
 }

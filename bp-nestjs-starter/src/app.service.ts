@@ -11,8 +11,8 @@ export class AppService {
   ) {
   }
 
-  isAlive(): string {
-    return 'I\'m alive!';
+  isAlive(): { isAlive: true } {
+    return { isAlive: true };
   }
 
   async testDb(): Promise<User> {

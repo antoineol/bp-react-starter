@@ -5,18 +5,17 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "start": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
+    "start": "ts-node-dev --no-deps --transpile-only --ignore-watch node_modules src/main.ts",
     "start:once": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
     "start:prod": "node dist/main.js",
+    "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "up": "docker-compose up -d"
   },
   "dependencies": {
@@ -56,6 +55,7 @@
     "supertest": "4.0.2",
     "ts-jest": "24.0.2",
     "ts-node": "8.1.0",
+    "ts-node-dev": "^1.0.0-pre.44",
     "tsc-watch": "2.2.1",
     "tsconfig-paths": "3.8.0",
     "tslint": "5.16.0",
@@ -67,12 +67,15 @@
       "json",
       "ts"
     ],
-    "rootDir": "test",
+    "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/testSetup.ts"
+    ]
   }
 }

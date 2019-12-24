@@ -1,8 +1,3 @@
-html {
-  font-size: calc(10px + 2vmin);
-}
-
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

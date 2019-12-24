@@ -1,6 +1,7 @@
 import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
+import { Server } from 'http';
 import { AppModule } from './app.module';
 import { appConfig } from './config/app.config';
 import { EntityNotFoundFilter } from './core/exception/entity-not-found.filter';
@@ -11,7 +12,7 @@ import session = require('express-session');
 const port = env.port;
 const logger = new Logger('main');
 
-async function bootstrap(): Promise<INestApplication> {
+export async function initApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
 
   if (env.allowedHosts) {
@@ -28,9 +29,12 @@ async function bootstrap(): Promise<INestApplication> {
 
   app.useGlobalFilters(new EntityNotFoundFilter());
   app.useGlobalFilters(new QueryFailedFilter());
-
-  await app.listen(port);
   return app;
+}
+
+async function bootstrap(): Promise<Server> {
+  const app = await initApp();
+  return app.listen(port);
 }
 
 bootstrap().then(() => {

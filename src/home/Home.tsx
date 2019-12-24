@@ -24,6 +24,7 @@ import {
 } from './count.service';
 import logo from './logo.svg';
 import SecretArea from './secret/SecretArea';
+import { GoogleSignIn } from './signin/GoogleSignIn';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
 // hope to have a fix in TypeScript 3.3. Issues to follow up:
@@ -100,6 +101,7 @@ const HomeComp: React.FC<Props> = ({ classes, count, loading, dispatch }: Props)
   const c = count;
   return (
     <div className={classes.root}>
+      <GoogleSignIn />
       <img src={logo} className={classes.logo} alt="logo" />
       <Typography variant="body1">
         Edit <code>src/home/Home.tsx</code> and save to reload.
