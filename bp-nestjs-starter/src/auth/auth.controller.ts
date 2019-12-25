@@ -1,7 +1,10 @@
-import { Body, Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { Profile } from 'passport-google-oauth20';
+import { appConfig } from '../common/app.config';
+import { Resource } from '../common/resource.decorator';
+import { authEndHtml } from './auth-end';
 import { AuthService } from './auth.service';
 
 interface ReqUser {
@@ -15,38 +18,47 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('google'))
+  @Resource()
   @Get('google/signin')
-  async signIn(@Req() req) {
+  signIn(@Req() req) {
     return req.user;
   }
 
   @UseGuards(AuthGuard('google'))
+  @Resource()
   @Get('google/callback')
-  async callbackPost(@Body() body: any, @Req() req, @Res() res: Response): Promise<Response> {
-    const { accessToken, profile }: ReqUser = req.user;
+  callbackPost(@Body() body: any, @Req() req, @Res() res: Response) {
+    const { accessToken }: ReqUser = req.user;
     const cookies = this.authService.makeJwtCookies(accessToken);
     for (const cookie of cookies) {
       res.cookie(cookie.name, cookie.value, cookie.options);
     }
-    return res.json({ expiresIn: cookies[0].options.maxAge, profile });
+    res.set('Content-Type', 'text/html');
+    res.send(Buffer.from(authEndHtml));
   }
 
-  @UseGuards()
-  @Get('google/groups')
-  async userGroups() {
-    return { group: true };
+  // @UseGuards()
+  // @Get('google/groups')
+  // userGroups() {
+  //   return { group: true };
+  // }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('refresh')
+  async refreshJwt(@Req() req: Request, @Res() res: Response) {
+    const { email, name, locale, hd, sub: subject } = req.user; // jwt
+    const accessToken = this.authService.createJwt({ email, name, locale, hd, subject });
+    const cookies = this.authService.makeJwtCookies(accessToken);
+    for (const cookie of cookies) {
+      res.cookie(cookie.name, cookie.value, cookie.options);
+    }
+    return res.status(200).json({ refreshed: true });
   }
 
-  // @Post('jwt/refresh')
-  // async refreshJwt(@Req() req: Request): Promise<{ access: string }> {
-  //   const access = await this.authService.checkRefreshToken(req.cookies[REFRESH_TOKEN] as string);
-  //
-  //   return { access };
-  // }
-  //
-  // @Post('jwt/logout')
-  // async logout(@Res() res: Response): Promise<Response> {
-  //   res.clearCookie(REFRESH_TOKEN);
-  //   return res.sendStatus(200);
-  // }
+  @Post('signout')
+  async logout(@Res() res: Response): Promise<Response> {
+    res.clearCookie(appConfig.jwtPayloadCookieName);
+    res.clearCookie(appConfig.jwtSignatureCookieName);
+    return res.status(200).json({ signedOut: true });
+  }
 }

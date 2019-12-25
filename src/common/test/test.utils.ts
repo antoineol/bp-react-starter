@@ -1,12 +1,29 @@
 import { fireEvent, render } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
 import App from '../../App';
+import { AUTH_REDUCER } from '../../auth/auth.service';
 import { makeApp } from '../../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from '../app.models';
+import * as featuresService from '../services/features.service';
 
 // Default HTTP mocks. Can be overridden in each test.
 mockApiGet(() => ({}));
 mockApiPost(() => ({ success: true }));
+
+// All features are enabled in test environment
+(featuresService as any).useFeatures = () => ({ get: () => true });
+// featuresSaga early mock is located in src/setupTests.ts
+
+export const signedInStore: Partial<AppStoreDirectModel> = {
+  [AUTH_REDUCER]: {
+    jwt: 'fake jwt',
+  },
+};
+
+export async function renderTestAppSignedIn(initialStore: Partial<AppStoreDirectModel> = {},
+                                            initialLocalStorage: LocalStorageModel = {}) {
+  return renderTestApp({ ...initialStore, ...signedInStore }, initialLocalStorage);
+}
 
 export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},
                                     initialLocalStorage: LocalStorageModel = {}) {

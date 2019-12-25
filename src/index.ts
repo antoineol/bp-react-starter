@@ -8,10 +8,9 @@ import 'react-app-polyfill/stable';
 // react-app-polyfill and polyfill.io.
 import { render } from 'react-snapshot';
 import App from './App';
-import { useHotModuleReplacement } from './common/app.config';
+import { appConfig } from './common/app.config';
 import { makeApp } from './core/_bootstrap/core.utils';
 import { unregister } from './core/_bootstrap/serviceWorker';
-import './index.css';
 
 // Init the app.
 const rootElt = document.getElementById('root');
@@ -20,7 +19,7 @@ renderApp(App);
 
 // Hot Module Replacement (HMR) to update the app content while developing without refreshing the
 // whole Web page
-if (useHotModuleReplacement && module.hot) {
+if (appConfig.useHotModuleReplacement && module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default;
     renderApp(NextApp);
