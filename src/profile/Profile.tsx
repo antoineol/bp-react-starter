@@ -9,7 +9,7 @@ function Profile() {
   const loading = useSelector(selectLoadingProfile);
   useEffect(() => {
     dispatch(ProfileAT.Load);
-  }, []);
+  }, [dispatch]);
 
   return <div>Profile: {loading ? 'loading...' : JSON.stringify(profile)}</div>;
 }

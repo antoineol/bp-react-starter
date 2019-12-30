@@ -11,6 +11,7 @@
     "test": "react-scripts test",
     "serve": "serve -s build",
     "upgr": "yarn upgrade-interactive --latest",
+    "up": "docker-compose up -d",
     "________________ implementation details ________________": "",
     "eject": "react-scripts eject",
     "build": "react-scripts build && react-snapshot"

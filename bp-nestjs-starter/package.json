@@ -14,7 +14,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "up": "docker-compose up -d"
+    "up": "cd .. && yarn up"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",
@@ -26,6 +26,7 @@
     "@nestjsx/crud": "^4.3.0",
     "@nestjsx/crud-typeorm": "^4.3.0",
     "@types/passport-google-oauth20": "^2.0.3",
+    "axios": "^0.19.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
     "cookie-parser": "^1.4.4",

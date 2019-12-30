@@ -114,11 +114,11 @@ export async function httpPost<T>(url: string, body?: any,
   return httpReq(config, url, config => axios.post<T>(url, body, config));
 }
 
-export async function httpReq<T>(config: AxiosRequestConfig | undefined,
+async function httpReq<T>(config: AxiosRequestConfig | undefined,
                                  url: string,
                                  sendRequest: (config: AxiosRequestConfig) => Promise<AxiosResponse<T>>): Promise<T> {
   const conf = extendConfig(config);
-  let resp: AxiosResponse<T> | undefined = undefined;
+  let resp: AxiosResponse<T> | undefined;
   try {
     resp = await sendRequest(conf);
   } catch (e) {

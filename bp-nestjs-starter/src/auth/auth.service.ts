@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CookieOptions } from 'express-serve-static-core';
 import * as moment from 'moment';
 import { Repository } from 'typeorm';
 import { appConfig } from '../common/app.config';
+import { flat, httpGet } from '../common/app.utils';
 import { env } from '../environment/env';
 import { User } from '../user/user.entity';
 
@@ -25,8 +26,14 @@ export class AuthService {
     });
   }
 
-  async validateGoogleUser(accessToken: string): Promise<void> {
+  async validateGoogleUser(accessToken: string, email: string): Promise<void> {
     // Check that the user belongs to the groups whitelist
+    const groups: GoogleGroup[] = await Promise.all(appConfig.authorizedGoogleGroups
+      .map(groupEmail => fetchGoogleGroup(groupEmail, accessToken)));
+    const members = flat(groups.map(group => group.members));
+    if (!members.find((member) => member.email === email)) {
+      throw new ForbiddenException();
+    }
   }
 
   makeJwtCookies(jwt: string): Array<{ name: string, value: string, options: CookieOptions }> {
@@ -57,4 +64,28 @@ export class AuthService {
     const jwtSignature = jwt.substr(i + 1);
     return { jwtHeaderAndPayload, jwtSignature };
   }
+}
+
+interface GoogleGroupMember {
+  kind: string;
+  etag: string;
+  id: string;
+  email: string;
+  role: 'MEMBER' | 'OWNER';
+  type: 'USER' | 'GROUP';
+  status: 'ACTIVE' | 'SUSPENDED';
+}
+
+interface GoogleGroup {
+  kind: string;
+  etag: string;
+  members: GoogleGroupMember[];
+}
+
+function fetchGoogleGroup(email: string, accessToken: string): Promise<GoogleGroup> {
+  const url = `https://www.googleapis.com/admin/directory/v1/groups/${encodeURIComponent(email)}/members`;
+  return httpGet(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    params: { includeDerivedMembership: true },
+  });
 }

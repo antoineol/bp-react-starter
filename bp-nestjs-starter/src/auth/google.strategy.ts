@@ -26,16 +26,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       clientID: env.googleClientID,
       clientSecret: env.googleClientSecret,
       callbackURL: `${env.publicUrl}/auth/google/callback`,
-      scope: ['email', 'profile', readUserGroupsScope],
+      scope: ['openid', 'email', 'profile', readUserGroupsScope],
       state: true,
     } as StrategyOptions);
   }
 
   async validate(googleAccessToken: string, noRefreshToken: string, profile: Profile) {
-    await this.authService.validateGoogleUser(googleAccessToken);
+    const { email, name, locale, hd }: GoogleJwt = profile._json;
+    await this.authService.validateGoogleUser(googleAccessToken, email);
     // The Google access token should remain private since it gives access
     // to sensitive admin APIs like Directory API.
-    const { email, name, locale, hd }: GoogleJwt = profile._json;
     const subject = profile.id;
     const accessToken = this.authService.createJwt({ email, name, locale, hd, subject });
     return { accessToken, profile };
