@@ -1,7 +1,7 @@
 //                  1 m  15 m
 const jwtLifeTime = 60 * 15; // seconds
 export const appConfig = {
-  localhostLatency: 500, // ms
+  localhostLatency: 400, // ms
   authorizedGoogleGroups: ['team@earlymetrics.com'],
   authEndMessage: 'signInFinished',
   jwtLifeTime,

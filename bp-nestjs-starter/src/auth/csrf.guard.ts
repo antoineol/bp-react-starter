@@ -5,8 +5,7 @@ import { appConfig } from '../common/app.config';
 
 @Injectable()
 export class CsrfGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {
-  }
+  private readonly reflector: Reflector = new Reflector();
 
   canActivate(context: ExecutionContext): boolean {
     const isResource: boolean = this.reflector.get('isResource', context.getHandler());

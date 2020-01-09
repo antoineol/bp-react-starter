@@ -37,12 +37,6 @@ export class AuthController {
     res.send(Buffer.from(authEndHtml));
   }
 
-  // @UseGuards()
-  // @Get('google/groups')
-  // userGroups() {
-  //   return { group: true };
-  // }
-
   @UseGuards(AuthGuard('jwt'))
   @Post('refresh')
   async refreshJwt(@Req() req: Request, @Res() res: Response) {
