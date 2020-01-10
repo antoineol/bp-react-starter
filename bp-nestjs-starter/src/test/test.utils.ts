@@ -92,6 +92,10 @@ async function createDb() {
     }
     await client.end();
   } catch (e) {
+    if (e && e.message && e.message.includes('ECONNREFUSED')) {
+      throw new Error(`Could not connect to the database. It is probably not started or the connection string \
+is wrong in \`TYPEORM_URL\` environment variable. Error: ${e.message}`);
+    }
     logger.error('An error occurred when creating the database:', e);
     throw e;
   }
