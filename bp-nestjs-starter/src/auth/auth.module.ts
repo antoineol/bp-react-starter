@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { appConfig } from '../config/app.config';
+import { appConfig } from '../common/app.config';
 import { env } from '../environment/env';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
@@ -13,7 +13,6 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [
     PassportModule.register({
       defaultStrategy: 'google',
-      // session: true, // required for state?
     }),
     JwtModule.register({
       // May be replaced with PEM to be safer in production

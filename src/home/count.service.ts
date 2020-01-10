@@ -1,31 +1,32 @@
 import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { createSelector } from 'reselect';
-import { useRealWebService } from '../common/app.config';
-import { AppStore, StoreOf } from '../common/app.models';
-import { apiGet } from '../common/app.utils';
-import { handleError } from '../common/error.service';
+import { call, select, takeLatest } from 'redux-saga/effects';
+import { appConfig } from '../common/app.config';
+import { StoreOf } from '../common/app.models';
+import {
+  dispatchSaga,
+  dispatchSagaErr,
+  httpGet,
+  selectState,
+  SimpleAction,
+} from '../common/app.utils';
 
 // Model
 
-export interface Counter {
+// To add to src/common/app.models.ts
+export interface CountModel {
+  loading?: boolean;
+  error?: any;
   count: number;
 }
 
-export interface CounterModel {
-  counter: Counter;
-  loading?: boolean;
-  error?: any | false;
-}
+type CountStore = StoreOf<CountModel>;
 
-export type CounterStore = StoreOf<CounterModel>;
-
-export const COUNTER_REDUCER = 'counter';
+export const COUNT_REDUCER = 'count';
 
 // Actions
 
-export enum CountActionTypes {
+export enum CountAT {
   Increment = 'Increment',
   IncrementSuccess = 'IncrementSuccess',
   IncrementError = 'IncrementError',
@@ -33,53 +34,12 @@ export enum CountActionTypes {
   DoubleCount = 'DoubleCount',
 }
 
-export interface IncrementAction {
-  type: CountActionTypes.Increment;
-}
-
-export interface IncrementSuccessAction {
-  type: CountActionTypes.IncrementSuccess;
-  count: number;
-}
-
-export interface IncrementErrorAction {
-  type: CountActionTypes.IncrementError;
-  error: any;
-}
-
-export interface UpdateAction {
-  type: CountActionTypes.UpdateCount;
-  count: number;
-}
-
-export interface DoubleCountAction {
-  type: CountActionTypes.DoubleCount;
-}
-
-export type CountActions =
-  IncrementAction
-  | UpdateAction
-  | IncrementSuccessAction
-  | IncrementErrorAction
-  | DoubleCountAction;
+type CountAction = SimpleAction<CountAT>;
 
 // Selectors
 
-function getCountState(state: AppStore): CounterStore {
-  return state.get(COUNTER_REDUCER);
-}
-
-export const selectCount = createSelector(
-  getCountState,
-  countState => countState.get('counter').get('count'),
-);
-
-// toJS
-
-export const selectIncrementLoading = createSelector(
-  getCountState,
-  countState => countState.get('loading'),
-);
+export const selectCount = selectState(COUNT_REDUCER, 'count');
+export const selectIncrementLoading = selectState(COUNT_REDUCER, 'loading');
 
 // Saga
 
@@ -89,66 +49,57 @@ export interface TodoItem {
 }
 
 function* incrementSaga() {
-  yield takeLatest(CountActionTypes.Increment, function* () {
+  yield takeLatest(CountAT.Increment, function* () {
     try {
       const oldCount: number = yield select(selectCount);
 
       let count: number;
-      if (useRealWebService) {
+      if (appConfig.useRealWebService) {
         // Let's pretend we need to get an id from remote to compute the next count
-        const [{ id, title }]: TodoItem[]
-          = yield call(apiGet, `/todos`, { params: { id: oldCount } });
-        console.log(`Title ${id}:`, title);
+        const [{ id }]: TodoItem[]
+          = yield call(httpGet, `https://jsonplaceholder.typicode.com/todos`,
+          { params: { id: oldCount } });
         count = id;
       } else {
         count = oldCount;
       }
 
-      const successAction: IncrementSuccessAction = {
-        count,
-        type: CountActionTypes.IncrementSuccess,
-      };
-      yield put(successAction);
+      yield dispatchSaga(CountAT.IncrementSuccess, count);
     } catch (err) {
-      const errorAction: IncrementErrorAction = {
-        type: CountActionTypes.IncrementError,
-        error: err,
-      };
-      yield put(errorAction);
-      handleError(err);
+      yield dispatchSagaErr(CountAT.IncrementError, err);
     }
   });
 }
 
-export const counterSagas = [
+// To add to src/core/app.sagas.ts
+export const countSagas = [
   incrementSaga,
 ];
 
 // Reducer
 
-const initialState: CounterStore = fromJS({ counter: { count: 1 } } as CounterModel);
+const initialState: CountStore = fromJS({ count: 1 } as CountModel);
 
-export const counterReducer: Reducer<CounterStore, CountActions> = (state: CounterStore = initialState,
-                                                                    action: CountActions) => {
+// To add to src/core/app.reducers.ts
+export const countReducer: Reducer<CountStore, CountAction> = (state = initialState,
+                                                               action) => {
   switch (action.type) {
-    case CountActionTypes.Increment:
+    case CountAT.Increment:
       return state
         .set('loading', true)
-        .set('error', false);
-    case CountActionTypes.IncrementSuccess:
+        .remove('error');
+    case CountAT.IncrementSuccess:
       return state
         .set('loading', false)
-        .set('counter', fromJS({ count: action.count + 1 } as Counter));
-    case CountActionTypes.IncrementError:
+        .set('count', action.payload + 1);
+    case CountAT.IncrementError:
       return state
         .set('loading', false)
-        .set('error', action.error);
-    case CountActionTypes.UpdateCount:
-      return state
-        .set('counter', fromJS({ count: action.count } as Counter));
-    case CountActionTypes.DoubleCount:
-      return state
-        .set('counter', fromJS({ count: state.get('counter').get('count') * 2 } as Counter));
+        .set('error', action.payload);
+    case CountAT.UpdateCount:
+      return state.set('count', action.payload);
+    case CountAT.DoubleCount:
+      return state.set('count', state.get('count') * 2);
     default:
       return state;
   }

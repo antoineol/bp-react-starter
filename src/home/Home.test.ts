@@ -4,13 +4,13 @@ import {
   changeInput,
   clickElt,
   mockApiGet,
-  renderTestApp,
+  renderTestAppSignedIn,
   submitInput,
 } from '../common/test/test.utils';
 import { TodoItem } from './count.service';
 
 it('should display the home page by default and with / URL', async () => {
-  const { getByText, getByRole, queryByText, getByLabelText } = await renderTestApp();
+  const { getByText, queryByText, getByLabelText } = await renderTestAppSignedIn();
   // `/` URL renders the home page
   // store.dispatch(push('/'));
   // Alternatively: click a link to navigate:
@@ -19,7 +19,7 @@ it('should display the home page by default and with / URL', async () => {
   // The home page is rendered by default
   expect(getByText(/save to reload/i)).toBeInTheDocument();
   // The button is initialized with count 1
-  expect(getByRole('button')).toHaveTextContent('Fetch n°1');
+  expect(getByText(/Fetch/)).toHaveTextContent('Fetch n°1');
   // The secret is hidden by default
   expect(queryByText('Voici le secret tant attendu !')).not.toBeInTheDocument();
   // Clicking the radio button shows the secret. Set 'secret' radio to 'Show'.
@@ -32,7 +32,7 @@ describe('Webservice interactions', () => {
   it('should increment the count by 1 when clicking its button', async () => {
     const apiMock = mockWebservice(); // Mock HTTP requests
     const expectedRequestParams = { id: 1 };
-    const { getByText, findByText } = await renderTestApp();
+    const { getByText, findByText } = await renderTestAppSignedIn();
     const btn = getByText('Fetch n°1');
     clickElt(btn);
     await findByText('Fetch n°2'); // Wait for the button label to update to this value
@@ -44,8 +44,8 @@ describe('Webservice interactions', () => {
 
   it('should double the count when submitting the form (enter)', async () => {
     const apiMock = mockWebservice(); // Mock HTTP requests
-    const { getByRole, getByLabelText } = await renderTestApp();
-    const btn = getByRole('button');
+    const { getByText, getByLabelText } = await renderTestAppSignedIn();
+    const btn = getByText(/Fetch/);
     const input = getByLabelText('Count');
     changeInput(input, '12');
     expect(btn).toHaveTextContent('Fetch n°12');

@@ -21,6 +21,7 @@ export const env = {
   isStaging,
   isProd,
   apiPath: processEnv.REACT_APP_API_PATH,
+  publicOrigin: processEnv.REACT_APP_PUBLIC_ORIGIN,
   isNodeProduction: processEnv.NODE_ENV === 'production',
   isJest: processEnv.JEST_WORKER_ID !== undefined,
 };

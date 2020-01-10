@@ -141,7 +141,7 @@ Pour les tests unitaires avec des snapshots.
 ### Variables d’environnement
 
 - `yarn add -DE env-cmd`
-- Copier `.env`, `.env.dev`, `.env.staging`, `src/environment/env.tsx`
+- Copier `.env`, `.env.dev`, `.env.staging`, `src/environment/env.ts`
 - Mettre à jour les scripts npm :
 
 ```

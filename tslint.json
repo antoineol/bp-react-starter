@@ -9,7 +9,10 @@
     ]
   },
   "rules": {
-    "semicolon": false,
+    "semicolon": [
+      true,
+      "always"
+    ],
     "trailing-comma": [
       true,
       {
@@ -19,6 +22,7 @@
     ],
     "no-shadowed-variable": false,
     "no-empty": false,
-    "function-name": false
+    "function-name": false,
+    "no-unnecessary-initializer": true
   }
 }

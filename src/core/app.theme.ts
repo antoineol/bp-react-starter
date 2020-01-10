@@ -9,34 +9,35 @@ import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import 'typeface-roboto';
 
 export const appTheme: ThemeOptions = {
-  // typography: {
-  //   button: {
-  //     textTransform: 'none',
-  //   },
-  //   // fontSize: 24, // Instead, this example uses a dynamic font size in index.css
-  // },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    //   // fontSize: 24,
+  },
   palette: {
     type: 'dark',
-  //   background: {
-  //     default: '#282c34',
-  //   },
-  //   primary: {
-  //     main: '#61dafb',
-  //   },
-  // },
-  // overrides: {
-  //   MuiTypography: {
-  //     body1: {
-  //       margin: '1em 0',
-  //     },
-  //   },
-  //   MuiButton: {
-  //     text: {
-  //       textDecoration: 'underline',
-  //       '&:hover': {
-  //         textDecoration: 'underline',
-  //       },
-  //     },
-  //   },
+    //   background: {
+    //     default: '#282c34',
+    //   },
+    //   primary: {
+    //     main: '#61dafb',
+    //   },
+    // },
+    // overrides: {
+    //   MuiTypography: {
+    //     body1: {
+    //       margin: '1em 0',
+    //     },
+    //   },
   },
 };

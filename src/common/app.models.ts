@@ -1,8 +1,19 @@
+import { RouterRootState } from 'connected-react-router';
 import { RouterState } from 'connected-react-router/immutable';
 import { Record } from 'immutable';
-import { COUNTER_REDUCER, CounterModel } from '../home/count.service';
+import { AUTH_REDUCER, AuthModel } from '../auth/auth.service';
+import { COUNT_REDUCER, CountModel } from '../home/count.service';
 import { SECRET_REDUCER, SecretModel } from '../home/secret/secret.service';
-import { ROUTER_REDUCER } from './routes.service';
+import { PROFILE_REDUCER, ProfileModel } from '../profile/profile.service';
+import { FEATURES_REDUCER, FeaturesModel } from './services/features.service';
+
+export interface AppStoreDirectModel extends RouterRootState {
+  [COUNT_REDUCER]: CountModel;
+  [SECRET_REDUCER]: SecretModel;
+  [AUTH_REDUCER]: AuthModel;
+  [FEATURES_REDUCER]: FeaturesModel;
+  [PROFILE_REDUCER]: ProfileModel;
+}
 
 export type Primitive = string | number | boolean | symbol | undefined | null;
 export type ImmutableEntry<T> = Record<T> | StoreOf<T>;
@@ -31,15 +42,9 @@ export interface StoreOf<T> {
   // are not suitable to Redux store types, so we improve them here
 }
 
-export interface AppStoreDirectModel {
-  [ROUTER_REDUCER]: RouterState;
-  [COUNTER_REDUCER]: CounterModel;
-  [SECRET_REDUCER]: SecretModel;
-}
-
 export type AppStoreModel = {
   [K in keyof AppStoreDirectModel]:
   AppStoreDirectModel[K] extends RouterState ? AppStoreDirectModel[K] : StoreOf<AppStoreDirectModel[K]>
-}
+};
 
 export type AppStore = StoreOf<AppStoreModel>;

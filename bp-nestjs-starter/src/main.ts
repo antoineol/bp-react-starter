@@ -1,36 +1,10 @@
-import { INestApplication, Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import * as cookieParser from 'cookie-parser';
+import { Logger } from '@nestjs/common';
 import { Server } from 'http';
-import { AppModule } from './app.module';
-import { appConfig } from './config/app.config';
-import { EntityNotFoundFilter } from './core/exception/entity-not-found.filter';
-import { QueryFailedFilter } from './core/exception/query-failed.filter';
+import { initApp } from './app';
 import { env } from './environment/env';
-import session = require('express-session');
 
 const port = env.port;
 const logger = new Logger('main');
-
-export async function initApp(): Promise<INestApplication> {
-  const app = await NestFactory.create(AppModule);
-
-  if (env.allowedHosts) {
-    app.enableCors({ credentials: true, origin: env.allowedHosts });
-  }
-
-  app.use(session({
-    secret: env.secretKey,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: env.isProduction, maxAge: appConfig.jwtLifeTime, sameSite: true },
-  }));
-  app.use(cookieParser(env.secretKey));
-
-  app.useGlobalFilters(new EntityNotFoundFilter());
-  app.useGlobalFilters(new QueryFailedFilter());
-  return app;
-}
 
 async function bootstrap(): Promise<Server> {
   const app = await initApp();
