@@ -42,6 +42,7 @@ interface RequestObj {
 async function initTestApp(): Promise<RequestObj> {
   process.env.TYPEORM_URL = env.typeOrmTestUrl;
   await createDb();
+
   const module: TestingModule = await NestTest.createTestingModule({
     imports: [AppModule],
   }).compile();
@@ -49,9 +50,11 @@ async function initTestApp(): Promise<RequestObj> {
   const app = module.createNestApplication();
   await app.init();
   return { request: supertest(await app.getHttpServer()), app };
-  // Attempt to use express app instance directly, which does not work well. To work better,
-  // the app should be in a separate file from main to NOT bootstrap normally in tests.
-  // return { request: supertest((await initApp()).getHttpServer()) };
+
+  // Attempt to use express app instance directly, which does not work well (controllers are not bound).
+  // const app = await initApp();
+  // await new Promise(resolve => setTimeout(resolve, 10000));
+  // return { request: supertest(app.getHttpServer()), app };
 }
 
 async function testReq(method: string, url: string, body: any,
@@ -69,8 +72,8 @@ async function testReq(method: string, url: string, body: any,
     req = req.send(body);
   }
   req = req
-    .expect('Content-Type', /json/)
-    .expect(exp.status);
+    .expect(exp.status)
+    .expect('Content-Type', /json/);
   return { req };
 }
 
