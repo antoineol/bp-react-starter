@@ -46,7 +46,7 @@ export class AuthService {
     //   server rejects the request)
     const { jwtHeaderAndPayload, jwtSignature } = this.splitJwt(jwt);
     const options = {
-      secure: env.isProduction,
+      secure: !env.isDev,
       sameSite: true,
       maxAge: appConfig.jwtLifeTime * 1000,
     };

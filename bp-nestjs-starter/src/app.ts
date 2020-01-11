@@ -27,7 +27,7 @@ export async function initApp(): Promise<INestApplication> {
     resave: false,
     saveUninitialized: false,
     // sameSite lax is required to make the OAuth2 work with state.
-    cookie: { secure: env.isProduction, maxAge: appConfig.jwtLifeTime * 1000, sameSite: 'lax' },
+    cookie: { secure: !env.isDev, maxAge: appConfig.jwtLifeTime * 1000, sameSite: 'lax' },
   }));
   app.use(cookieParser(env.secretKey));
   // Log incoming requests with the specified format
@@ -35,6 +35,8 @@ export async function initApp(): Promise<INestApplication> {
 
   app.useGlobalFilters(new EntityNotFoundFilter());
   app.useGlobalFilters(new QueryFailedFilter());
-  app.useGlobalGuards(new CsrfGuard());
+  if (!env.isDev) {
+    app.useGlobalGuards(new CsrfGuard());
+  }
   return app;
 }

@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Action } from 'redux';
 import { put, PutEffect } from 'redux-saga/effects';
@@ -40,7 +41,10 @@ export interface SimpleAction<T = string, U = any> extends Action<T> {
 
 export function useAppDispatch() {
   const dispatch = useDispatch();
-  return <T, U>(type: T, payload?: U) => dispatch({ type, payload });
+  return useCallback(
+    <T, U>(type: T, payload?: U) => dispatch({ type, payload }),
+    [dispatch],
+  );
 }
 
 export function dispatch<T, U>(type: T, payload?: U): SimpleAction<T, U> {
