@@ -33,6 +33,9 @@ export class AuthController {
     for (const cookie of cookies) {
       res.cookie(cookie.name, cookie.value, cookie.options);
     }
+    // Session was used for oauth2 state only; destroy it at end of sign in.
+    req.session.destroy();
+    // Respond with an HTML page to close the pop-up
     res.set('Content-Type', 'text/html');
     res.send(Buffer.from(authEndHtml));
   }
