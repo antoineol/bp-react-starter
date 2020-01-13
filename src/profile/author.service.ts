@@ -2,6 +2,7 @@ import { gql } from 'apollo-boost';
 import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
 import { takeLatest } from 'redux-saga/effects';
+import { Author } from '../../bp-nestjs-starter/model/author.model';
 import { StoreOf } from '../common/app.models';
 import {
   apiGql,
@@ -12,19 +13,6 @@ import {
 } from '../common/app.utils';
 
 // Model
-
-export interface Post {
-  id: number;
-  title: string;
-  votes: number;
-}
-
-export interface Author {
-  id: number;
-  firstName: string;
-  lastName: string;
-  posts: Post[];
-}
 
 export interface AuthorsResp {
   authors: Author[];

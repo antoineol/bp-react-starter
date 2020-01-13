@@ -1,8 +1,8 @@
 import { Args, Mutation, Parent, Query, ResolveProperty, Resolver } from '@nestjs/graphql';
 import { Int } from 'type-graphql';
 import { AuthorService } from './author.service';
-import { Author } from './model/author.model';
-import { Post } from './model/post.model';
+import { Author } from '../../model/author.model';
+import { Post } from '../../model/post.model';
 
 @Resolver(of => Author)
 export class AuthorResolver {

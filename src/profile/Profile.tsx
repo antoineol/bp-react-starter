@@ -18,8 +18,6 @@ function Profile() {
   if (authorError || !authors) {
     return <div>{authorError}</div>;
   }
-  // TODO
-  //  Check if model can be shared with api
 
   return <div>
     <ul>
