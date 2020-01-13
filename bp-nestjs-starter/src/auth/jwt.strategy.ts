@@ -26,6 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 
 function cookieExtractor(req: Request): string | null {
-  return req.cookies.jwtSignature ?
+  return req && req.cookies && req.cookies.jwtSignature ?
     `${req.cookies.jwtHeaderPayload}.${req.cookies.jwtSignature}` : null;
 }

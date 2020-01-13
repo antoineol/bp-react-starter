@@ -26,6 +26,13 @@ const authors: Author[] = [
 
 @Injectable()
 export class AuthorService {
+  findAll(id?: number): Author[] {
+    if (!id) {
+      return authors;
+    }
+    return authors.filter(author => author.id === id);
+  }
+
   findOneById(id: number): Author {
     return authors.find(author => author.id === id);
   }

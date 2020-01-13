@@ -1,9 +1,10 @@
 import { RouterRootState } from 'connected-react-router';
 import { RouterState } from 'connected-react-router/immutable';
-import { Record } from 'immutable';
+import { List, Record } from 'immutable';
 import { AUTH_REDUCER, AuthModel } from '../auth/auth.service';
 import { COUNT_REDUCER, CountModel } from '../home/count.service';
 import { SECRET_REDUCER, SecretModel } from '../home/secret/secret.service';
+import { AUTHOR_REDUCER, AuthorModel } from '../profile/author.service';
 import { PROFILE_REDUCER, ProfileModel } from '../profile/profile.service';
 import { FEATURES_REDUCER, FeaturesModel } from './services/features.service';
 
@@ -13,13 +14,14 @@ export interface AppStoreDirectModel extends RouterRootState {
   [AUTH_REDUCER]: AuthModel;
   [FEATURES_REDUCER]: FeaturesModel;
   [PROFILE_REDUCER]: ProfileModel;
+  [AUTHOR_REDUCER]: AuthorModel;
 }
 
 export type Primitive = string | number | boolean | symbol | undefined | null;
 export type ImmutableEntry<T> = Record<T> | StoreOf<T>;
 
-export type StoreEntry<T> = T extends Primitive | ImmutableEntry<any> ? T : Record<T>;
-export type ToStoreEntry<T> = T extends Primitive ? T : Record<T>;
+export type StoreEntry<T> = T extends Primitive | ImmutableEntry<any> ? T : T extends unknown[] ? List<T[number]> : Record<T>;
+export type ToStoreEntry<T> = T extends Primitive ? T : T extends unknown[] ? List<T[number]> : Record<T>;
 
 export interface StoreOf<T> {
   get<U extends keyof T>(key: U): StoreEntry<T[U]>;

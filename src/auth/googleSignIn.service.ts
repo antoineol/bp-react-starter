@@ -3,6 +3,7 @@ import { appConfig } from '../common/app.config';
 import { apiPost, deleteCookie, getCookie } from '../common/app.utils';
 import { handleError } from '../common/services/error.service';
 import { env } from '../environment/env';
+import { signIn } from './auth.service';
 
 type MessageEventHandler = (event: MessageEvent) => void;
 
@@ -100,6 +101,7 @@ async function refreshJwt() {
     scheduleJwtRefresh(jwt);
   } catch (e) {
     handleError(e);
+    signIn().catch(handleError);
   }
 }
 

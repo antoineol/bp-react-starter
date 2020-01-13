@@ -4,8 +4,6 @@ import { Profile, Strategy, StrategyOptions } from 'passport-google-oauth20';
 import { env } from '../environment/env';
 import { AuthService } from './auth.service';
 
-const readUserGroupsScope = 'https://www.googleapis.com/auth/admin.directory.group.readonly';
-
 interface GoogleJwt {
   sub: string;
   name: string;
@@ -22,18 +20,19 @@ interface GoogleJwt {
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
+      // Some of the options are specified in src/auth/auth.module.ts
       passReqToCallback: false, // If true, add req as first parameter of validate()
       clientID: env.googleClientID,
       clientSecret: env.googleClientSecret,
       callbackURL: `${env.publicUrl}/auth/google/callback`,
-      scope: ['openid', 'email', 'profile', readUserGroupsScope],
+      scope: ['openid', 'email', 'profile'],
       state: true,
     } as StrategyOptions);
   }
 
   async validate(googleAccessToken: string, noRefreshToken: string, profile: Profile) {
     const { email, name, locale, hd }: GoogleJwt = profile._json;
-    await this.authService.validateGoogleUser(googleAccessToken, email);
+    await this.authService.validateGoogleUser(email, hd);
     // The Google access token should remain private since it gives access
     // to sensitive admin APIs like Directory API.
     const subject = profile.id;

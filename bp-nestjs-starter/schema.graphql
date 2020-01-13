@@ -21,5 +21,6 @@ type Post {
 }
 
 type Query {
-  author(id: Int!): Author!
+  authors(id: Int): [Author!]!
+  author(id: Int): Author!
 }

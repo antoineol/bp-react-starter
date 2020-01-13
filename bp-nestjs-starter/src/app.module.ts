@@ -13,8 +13,8 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRoot(),
     GraphQLModule.forRoot({
       debug: env.isDev,
-      playground: env.isDev,
-      autoSchemaFile: 'schema.gql',
+      playground: !env.isProd,
+      autoSchemaFile: 'schema.graphql',
       // buildSchemaOptions
     }),
     UserModule,

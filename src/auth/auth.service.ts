@@ -128,16 +128,7 @@ export const authReducer: Reducer<AuthStore, AuthAction> = (state = initialState
 };
 
 export function signIn(): Promise<void> {
-  // TODO
-  //  Generate deferred and its promise, return the promise
-  //  put the deferred in state as indication that there is an auth request
-  //  Update the sign in dialog to read this deferred, include in the condition to show dialog
-  //  End of Google auth, resolve deferred (if defined)
-  //  should be ok
-  //  Should we reject in any case?
-  return new Promise<void>(resolve => {
-    dispatchOther(AuthAT.ShowSignIn, resolve); // Do we need it?
-  });
+  return new Promise(resolve => dispatchOther(AuthAT.ShowSignIn, resolve));
 }
 
 export async function backgroundSignOut(): Promise<void> {

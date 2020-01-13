@@ -1,3 +1,5 @@
+import { DocumentNode } from 'apollo-boost';
+import { OperationVariables } from 'apollo-client';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
@@ -9,6 +11,7 @@ import { getStoreAndHistory } from '../core/app.store';
 import { env } from '../environment/env';
 import { appConfig } from './app.config';
 import { AppStore, AppStoreDirectModel, StoreEntry, StoreOf, ToStoreEntry } from './app.models';
+import { gqlClient } from './graphql.client';
 import { handleError } from './services/error.service';
 
 /**
@@ -91,13 +94,25 @@ export function selectState<T extends keyof AppStoreDirectModel, U extends keyof
 (reducer: T, key: U, transformer?: any): any {
   return createSelector(
     (state: AppStore) => state.get(reducer) as StoreOf<AppStoreDirectModel[T]>,
-    (state) =>
-      (transformer ? transformer(state.get(key)) : state.get(key)),
+    state => transformer ? transformer(state.get(key)) : state.get(key),
   );
 }
 
 /**
- * Sends a GET request to the app API.
+ * Sends a GraphQL request to the app API.
+ * @param query the GraphQL query. Use gql`query { ... }` syntax to build it.
+ */
+export async function apiGql<T = any, TVariables = OperationVariables>(
+  query: DocumentNode): Promise<T> {
+  const { data, errors } = await gqlClient.query<T, TVariables>({ query });
+  if (errors) {
+    throw errors;
+  }
+  return data;
+}
+
+/**
+ * Sends a GET request to the app API (REST classic method).
  * @param url API URL
  * @param config eventual Axios config, e.g. to add custom HTTP headers
  */
