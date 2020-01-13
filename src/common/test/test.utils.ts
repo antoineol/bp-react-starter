@@ -5,6 +5,7 @@ import { AUTH_REDUCER } from '../../auth/auth.service';
 import { makeApp } from '../../core/_bootstrap/core.utils';
 import { AppStoreDirectModel } from '../app.models';
 import * as featuresService from '../services/features.service';
+import * as initialStoreModule from '../../core/_bootstrap/initialStore';
 
 // Default HTTP mocks. Can be overridden in each test.
 mockApiGet(() => ({}));
@@ -14,21 +15,19 @@ mockApiPost(() => ({ success: true }));
 (featuresService as any).useFeatures = () => ({ get: () => true });
 // featuresSaga early mock is located in src/setupTests.ts
 
-export const signedInStore: Partial<AppStoreDirectModel> = {
-  [AUTH_REDUCER]: {
-    jwt: 'fake jwt',
-  },
-};
-
 export async function renderTestAppSignedIn(initialStore: Partial<AppStoreDirectModel> = {},
-                                            initialLocalStorage: LocalStorageModel = {}) {
+                                            initialLocalStorage: LocalStorageModel = {},
+                                            jwt = 'fake jwt') {
+  const signedInStore: Partial<AppStoreDirectModel> = { [AUTH_REDUCER]: { jwt } };
   return renderTestApp({ ...initialStore, ...signedInStore }, initialLocalStorage);
 }
 
 export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},
                                     initialLocalStorage: LocalStorageModel = {}) {
+  // Mock initial store
+  (initialStoreModule as any).initialStore = initialStore;
   mockLocalStorage(initialLocalStorage);
-  const { app, history, store } = makeApp(App, initialStore);
+  const { app, history, store } = makeApp(App);
   const wrapper = render(app);
   return { history, store, ...wrapper };
 }

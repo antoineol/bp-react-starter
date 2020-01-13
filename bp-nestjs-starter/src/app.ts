@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
@@ -27,14 +27,21 @@ export async function initApp(): Promise<INestApplication> {
     resave: false,
     saveUninitialized: false,
     // sameSite lax is required to make the OAuth2 work with state.
-    cookie: { secure: env.isProduction, maxAge: appConfig.jwtLifeTime * 1000, sameSite: 'lax' },
+    cookie: { secure: !env.isDev, maxAge: appConfig.jwtLifeTime * 1000, sameSite: 'lax' },
   }));
   app.use(cookieParser(env.secretKey));
   // Log incoming requests with the specified format
   app.use(morgan('[:date[iso]] :remote-addr :method :url :status - :response-time ms'));
+  // For validation, we may want to use a toolkit that works both on client-side and server-side
+  // with a validation/data model format shared between the two apps.
+  // It would replace nestjs' embedded validation (from class-validator).
+  // Unless, with realtime, we skip client-side validation...
+  app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalFilters(new EntityNotFoundFilter());
   app.useGlobalFilters(new QueryFailedFilter());
-  app.useGlobalGuards(new CsrfGuard());
+  if (!env.isDev) {
+    app.useGlobalGuards(new CsrfGuard());
+  }
   return app;
 }

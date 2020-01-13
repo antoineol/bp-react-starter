@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
-import { call, takeLatest } from 'redux-saga/effects';
+import { call, takeLatest, select } from 'redux-saga/effects';
+import { createSelector } from 'reselect';
 import { appConfig } from '../common/app.config';
 import { StoreOf } from '../common/app.models';
 import {
@@ -10,6 +11,7 @@ import {
   getCookie,
   selectState,
   SimpleAction,
+  dispatchOther,
 } from '../common/app.utils';
 import { localSignOut, scheduleJwtRefresh, signInWithGoogle } from './googleSignIn.service';
 
@@ -18,6 +20,7 @@ import { localSignOut, scheduleJwtRefresh, signInWithGoogle } from './googleSign
 // To add to src/common/app.models.ts
 export interface AuthModel {
   loading?: boolean;
+  resolve?: () => void;
   error?: any;
   jwt?: string | boolean;
 }
@@ -29,6 +32,7 @@ export const AUTH_REDUCER = 'auth';
 // Actions
 
 export enum AuthAT {
+  ShowSignIn = 'AuthAT_ShowSignIn',
   SignIn = 'AuthAT_SignIn',
   SignInSuccess = 'AuthAT_SignInSuccess',
   SignInError = 'AuthAT_SignInError',
@@ -41,9 +45,12 @@ type AuthAction = SimpleAction<AuthAT>;
 
 // Selectors
 
-// export const selectJwt = selectState(AUTH_REDUCER, 'jwt');
-export const selectIsLoggedIn = selectState(AUTH_REDUCER, 'jwt', jwt => !!jwt);
+const selectHasJwt = selectState(AUTH_REDUCER, 'jwt', jwt => !!jwt);
+const selectResolve = selectState(AUTH_REDUCER, 'resolve');
+export const selectIsLoggedIn = createSelector(selectHasJwt, selectResolve,
+  (hasJwt, resolve) => hasJwt && !resolve);
 export const selectAuthLoading = selectState(AUTH_REDUCER, 'loading');
+export const selectAuthResolve = selectState(AUTH_REDUCER, 'resolve');
 export const selectAuthError = selectState(AUTH_REDUCER, 'error');
 
 // Saga
@@ -52,6 +59,10 @@ function* signInSaga() {
   yield takeLatest(AuthAT.SignIn, function* () {
     try {
       const jwt = yield signInWithGoogle();
+      const resolve = yield select(selectAuthResolve);
+      if (resolve) {
+        resolve();
+      }
       yield dispatchSaga(AuthAT.SignInSuccess, jwt);
     } catch (err) {
       yield dispatchSagaErr(AuthAT.SignInError, err, err.message === 'CANCELED');
@@ -62,7 +73,7 @@ function* signInSaga() {
 function* signOutSaga() {
   yield takeLatest(AuthAT.SignOut, function* () {
     try {
-      yield call(signOut);
+      yield call(remoteSignOut);
       yield dispatchSaga(AuthAT.SignOutSuccess);
     } catch (err) {
       yield dispatchSagaErr(AuthAT.SignOutError, err);
@@ -86,6 +97,8 @@ const initialState: AuthStore = fromJS({ jwt: jwt || false } as AuthModel);
 export const authReducer: Reducer<AuthStore, AuthAction> = (state = initialState,
                                                             action) => {
   switch (action.type) {
+    case AuthAT.ShowSignIn:
+      return state.set('resolve', fromJS(action.payload));
     case AuthAT.SignIn:
     case AuthAT.SignOut:
       return state
@@ -93,22 +106,39 @@ export const authReducer: Reducer<AuthStore, AuthAction> = (state = initialState
         .remove('error');
     case AuthAT.SignInSuccess:
       return state
-        .set('loading', false)
+        .remove('loading')
+        .remove('resolve')
         .set('jwt', fromJS(action.payload));
+    case AuthAT.SignInError:
+      return state
+        .remove('loading')
+        .remove('resolve')
+        .set('error', fromJS(action.payload));
     case AuthAT.SignOutSuccess:
       return state
-        .set('loading', false)
+        .remove('loading')
         .remove('jwt');
-    case AuthAT.SignInError:
     case AuthAT.SignOutError:
       return state
-        .set('loading', false)
+        .remove('loading')
         .set('error', fromJS(action.payload));
     default:
       return state;
   }
 };
 
-export function signOut(): Promise<void> {
+export function signIn(): Promise<void> {
+  return new Promise(resolve => dispatchOther(AuthAT.ShowSignIn, resolve));
+}
+
+export async function backgroundSignOut(): Promise<void> {
+  try {
+    await remoteSignOut();
+  } catch (e) {
+  }
+  localSignOut();
+}
+
+function remoteSignOut(): Promise<void> {
   return apiPost('/auth/signout');
 }

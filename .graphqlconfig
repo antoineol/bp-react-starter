@@ -1,0 +1,4 @@
+{
+  "name": "Foo",
+  "includes": ["src/**", "bp-nestjs-starter/*"]
+}

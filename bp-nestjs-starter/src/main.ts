@@ -12,7 +12,8 @@ async function bootstrap(): Promise<Server> {
 }
 
 bootstrap().then(() => {
-  if (!env.isProduction) {
+  if (env.isDev) {
     logger.log(`Serving the app at http://localhost:${port}`);
   }
-}).catch(err => logger.error(err));
+// tslint:disable-next-line:no-console
+}).catch(err => console.error(err));

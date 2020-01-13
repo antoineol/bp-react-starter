@@ -13,6 +13,10 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [
     PassportModule.register({
       defaultStrategy: 'google',
+      // Only show accounts that match the hosted domain.
+      hd: appConfig.authorizedDomain,
+      // Ensure the user can always select an account when sent to Google.
+      prompt: 'select_account',
     }),
     JwtModule.register({
       // May be replaced with PEM to be safer in production

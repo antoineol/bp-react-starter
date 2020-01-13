@@ -3,7 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
-      <excludeFolder url="file://$MODULE_DIR$/bp-nestjs-starter" />
+      <excludeFolder url="file://$MODULE_DIR$/bp-nestjs-starter/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/bp-nestjs-starter/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/bp-nestjs-starter/src" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/src/resources" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />

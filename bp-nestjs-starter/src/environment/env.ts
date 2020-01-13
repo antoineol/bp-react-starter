@@ -19,14 +19,20 @@ if (!isDev && !isStaging && !isProd) {
 const dev = {
   publicOrigin: 'http://localhost:3000',
   publicUrl: 'http://localhost:3000/api',
+  googleAdminProjectId: 'rating-rocket',
+  googleAdminClientEmail: 'check-group-members@rating-rocket.iam.gserviceaccount.com',
 };
 const staging = {
   publicOrigin: 'http://localhost:3000',
   publicUrl: 'http://localhost:3000/api',
+  googleAdminProjectId: 'rating-rocket',
+  googleAdminClientEmail: 'check-group-members@rating-rocket.iam.gserviceaccount.com',
 };
 const prod = {
   publicOrigin: 'http://localhost:3000',
   publicUrl: 'http://localhost:3000/api',
+  googleAdminProjectId: 'rating-rocket',
+  googleAdminClientEmail: 'check-group-members@rating-rocket.iam.gserviceaccount.com',
 };
 
 const nonConfidentialEnv = isDev ? dev : isStaging ? staging : prod;
@@ -38,13 +44,13 @@ export const env = {
   isProd,
   isJest: process.env.JEST_WORKER_ID !== undefined,
   nodeEnv: process.env.NODE_ENV,
-  isProduction: process.env.NODE_ENV === 'production',
+  isNodeProduction: process.env.NODE_ENV === 'production',
   port: process.env.PORT || 4000,
   allowedHosts: process.env.ALLOWED_HOST,
   typeOrmUrl: process.env.TYPEORM_URL,
   typeOrmTestUrl: process.env.TYPEORM_TEST_URL,
-  airTableApiKey: process.env.AIRTABLE_API_KEY,
   secretKey: process.env.SECRET_KEY,
   googleClientID: process.env.GOOGLE_CLIENT_ID,
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  googleAdminPrivateKey: process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
 };
