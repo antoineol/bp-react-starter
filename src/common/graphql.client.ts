@@ -1,11 +1,11 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-client';
 import { ApolloLink, FetchResult, fromPromise, NextLink, Operation } from 'apollo-link';
 import { setContext } from 'apollo-link-context';
 import { onError } from 'apollo-link-error';
 import { RetryLink } from 'apollo-link-retry';
 import { buildDelayFunction } from 'apollo-link-retry/lib/delayFunction';
 import { WebSocketLink } from 'apollo-link-ws';
+import { ApolloOfflineClient } from 'offix-client';
 import Observable from 'zen-observable-ts';
 import { addJwtToHeaders, showSignIn } from '../auth/auth.service';
 import { env } from '../environment/env';
@@ -61,7 +61,7 @@ const wsLink = new WebSocketLink({
 const cache = new InMemoryCache({
   freezeResults: true,
 });
-const gqlClient = new ApolloClient({
+const gqlClient = new ApolloOfflineClient({
   cache,
   link: ApolloLink.from([retryLink, errorLink, authLink, wsLink]),
   assumeImmutableResults: true,

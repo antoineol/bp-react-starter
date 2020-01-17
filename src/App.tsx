@@ -2,13 +2,13 @@ import { createMuiTheme, CssBaseline, responsiveFontSizes } from '@material-ui/c
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { History } from 'history';
 import React, { FC, Fragment, memo } from 'react';
-import { ApolloProvider } from 'react-apollo';
 import { Route, Router, Switch } from 'react-router';
 import SignInDialog from './auth/SignInDialog';
 import Header from './common/components/Header';
 import Layout from './common/components/Layout';
 import { getGqlClient } from './common/graphql.client';
 import { handleError } from './common/services/error.service';
+import { ApolloInit } from './core/_bootstrap/ApolloInit';
 import './core/_bootstrap/app.css';
 import { initAppServices } from './core/app.init';
 import { appTheme } from './core/app.theme';
@@ -32,7 +32,7 @@ const App: FC<Props> = ({ history }) => {
       {/* A few CSS defaults provided by Material UI */}
       <CssBaseline />
       {/* Initializes Apollo GraphQL client for child components */}
-      <ApolloProvider client={gqlClient}>
+      <ApolloInit client={gqlClient}>
         {/* Initializes routing for child components */}
         <Router history={history}>
           <Fragment>
@@ -50,7 +50,7 @@ const App: FC<Props> = ({ history }) => {
             </Layout>
           </Fragment>
         </Router>
-      </ApolloProvider>
+      </ApolloInit>
     </MuiThemeProvider>
   );
 };

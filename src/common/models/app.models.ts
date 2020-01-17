@@ -1,4 +1,5 @@
 // Add models (interfaces) that are used in more than one feature/module/service
-import { ExecutionResult, MutationFunctionOptions, OperationVariables } from '@apollo/react-common';
+import { OperationVariables } from '@apollo/react-common';
+import { MutationFn } from 'react-offix-hooks/src/useOfflineMutation';
 
-export type Mutator<TData = any, TVariables = OperationVariables> = (options?: MutationFunctionOptions<TData, TVariables>) => Promise<ExecutionResult<TData>>;
+export type Mutator<TData = any, TVariables = OperationVariables> = MutationFn<TData, TVariables>;

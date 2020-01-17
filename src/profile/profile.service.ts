@@ -1,9 +1,11 @@
 import gql from 'graphql-tag';
+import { CacheOperation, createOptimisticResponse } from 'offix-cache';
 import { MouseEvent } from 'react';
 import { Mutation_Root } from '../../hasura/gen/types';
 import { Mutator } from '../common/models/app.models';
 
 export const AUTHORS_SUB = gql`subscription { author { id, name } }`;
+// TODO try to remove returning{}...
 export const ADD_AUTHOR = gql`mutation insert_author($object: author_insert_input! ) {
     insert_author(objects: [$object]) {
         affected_rows
@@ -18,8 +20,23 @@ export const DELETE_AUTHOR = gql`mutation delete_author($id: uuid) {
 export function addAuthor(mutator: Mutator<Mutation_Root>) {
   return async (e: MouseEvent) => {
     const name = pickRandom(names);
+    const variables = { object: { name } };
+    const optimisticResponse = createOptimisticResponse({
+      variables,
+      mutation: ADD_AUTHOR,
+      operationType: CacheOperation.ADD,
+      returnType: 'Author',
+      idField: 'id',
+    });
     return mutator({
-      variables: { object: { name } },
+      variables,
+      optimisticResponse,
+      updateQuery: gql`subscription { author { id, name } }`,
+      // optimisticResponse: undefined,
+      // update: (proxy, mutationResult) => {
+      //   console.log('proxy:', proxy);
+      //   console.log('mutationResult:', mutationResult);
+      // }
     });
   };
 }
