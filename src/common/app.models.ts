@@ -50,3 +50,10 @@ export type AppStoreModel = {
 };
 
 export type AppStore = StoreOf<AppStoreModel>;
+
+export enum JwtFields {
+  jwtNamespace = 'https://hasura.io/jwt/claims',
+  jwtClaimRoles = 'x-hasura-allowed-roles',
+  jwtClaimDefaultRole = 'x-hasura-default-role',
+  jwtClaimUserId = 'x-hasura-user-id',
+}

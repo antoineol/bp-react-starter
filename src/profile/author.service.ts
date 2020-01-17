@@ -1,11 +1,11 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
 import { takeLatest } from 'redux-saga/effects';
-import { Author } from '../../bp-nestjs-starter/model/author.model';
+import { Author, Query_Root } from '../../hasura/gen/types';
 import { StoreOf } from '../common/app.models';
 import {
-  apiGql,
+  apiQuery,
   dispatchSaga,
   dispatchSagaErr,
   selectState,
@@ -13,10 +13,6 @@ import {
 } from '../common/app.utils';
 
 // Model
-
-export interface AuthorsResp {
-  authors: Author[];
-}
 
 // To add to src/common/app.models.ts
 export interface AuthorModel {
@@ -50,8 +46,8 @@ export const selectAuthorError = selectState(AUTHOR_REDUCER, 'error');
 function* loadAuthorsSaga() {
   yield takeLatest(AuthorAT.Load, function* () {
     try {
-      const resp: AuthorsResp = yield apiGql(gql`query { authors { id, firstName } }`);
-      yield dispatchSaga(AuthorAT.LoadSuccess, resp.authors);
+      const resp: Query_Root = yield apiQuery(gql`query { author { id, name } }`);
+      yield dispatchSaga(AuthorAT.LoadSuccess, resp.author);
     } catch (err) {
       yield dispatchSagaErr(AuthorAT.LoadError, err);
     }

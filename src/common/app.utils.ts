@@ -1,11 +1,13 @@
-import { DocumentNode } from 'apollo-boost';
 import { OperationVariables } from 'apollo-client';
+import { Observable } from 'apollo-client/util/Observable';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Action } from 'redux';
 import { put, PutEffect } from 'redux-saga/effects';
 import { createSelector, OutputSelector } from 'reselect';
+import { Query_Root, Subscription_Root } from '../../hasura/gen/types';
 import { backgroundSignOut, signIn } from '../auth/auth.service';
 import { getStoreAndHistory } from '../core/app.store';
 import { env } from '../environment/env';
@@ -102,13 +104,27 @@ export function selectState<T extends keyof AppStoreDirectModel, U extends keyof
  * Sends a GraphQL request to the app API.
  * @param query the GraphQL query. Use gql`query { ... }` syntax to build it.
  */
-export async function apiGql<T = any, TVariables = OperationVariables>(
+export async function apiQuery<T = Query_Root, TVariables = OperationVariables>(
   query: DocumentNode): Promise<T> {
   const { data, errors } = await gqlClient.query<T, TVariables>({ query });
   if (errors) {
     throw errors;
   }
   return data;
+}
+
+export async function apiMutate<T = any, TVariables = OperationVariables>(
+  mutation: DocumentNode, variables?: TVariables): Promise<T | null | undefined> {
+  const { data, errors } = await gqlClient.mutate<T, TVariables>({ mutation, variables });
+  if (errors) {
+    throw errors;
+  }
+  return data;
+}
+
+export function apiSubscribe<T = Subscription_Root, TVariables = OperationVariables>(
+  query: DocumentNode): Observable<T | null | undefined> {
+  return gqlClient.subscribe<T, TVariables>({ query }).map((res => res.data));
 }
 
 /**

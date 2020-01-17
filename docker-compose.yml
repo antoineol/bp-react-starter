@@ -4,20 +4,24 @@ services:
   db:
     image: postgres:10.6-alpine
     container_name: db
-    environment:
-      # Credentials must differ from the main database in order to avoid Programming by Coincidence
-      # https://pragprog.com/the-pragmatic-programmer/extracts/coincidence
-      - POSTGRES_DB=seed
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=user
+    env_file: .env
     ports:
       - '5432:5432'
+  hasura:
+    image: hasura/graphql-engine:v1.0.0.cli-migrations
+    container_name: hasura
+    ports:
+      - '8080:8080'
+    depends_on:
+      - "db"
+    restart: always
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+    env_file: .env
   pgadmin:
-    image: dpage/pgadmin4:4.16
+    image: dpage/pgadmin4:4.17
     container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-antoine_ol@earlymetrics.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-postgres}
+    env_file: .env
     ports:
       - "5400:80"
     # Tried to predefine the DB server, which didn't work well on Windows

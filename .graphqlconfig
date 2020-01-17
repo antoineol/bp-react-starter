@@ -1,4 +1,7 @@
 {
   "name": "Foo",
-  "includes": ["src/**", "bp-nestjs-starter/*"]
+  "includes": [
+    "src/**",
+    "hasura/gen/*"
+  ]
 }

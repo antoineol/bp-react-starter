@@ -45,7 +45,7 @@ export const env = {
   isJest: process.env.JEST_WORKER_ID !== undefined,
   nodeEnv: process.env.NODE_ENV,
   isNodeProduction: process.env.NODE_ENV === 'production',
-  port: process.env.PORT || 4000,
+  port: process.env.PORT || 4141,
   allowedHosts: process.env.ALLOWED_HOST,
   typeOrmUrl: process.env.TYPEORM_URL,
   typeOrmTestUrl: process.env.TYPEORM_TEST_URL,

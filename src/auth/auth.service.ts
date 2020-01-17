@@ -1,18 +1,19 @@
 import { fromJS } from 'immutable';
 import { Reducer } from 'redux';
-import { call, takeLatest, select } from 'redux-saga/effects';
+import { call, select, takeLatest } from 'redux-saga/effects';
 import { createSelector } from 'reselect';
 import { appConfig } from '../common/app.config';
 import { StoreOf } from '../common/app.models';
 import {
   apiPost,
+  dispatchOther,
   dispatchSaga,
   dispatchSagaErr,
   getCookie,
   selectState,
   SimpleAction,
-  dispatchOther,
 } from '../common/app.utils';
+import { resetWsConnection } from '../common/graphql.client';
 import { localSignOut, scheduleJwtRefresh, signInWithGoogle } from './googleSignIn.service';
 
 // Model
@@ -59,6 +60,7 @@ function* signInSaga() {
   yield takeLatest(AuthAT.SignIn, function* () {
     try {
       const jwt = yield signInWithGoogle();
+      resetWsConnection();
       const resolve = yield select(selectAuthResolve);
       if (resolve) {
         resolve();
@@ -78,7 +80,7 @@ function* signOutSaga() {
     } catch (err) {
       yield dispatchSagaErr(AuthAT.SignOutError, err);
     }
-    localSignOut();
+    yield localSignOut();
   });
 }
 
@@ -136,7 +138,22 @@ export async function backgroundSignOut(): Promise<void> {
     await remoteSignOut();
   } catch (e) {
   }
-  localSignOut();
+  await localSignOut();
+}
+
+export function addJwtToHeaders(headers: any) {
+  const jwt = getCurrentJwt();
+  // return the headers to the context so httpLink can read them
+  return !jwt ? headers : {
+    ...headers,
+    authorization: `Bearer ${jwt}`,
+  };
+}
+
+function getCurrentJwt(): string | undefined {
+  const jwt1 = getCookie(appConfig.jwtCookieName);
+  const jwt2 = getCookie(appConfig.jwtSignatureCookieName);
+  return jwt1 && jwt2 ? `${jwt1}.${jwt2}` : undefined;
 }
 
 function remoteSignOut(): Promise<void> {
