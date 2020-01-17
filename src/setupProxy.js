@@ -3,9 +3,10 @@ module.exports = function(app) {
   app.use(
     '/api',
     proxy({
-      target: 'http://localhost:4000',
+      target: 'http://localhost:4141',
       pathRewrite: { '^/api': '' },
       changeOrigin: true,
+      // ws: true,
     }),
   );
 };

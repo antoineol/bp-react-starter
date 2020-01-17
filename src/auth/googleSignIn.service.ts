@@ -1,6 +1,8 @@
 import jwtDecode from 'jwt-decode';
 import { appConfig } from '../common/app.config';
+import { JwtFields } from '../common/app.models';
 import { apiPost, deleteCookie, getCookie } from '../common/app.utils';
+import { gqlClient, resetWsConnection } from '../common/graphql.client';
 import { handleError } from '../common/services/error.service';
 import { env } from '../environment/env';
 import { signIn } from './auth.service';
@@ -19,15 +21,22 @@ export async function signInWithGoogle(): Promise<string> {
 }
 
 interface TokenDto {
+  iat: number;
+  exp: number;
+  iss: string;
+  sub: string;
+  [JwtFields.jwtNamespace]: JwtClaims;
+}
+
+interface JwtClaims {
   email: string;
   name: string;
   locale: string;
   hd: string;
   refresh: string;
-  iat: number;
-  exp: number;
-  iss: string;
-  sub: string;
+  [JwtFields.jwtClaimRoles]: string;
+  [JwtFields.jwtClaimDefaultRole]: string;
+  [JwtFields.jwtClaimUserId]: string;
 }
 
 let refreshTimer: NodeJS.Timeout | null = null;
@@ -40,7 +49,11 @@ export function scheduleJwtRefresh(jwt: string | undefined) {
     return;
   }
   const decoded: TokenDto = jwtDecode(jwt);
-  const date = new Date(decoded.refresh);
+  const claims = (JwtFields.jwtNamespace ? decoded[JwtFields.jwtNamespace] : decoded) as JwtClaims;
+  if (!claims.refresh) {
+    throw new Error(`No refresh date found`);
+  }
+  const date = new Date(claims.refresh);
   const time = date.getTime();
   if (time === prevRefreshTime) {
     throw new Error(`Refresh time was not updated. Old: ${new Date(
@@ -57,8 +70,11 @@ export function scheduleJwtRefresh(jwt: string | undefined) {
   refreshTimer = setTimeout(refreshJwt, renewInMs);
 }
 
-export function localSignOut() {
+export async function localSignOut() {
   deleteCookie(appConfig.jwtCookieName);
+  deleteCookie(appConfig.jwtSignatureCookieName);
+  resetWsConnection();
+  await gqlClient.resetStore();
 }
 
 function gSignInPopup(): Promise<string> {

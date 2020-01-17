@@ -1,28 +1,40 @@
-import React, { memo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../common/app.utils';
-import { AuthorAT, selectAuthorError, selectAuthors, selectLoadingAuthor } from './author.service';
+import { useSubscription } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import React, { memo } from 'react';
+import { Subscription_Root } from '../../hasura/gen/types';
+
+const authorsSub = gql`subscription { author { id, name } }`;
+
+// const authorsQuery = gql`query { author { id, name } }`;
 
 function Profile() {
-  const dispatch = useAppDispatch(); // Redux dispatcher
-  useEffect(() => {
-    dispatch(AuthorAT.Load);
-  }, [dispatch]);
-  const authors = useSelector(selectAuthors);
-  const loadingAuthors = useSelector(selectLoadingAuthor);
-  const authorError = useSelector(selectAuthorError);
+  const { data, loading, error } = useSubscription<Subscription_Root>(authorsSub);
+  // const { data, loading, error } = useQuery<Subscription_Root>(authorsQuery);
+  // const data = {author: [] as {id: string, name: string}[]};
+  // const error = null;
+  // const loading = false;
 
-  if (loadingAuthors) {
+  // const dispatch = useAppDispatch(); // Redux dispatcher
+  // const handleClick = useCallback(() => dispatch(AuthorAT.Upvote), [dispatch]);
+
+  if (loading) {
     return <p>Loading...</p>;
   }
-  if (authorError || !authors) {
-    return <div>{authorError}</div>;
+  if (error || !data) {
+    return <div>{JSON.stringify(error)}</div>;
   }
+  const authors = data!.author;
 
   return <div>
     <ul>
-      {authors.map(author => <li key={author.id}>{author.firstName}</li>)}
+      {authors.map(author => <li key={author.id}>{author.id}: {author.name}</li>)}
     </ul>
+    {/*<Button
+      variant={'outlined'}
+      color={'primary'}
+      onClick={handleClick}>
+      Upvote
+    </Button>*/}
   </div>;
 }
 

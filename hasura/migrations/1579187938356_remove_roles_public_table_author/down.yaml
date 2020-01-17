@@ -1,0 +1,45 @@
+- args:
+    permission:
+      filter: {}
+    role: anonymous
+    table:
+      name: author
+      schema: public
+  type: create_delete_permission
+- args:
+    permission:
+      check: {}
+      columns:
+        - id
+        - name
+      set: {}
+    role: anonymous
+    table:
+      name: author
+      schema: public
+  type: create_insert_permission
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+        - name
+        - id
+      computed_fields: []
+      filter: {}
+    role: anonymous
+    table:
+      name: author
+      schema: public
+  type: create_select_permission
+- args:
+    permission:
+      columns:
+        - name
+        - id
+      filter: {}
+      set: {}
+    role: anonymous
+    table:
+      name: author
+      schema: public
+  type: create_update_permission

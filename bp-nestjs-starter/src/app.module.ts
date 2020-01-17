@@ -11,15 +11,15 @@ import { UserModule } from './user/user.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
-    GraphQLModule.forRoot({
-      debug: env.isDev,
-      playground: !env.isProd,
-      autoSchemaFile: 'schema.graphql',
-      // buildSchemaOptions
-    }),
+    // GraphQLModule.forRoot({
+    //   debug: env.isDev,
+    //   playground: !env.isProd,
+    //   autoSchemaFile: 'schema.graphql',
+    //   // buildSchemaOptions
+    // }),
     UserModule,
     AuthModule,
-    AuthorsModule,
+    // AuthorsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

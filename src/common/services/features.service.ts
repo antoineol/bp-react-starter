@@ -2,6 +2,7 @@ import { call } from '@redux-saga/core/effects';
 import { fromJS } from 'immutable';
 import { useSelector } from 'react-redux';
 import { Reducer } from 'redux';
+import { appConfig } from '../app.config';
 import { StoreOf } from '../app.models';
 import { apiGet, dispatchSaga, dispatchSagaErr, selectState, SimpleAction } from '../app.utils';
 
@@ -42,9 +43,12 @@ export function useFeatures() { // utility that can be easily mocked for tests
 
 // Saga
 
+const featuresMock: Features = { queryJsonPlaceholder: true };
+
 export function* featuresSaga() {
   try {
-    const features: Features = yield call(apiGet, '/features');
+    const features: Features = appConfig.useServerFeatures ? yield call(apiGet, '/features') :
+      featuresMock;
     yield dispatchSaga(FeatAT.FeaturesLoaded, features);
   } catch (err) {
     yield dispatchSagaErr(FeatAT.FeaturesError, err);

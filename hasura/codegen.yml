@@ -1,0 +1,5 @@
+schema: ./hasura/gen/schema.graphql
+generates:
+  ./hasura/gen/types.d.ts:
+    plugins:
+      - typescript

@@ -1,0 +1,15 @@
+- args:
+    permission:
+      columns:
+        - name
+        - id
+      filter: {}
+      localPresets:
+        - key: ""
+          value: ""
+      set: {}
+    role: anonymous
+    table:
+      name: author
+      schema: public
+  type: create_update_permission

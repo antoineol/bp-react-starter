@@ -3,7 +3,7 @@
 <head>
   <!-- Update this CSP with resources and websites the app needs to reach -->
   <meta
-    content="base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+    content="base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
     http-equiv="Content-Security-Policy">
   <meta charset="utf-8" />
   <link href="%PUBLIC_URL%/favicon.ico" rel="icon" />
@@ -58,6 +58,7 @@
   <!-- Ensure you don't also use polyfills on top of index.ts. Only one of them is required. -->
   <!-- <script>if(!(window.Promise&&[].includes&&Object.assign&&window.Map)){document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017"></scr'+'ipt>')}</script> -->
   <script src="%PUBLIC_URL%/pace/pace.min.js"></script>
+  <script>Pace.options.ajax.trackWebSockets = false;</script>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>

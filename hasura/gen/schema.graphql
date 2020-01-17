@@ -1,0 +1,2009 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+# columns and relationships of "article"
+type article {
+  # An array relationship
+  article_tags(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): [article_tag!]!
+
+  # An aggregated array relationship
+  article_tags_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): article_tag_aggregate!
+
+  # An object relationship
+  author: author!
+  author_id: uuid!
+  content: String!
+  id: uuid!
+  rating: Int!
+
+  # An array relationship
+  tags(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): [article_tags_view!]!
+
+  # An aggregated array relationship
+  tags_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): article_tags_view_aggregate!
+  title: String!
+}
+
+# aggregated selection of "article"
+type article_aggregate {
+  aggregate: article_aggregate_fields
+  nodes: [article!]!
+}
+
+# aggregate fields of "article"
+type article_aggregate_fields {
+  avg: article_avg_fields
+  count(columns: [article_select_column!], distinct: Boolean): Int
+  max: article_max_fields
+  min: article_min_fields
+  stddev: article_stddev_fields
+  stddev_pop: article_stddev_pop_fields
+  stddev_samp: article_stddev_samp_fields
+  sum: article_sum_fields
+  var_pop: article_var_pop_fields
+  var_samp: article_var_samp_fields
+  variance: article_variance_fields
+}
+
+# order by aggregate values of table "article"
+input article_aggregate_order_by {
+  avg: article_avg_order_by
+  count: order_by
+  max: article_max_order_by
+  min: article_min_order_by
+  stddev: article_stddev_order_by
+  stddev_pop: article_stddev_pop_order_by
+  stddev_samp: article_stddev_samp_order_by
+  sum: article_sum_order_by
+  var_pop: article_var_pop_order_by
+  var_samp: article_var_samp_order_by
+  variance: article_variance_order_by
+}
+
+# input type for inserting array relation for remote table "article"
+input article_arr_rel_insert_input {
+  data: [article_insert_input!]!
+  on_conflict: article_on_conflict
+}
+
+# aggregate avg on columns
+type article_avg_fields {
+  rating: Float
+}
+
+# order by avg() on columns of table "article"
+input article_avg_order_by {
+  rating: order_by
+}
+
+# Boolean expression to filter rows from the table "article". All fields are combined with a logical 'AND'.
+input article_bool_exp {
+  _and: [article_bool_exp]
+  _not: article_bool_exp
+  _or: [article_bool_exp]
+  article_tags: article_tag_bool_exp
+  author: author_bool_exp
+  author_id: uuid_comparison_exp
+  content: String_comparison_exp
+  id: uuid_comparison_exp
+  rating: Int_comparison_exp
+  tags: article_tags_view_bool_exp
+  title: String_comparison_exp
+}
+
+# unique or primary key constraints on table "article"
+enum article_constraint {
+  # unique or primary key constraint
+  article_pkey
+}
+
+# input type for incrementing integer columne in table "article"
+input article_inc_input {
+  rating: Int
+}
+
+# input type for inserting data into table "article"
+input article_insert_input {
+  article_tags: article_tag_arr_rel_insert_input
+  author: author_obj_rel_insert_input
+  author_id: uuid
+  content: String
+  id: uuid
+  rating: Int
+  title: String
+}
+
+# aggregate max on columns
+type article_max_fields {
+  content: String
+  rating: Int
+  title: String
+}
+
+# order by max() on columns of table "article"
+input article_max_order_by {
+  content: order_by
+  rating: order_by
+  title: order_by
+}
+
+# aggregate min on columns
+type article_min_fields {
+  content: String
+  rating: Int
+  title: String
+}
+
+# order by min() on columns of table "article"
+input article_min_order_by {
+  content: order_by
+  rating: order_by
+  title: order_by
+}
+
+# response of any mutation on the table "article"
+type article_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [article!]!
+}
+
+# input type for inserting object relation for remote table "article"
+input article_obj_rel_insert_input {
+  data: article_insert_input!
+  on_conflict: article_on_conflict
+}
+
+# on conflict condition type for table "article"
+input article_on_conflict {
+  constraint: article_constraint!
+  update_columns: [article_update_column!]!
+  where: article_bool_exp
+}
+
+# ordering options when selecting data from "article"
+input article_order_by {
+  article_tags_aggregate: article_tag_aggregate_order_by
+  author: author_order_by
+  author_id: order_by
+  content: order_by
+  id: order_by
+  rating: order_by
+  tags_aggregate: article_tags_view_aggregate_order_by
+  title: order_by
+}
+
+# select columns of table "article"
+enum article_select_column {
+  # column name
+  author_id
+
+  # column name
+  content
+
+  # column name
+  id
+
+  # column name
+  rating
+
+  # column name
+  title
+}
+
+# input type for updating data in table "article"
+input article_set_input {
+  author_id: uuid
+  content: String
+  id: uuid
+  rating: Int
+  title: String
+}
+
+# aggregate stddev on columns
+type article_stddev_fields {
+  rating: Float
+}
+
+# order by stddev() on columns of table "article"
+input article_stddev_order_by {
+  rating: order_by
+}
+
+# aggregate stddev_pop on columns
+type article_stddev_pop_fields {
+  rating: Float
+}
+
+# order by stddev_pop() on columns of table "article"
+input article_stddev_pop_order_by {
+  rating: order_by
+}
+
+# aggregate stddev_samp on columns
+type article_stddev_samp_fields {
+  rating: Float
+}
+
+# order by stddev_samp() on columns of table "article"
+input article_stddev_samp_order_by {
+  rating: order_by
+}
+
+# aggregate sum on columns
+type article_sum_fields {
+  rating: Int
+}
+
+# order by sum() on columns of table "article"
+input article_sum_order_by {
+  rating: order_by
+}
+
+# columns and relationships of "article_tag"
+type article_tag {
+  # An object relationship
+  article: article!
+  article_id: uuid!
+
+  # An object relationship
+  tag: tag!
+  tag_id: uuid!
+}
+
+# aggregated selection of "article_tag"
+type article_tag_aggregate {
+  aggregate: article_tag_aggregate_fields
+  nodes: [article_tag!]!
+}
+
+# aggregate fields of "article_tag"
+type article_tag_aggregate_fields {
+  count(columns: [article_tag_select_column!], distinct: Boolean): Int
+}
+
+# order by aggregate values of table "article_tag"
+input article_tag_aggregate_order_by {
+  count: order_by
+}
+
+# input type for inserting array relation for remote table "article_tag"
+input article_tag_arr_rel_insert_input {
+  data: [article_tag_insert_input!]!
+  on_conflict: article_tag_on_conflict
+}
+
+# Boolean expression to filter rows from the table "article_tag". All fields are combined with a logical 'AND'.
+input article_tag_bool_exp {
+  _and: [article_tag_bool_exp]
+  _not: article_tag_bool_exp
+  _or: [article_tag_bool_exp]
+  article: article_bool_exp
+  article_id: uuid_comparison_exp
+  tag: tag_bool_exp
+  tag_id: uuid_comparison_exp
+}
+
+# unique or primary key constraints on table "article_tag"
+enum article_tag_constraint {
+  # unique or primary key constraint
+  article_tag_pkey
+}
+
+# input type for inserting data into table "article_tag"
+input article_tag_insert_input {
+  article: article_obj_rel_insert_input
+  article_id: uuid
+  tag: tag_obj_rel_insert_input
+  tag_id: uuid
+}
+
+# response of any mutation on the table "article_tag"
+type article_tag_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [article_tag!]!
+}
+
+# input type for inserting object relation for remote table "article_tag"
+input article_tag_obj_rel_insert_input {
+  data: article_tag_insert_input!
+  on_conflict: article_tag_on_conflict
+}
+
+# on conflict condition type for table "article_tag"
+input article_tag_on_conflict {
+  constraint: article_tag_constraint!
+  update_columns: [article_tag_update_column!]!
+  where: article_tag_bool_exp
+}
+
+# ordering options when selecting data from "article_tag"
+input article_tag_order_by {
+  article: article_order_by
+  article_id: order_by
+  tag: tag_order_by
+  tag_id: order_by
+}
+
+# select columns of table "article_tag"
+enum article_tag_select_column {
+  # column name
+  article_id
+
+  # column name
+  tag_id
+}
+
+# input type for updating data in table "article_tag"
+input article_tag_set_input {
+  article_id: uuid
+  tag_id: uuid
+}
+
+# update columns of table "article_tag"
+enum article_tag_update_column {
+  # column name
+  article_id
+
+  # column name
+  tag_id
+}
+
+# columns and relationships of "article_tags_view"
+type article_tags_view {
+  article_id: uuid
+  id: uuid
+  tag_value: String
+}
+
+# aggregated selection of "article_tags_view"
+type article_tags_view_aggregate {
+  aggregate: article_tags_view_aggregate_fields
+  nodes: [article_tags_view!]!
+}
+
+# aggregate fields of "article_tags_view"
+type article_tags_view_aggregate_fields {
+  count(columns: [article_tags_view_select_column!], distinct: Boolean): Int
+  max: article_tags_view_max_fields
+  min: article_tags_view_min_fields
+}
+
+# order by aggregate values of table "article_tags_view"
+input article_tags_view_aggregate_order_by {
+  count: order_by
+  max: article_tags_view_max_order_by
+  min: article_tags_view_min_order_by
+}
+
+# Boolean expression to filter rows from the table "article_tags_view". All fields are combined with a logical 'AND'.
+input article_tags_view_bool_exp {
+  _and: [article_tags_view_bool_exp]
+  _not: article_tags_view_bool_exp
+  _or: [article_tags_view_bool_exp]
+  article_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  tag_value: String_comparison_exp
+}
+
+# aggregate max on columns
+type article_tags_view_max_fields {
+  tag_value: String
+}
+
+# order by max() on columns of table "article_tags_view"
+input article_tags_view_max_order_by {
+  tag_value: order_by
+}
+
+# aggregate min on columns
+type article_tags_view_min_fields {
+  tag_value: String
+}
+
+# order by min() on columns of table "article_tags_view"
+input article_tags_view_min_order_by {
+  tag_value: order_by
+}
+
+# ordering options when selecting data from "article_tags_view"
+input article_tags_view_order_by {
+  article_id: order_by
+  id: order_by
+  tag_value: order_by
+}
+
+# select columns of table "article_tags_view"
+enum article_tags_view_select_column {
+  # column name
+  article_id
+
+  # column name
+  id
+
+  # column name
+  tag_value
+}
+
+# update columns of table "article"
+enum article_update_column {
+  # column name
+  author_id
+
+  # column name
+  content
+
+  # column name
+  id
+
+  # column name
+  rating
+
+  # column name
+  title
+}
+
+# aggregate var_pop on columns
+type article_var_pop_fields {
+  rating: Float
+}
+
+# order by var_pop() on columns of table "article"
+input article_var_pop_order_by {
+  rating: order_by
+}
+
+# aggregate var_samp on columns
+type article_var_samp_fields {
+  rating: Float
+}
+
+# order by var_samp() on columns of table "article"
+input article_var_samp_order_by {
+  rating: order_by
+}
+
+# aggregate variance on columns
+type article_variance_fields {
+  rating: Float
+}
+
+# order by variance() on columns of table "article"
+input article_variance_order_by {
+  rating: order_by
+}
+
+# columns and relationships of "author"
+type author {
+  # An array relationship
+  articles(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): [article!]!
+
+  # An aggregated array relationship
+  articles_aggregate(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): article_aggregate!
+  id: uuid!
+  name: String!
+}
+
+# aggregated selection of "author"
+type author_aggregate {
+  aggregate: author_aggregate_fields
+  nodes: [author!]!
+}
+
+# aggregate fields of "author"
+type author_aggregate_fields {
+  count(columns: [author_select_column!], distinct: Boolean): Int
+  max: author_max_fields
+  min: author_min_fields
+}
+
+# order by aggregate values of table "author"
+input author_aggregate_order_by {
+  count: order_by
+  max: author_max_order_by
+  min: author_min_order_by
+}
+
+# input type for inserting array relation for remote table "author"
+input author_arr_rel_insert_input {
+  data: [author_insert_input!]!
+  on_conflict: author_on_conflict
+}
+
+# Boolean expression to filter rows from the table "author". All fields are combined with a logical 'AND'.
+input author_bool_exp {
+  _and: [author_bool_exp]
+  _not: author_bool_exp
+  _or: [author_bool_exp]
+  articles: article_bool_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+}
+
+# unique or primary key constraints on table "author"
+enum author_constraint {
+  # unique or primary key constraint
+  author_pkey
+}
+
+# input type for inserting data into table "author"
+input author_insert_input {
+  articles: article_arr_rel_insert_input
+  id: uuid
+  name: String
+}
+
+# aggregate max on columns
+type author_max_fields {
+  name: String
+}
+
+# order by max() on columns of table "author"
+input author_max_order_by {
+  name: order_by
+}
+
+# aggregate min on columns
+type author_min_fields {
+  name: String
+}
+
+# order by min() on columns of table "author"
+input author_min_order_by {
+  name: order_by
+}
+
+# response of any mutation on the table "author"
+type author_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [author!]!
+}
+
+# input type for inserting object relation for remote table "author"
+input author_obj_rel_insert_input {
+  data: author_insert_input!
+  on_conflict: author_on_conflict
+}
+
+# on conflict condition type for table "author"
+input author_on_conflict {
+  constraint: author_constraint!
+  update_columns: [author_update_column!]!
+  where: author_bool_exp
+}
+
+# ordering options when selecting data from "author"
+input author_order_by {
+  articles_aggregate: article_aggregate_order_by
+  id: order_by
+  name: order_by
+}
+
+# select columns of table "author"
+enum author_select_column {
+  # column name
+  id
+
+  # column name
+  name
+}
+
+# input type for updating data in table "author"
+input author_set_input {
+  id: uuid
+  name: String
+}
+
+# update columns of table "author"
+enum author_update_column {
+  # column name
+  id
+
+  # column name
+  name
+}
+
+# expression to compare columns of type Int. All fields are combined with logical 'AND'.
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+# mutation root
+type mutation_root {
+  # delete data from the table: "article"
+  delete_article(
+    # filter the rows which have to be deleted
+    where: article_bool_exp!
+  ): article_mutation_response
+
+  # delete data from the table: "article_tag"
+  delete_article_tag(
+    # filter the rows which have to be deleted
+    where: article_tag_bool_exp!
+  ): article_tag_mutation_response
+
+  # delete data from the table: "author"
+  delete_author(
+    # filter the rows which have to be deleted
+    where: author_bool_exp!
+  ): author_mutation_response
+
+  # delete data from the table: "profile"
+  delete_profile(
+    # filter the rows which have to be deleted
+    where: profile_bool_exp!
+  ): profile_mutation_response
+
+  # delete data from the table: "tag"
+  delete_tag(
+    # filter the rows which have to be deleted
+    where: tag_bool_exp!
+  ): tag_mutation_response
+
+  # insert data into the table: "article"
+  insert_article(
+    # the rows to be inserted
+    objects: [article_insert_input!]!
+
+    # on conflict condition
+    on_conflict: article_on_conflict
+  ): article_mutation_response
+
+  # insert data into the table: "article_tag"
+  insert_article_tag(
+    # the rows to be inserted
+    objects: [article_tag_insert_input!]!
+
+    # on conflict condition
+    on_conflict: article_tag_on_conflict
+  ): article_tag_mutation_response
+
+  # insert data into the table: "author"
+  insert_author(
+    # the rows to be inserted
+    objects: [author_insert_input!]!
+
+    # on conflict condition
+    on_conflict: author_on_conflict
+  ): author_mutation_response
+
+  # insert data into the table: "profile"
+  insert_profile(
+    # the rows to be inserted
+    objects: [profile_insert_input!]!
+
+    # on conflict condition
+    on_conflict: profile_on_conflict
+  ): profile_mutation_response
+
+  # insert data into the table: "tag"
+  insert_tag(
+    # the rows to be inserted
+    objects: [tag_insert_input!]!
+
+    # on conflict condition
+    on_conflict: tag_on_conflict
+  ): tag_mutation_response
+
+  # update data of the table: "article"
+  update_article(
+    # increments the integer columns with given value of the filtered values
+    _inc: article_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: article_set_input
+
+    # filter the rows which have to be updated
+    where: article_bool_exp!
+  ): article_mutation_response
+
+  # update data of the table: "article_tag"
+  update_article_tag(
+    # sets the columns of the filtered rows to the given values
+    _set: article_tag_set_input
+
+    # filter the rows which have to be updated
+    where: article_tag_bool_exp!
+  ): article_tag_mutation_response
+
+  # update data of the table: "author"
+  update_author(
+    # sets the columns of the filtered rows to the given values
+    _set: author_set_input
+
+    # filter the rows which have to be updated
+    where: author_bool_exp!
+  ): author_mutation_response
+
+  # update data of the table: "profile"
+  update_profile(
+    # sets the columns of the filtered rows to the given values
+    _set: profile_set_input
+
+    # filter the rows which have to be updated
+    where: profile_bool_exp!
+  ): profile_mutation_response
+
+  # update data of the table: "tag"
+  update_tag(
+    # sets the columns of the filtered rows to the given values
+    _set: tag_set_input
+
+    # filter the rows which have to be updated
+    where: tag_bool_exp!
+  ): tag_mutation_response
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# columns and relationships of "profile"
+type profile {
+  created_at: timestamptz!
+  id: uuid!
+  name: String!
+  updated_at: timestamptz!
+}
+
+# aggregated selection of "profile"
+type profile_aggregate {
+  aggregate: profile_aggregate_fields
+  nodes: [profile!]!
+}
+
+# aggregate fields of "profile"
+type profile_aggregate_fields {
+  count(columns: [profile_select_column!], distinct: Boolean): Int
+  max: profile_max_fields
+  min: profile_min_fields
+}
+
+# order by aggregate values of table "profile"
+input profile_aggregate_order_by {
+  count: order_by
+  max: profile_max_order_by
+  min: profile_min_order_by
+}
+
+# input type for inserting array relation for remote table "profile"
+input profile_arr_rel_insert_input {
+  data: [profile_insert_input!]!
+  on_conflict: profile_on_conflict
+}
+
+# Boolean expression to filter rows from the table "profile". All fields are combined with a logical 'AND'.
+input profile_bool_exp {
+  _and: [profile_bool_exp]
+  _not: profile_bool_exp
+  _or: [profile_bool_exp]
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+# unique or primary key constraints on table "profile"
+enum profile_constraint {
+  # unique or primary key constraint
+  profile_pkey
+}
+
+# input type for inserting data into table "profile"
+input profile_insert_input {
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+# aggregate max on columns
+type profile_max_fields {
+  created_at: timestamptz
+  name: String
+  updated_at: timestamptz
+}
+
+# order by max() on columns of table "profile"
+input profile_max_order_by {
+  created_at: order_by
+  name: order_by
+  updated_at: order_by
+}
+
+# aggregate min on columns
+type profile_min_fields {
+  created_at: timestamptz
+  name: String
+  updated_at: timestamptz
+}
+
+# order by min() on columns of table "profile"
+input profile_min_order_by {
+  created_at: order_by
+  name: order_by
+  updated_at: order_by
+}
+
+# response of any mutation on the table "profile"
+type profile_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [profile!]!
+}
+
+# input type for inserting object relation for remote table "profile"
+input profile_obj_rel_insert_input {
+  data: profile_insert_input!
+  on_conflict: profile_on_conflict
+}
+
+# on conflict condition type for table "profile"
+input profile_on_conflict {
+  constraint: profile_constraint!
+  update_columns: [profile_update_column!]!
+  where: profile_bool_exp
+}
+
+# ordering options when selecting data from "profile"
+input profile_order_by {
+  created_at: order_by
+  id: order_by
+  name: order_by
+  updated_at: order_by
+}
+
+# select columns of table "profile"
+enum profile_select_column {
+  # column name
+  created_at
+
+  # column name
+  id
+
+  # column name
+  name
+
+  # column name
+  updated_at
+}
+
+# input type for updating data in table "profile"
+input profile_set_input {
+  created_at: timestamptz
+  id: uuid
+  name: String
+  updated_at: timestamptz
+}
+
+# update columns of table "profile"
+enum profile_update_column {
+  # column name
+  created_at
+
+  # column name
+  id
+
+  # column name
+  name
+
+  # column name
+  updated_at
+}
+
+# query root
+type query_root {
+  # fetch data from the table: "article"
+  article(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): [article!]!
+
+  # fetch aggregated fields from the table: "article"
+  article_aggregate(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): article_aggregate!
+
+  # fetch data from the table: "article" using primary key columns
+  article_by_pk(id: uuid!): article
+
+  # fetch data from the table: "article_tag"
+  article_tag(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): [article_tag!]!
+
+  # fetch aggregated fields from the table: "article_tag"
+  article_tag_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): article_tag_aggregate!
+
+  # fetch data from the table: "article_tag" using primary key columns
+  article_tag_by_pk(article_id: uuid!, tag_id: uuid!): article_tag
+
+  # fetch data from the table: "article_tags_view"
+  article_tags_view(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): [article_tags_view!]!
+
+  # fetch aggregated fields from the table: "article_tags_view"
+  article_tags_view_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): article_tags_view_aggregate!
+
+  # fetch data from the table: "author"
+  author(
+    # distinct select on columns
+    distinct_on: [author_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [author_order_by!]
+
+    # filter the rows returned
+    where: author_bool_exp
+  ): [author!]!
+
+  # fetch aggregated fields from the table: "author"
+  author_aggregate(
+    # distinct select on columns
+    distinct_on: [author_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [author_order_by!]
+
+    # filter the rows returned
+    where: author_bool_exp
+  ): author_aggregate!
+
+  # fetch data from the table: "author" using primary key columns
+  author_by_pk(id: uuid!): author
+
+  # fetch data from the table: "profile"
+  profile(
+    # distinct select on columns
+    distinct_on: [profile_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [profile_order_by!]
+
+    # filter the rows returned
+    where: profile_bool_exp
+  ): [profile!]!
+
+  # fetch aggregated fields from the table: "profile"
+  profile_aggregate(
+    # distinct select on columns
+    distinct_on: [profile_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [profile_order_by!]
+
+    # filter the rows returned
+    where: profile_bool_exp
+  ): profile_aggregate!
+
+  # fetch data from the table: "profile" using primary key columns
+  profile_by_pk(id: uuid!): profile
+
+  # fetch data from the table: "tag"
+  tag(
+    # distinct select on columns
+    distinct_on: [tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_order_by!]
+
+    # filter the rows returned
+    where: tag_bool_exp
+  ): [tag!]!
+
+  # fetch aggregated fields from the table: "tag"
+  tag_aggregate(
+    # distinct select on columns
+    distinct_on: [tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_order_by!]
+
+    # filter the rows returned
+    where: tag_bool_exp
+  ): tag_aggregate!
+
+  # fetch data from the table: "tag_articles_view"
+  tag_articles_view(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): [tag_articles_view!]!
+
+  # fetch aggregated fields from the table: "tag_articles_view"
+  tag_articles_view_aggregate(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): tag_articles_view_aggregate!
+
+  # fetch data from the table: "tag" using primary key columns
+  tag_by_pk(id: uuid!): tag
+}
+
+# expression to compare columns of type String. All fields are combined with logical 'AND'.
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String!]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String!]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+# subscription root
+type subscription_root {
+  # fetch data from the table: "article"
+  article(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): [article!]!
+
+  # fetch aggregated fields from the table: "article"
+  article_aggregate(
+    # distinct select on columns
+    distinct_on: [article_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_order_by!]
+
+    # filter the rows returned
+    where: article_bool_exp
+  ): article_aggregate!
+
+  # fetch data from the table: "article" using primary key columns
+  article_by_pk(id: uuid!): article
+
+  # fetch data from the table: "article_tag"
+  article_tag(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): [article_tag!]!
+
+  # fetch aggregated fields from the table: "article_tag"
+  article_tag_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): article_tag_aggregate!
+
+  # fetch data from the table: "article_tag" using primary key columns
+  article_tag_by_pk(article_id: uuid!, tag_id: uuid!): article_tag
+
+  # fetch data from the table: "article_tags_view"
+  article_tags_view(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): [article_tags_view!]!
+
+  # fetch aggregated fields from the table: "article_tags_view"
+  article_tags_view_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tags_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tags_view_order_by!]
+
+    # filter the rows returned
+    where: article_tags_view_bool_exp
+  ): article_tags_view_aggregate!
+
+  # fetch data from the table: "author"
+  author(
+    # distinct select on columns
+    distinct_on: [author_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [author_order_by!]
+
+    # filter the rows returned
+    where: author_bool_exp
+  ): [author!]!
+
+  # fetch aggregated fields from the table: "author"
+  author_aggregate(
+    # distinct select on columns
+    distinct_on: [author_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [author_order_by!]
+
+    # filter the rows returned
+    where: author_bool_exp
+  ): author_aggregate!
+
+  # fetch data from the table: "author" using primary key columns
+  author_by_pk(id: uuid!): author
+
+  # fetch data from the table: "profile"
+  profile(
+    # distinct select on columns
+    distinct_on: [profile_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [profile_order_by!]
+
+    # filter the rows returned
+    where: profile_bool_exp
+  ): [profile!]!
+
+  # fetch aggregated fields from the table: "profile"
+  profile_aggregate(
+    # distinct select on columns
+    distinct_on: [profile_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [profile_order_by!]
+
+    # filter the rows returned
+    where: profile_bool_exp
+  ): profile_aggregate!
+
+  # fetch data from the table: "profile" using primary key columns
+  profile_by_pk(id: uuid!): profile
+
+  # fetch data from the table: "tag"
+  tag(
+    # distinct select on columns
+    distinct_on: [tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_order_by!]
+
+    # filter the rows returned
+    where: tag_bool_exp
+  ): [tag!]!
+
+  # fetch aggregated fields from the table: "tag"
+  tag_aggregate(
+    # distinct select on columns
+    distinct_on: [tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_order_by!]
+
+    # filter the rows returned
+    where: tag_bool_exp
+  ): tag_aggregate!
+
+  # fetch data from the table: "tag_articles_view"
+  tag_articles_view(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): [tag_articles_view!]!
+
+  # fetch aggregated fields from the table: "tag_articles_view"
+  tag_articles_view_aggregate(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): tag_articles_view_aggregate!
+
+  # fetch data from the table: "tag" using primary key columns
+  tag_by_pk(id: uuid!): tag
+}
+
+# columns and relationships of "tag"
+type tag {
+  # An array relationship
+  articles(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): [tag_articles_view!]!
+
+  # An aggregated array relationship
+  articles_aggregate(
+    # distinct select on columns
+    distinct_on: [tag_articles_view_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [tag_articles_view_order_by!]
+
+    # filter the rows returned
+    where: tag_articles_view_bool_exp
+  ): tag_articles_view_aggregate!
+  id: uuid!
+
+  # An array relationship
+  tag_articles(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): [article_tag!]!
+
+  # An aggregated array relationship
+  tag_articles_aggregate(
+    # distinct select on columns
+    distinct_on: [article_tag_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [article_tag_order_by!]
+
+    # filter the rows returned
+    where: article_tag_bool_exp
+  ): article_tag_aggregate!
+  tag_value: String!
+}
+
+# aggregated selection of "tag"
+type tag_aggregate {
+  aggregate: tag_aggregate_fields
+  nodes: [tag!]!
+}
+
+# aggregate fields of "tag"
+type tag_aggregate_fields {
+  count(columns: [tag_select_column!], distinct: Boolean): Int
+  max: tag_max_fields
+  min: tag_min_fields
+}
+
+# order by aggregate values of table "tag"
+input tag_aggregate_order_by {
+  count: order_by
+  max: tag_max_order_by
+  min: tag_min_order_by
+}
+
+# input type for inserting array relation for remote table "tag"
+input tag_arr_rel_insert_input {
+  data: [tag_insert_input!]!
+  on_conflict: tag_on_conflict
+}
+
+# columns and relationships of "tag_articles_view"
+type tag_articles_view {
+  author_id: uuid
+  content: String
+  id: uuid
+  rating: Int
+  tag_id: uuid
+  title: String
+}
+
+# aggregated selection of "tag_articles_view"
+type tag_articles_view_aggregate {
+  aggregate: tag_articles_view_aggregate_fields
+  nodes: [tag_articles_view!]!
+}
+
+# aggregate fields of "tag_articles_view"
+type tag_articles_view_aggregate_fields {
+  avg: tag_articles_view_avg_fields
+  count(columns: [tag_articles_view_select_column!], distinct: Boolean): Int
+  max: tag_articles_view_max_fields
+  min: tag_articles_view_min_fields
+  stddev: tag_articles_view_stddev_fields
+  stddev_pop: tag_articles_view_stddev_pop_fields
+  stddev_samp: tag_articles_view_stddev_samp_fields
+  sum: tag_articles_view_sum_fields
+  var_pop: tag_articles_view_var_pop_fields
+  var_samp: tag_articles_view_var_samp_fields
+  variance: tag_articles_view_variance_fields
+}
+
+# order by aggregate values of table "tag_articles_view"
+input tag_articles_view_aggregate_order_by {
+  avg: tag_articles_view_avg_order_by
+  count: order_by
+  max: tag_articles_view_max_order_by
+  min: tag_articles_view_min_order_by
+  stddev: tag_articles_view_stddev_order_by
+  stddev_pop: tag_articles_view_stddev_pop_order_by
+  stddev_samp: tag_articles_view_stddev_samp_order_by
+  sum: tag_articles_view_sum_order_by
+  var_pop: tag_articles_view_var_pop_order_by
+  var_samp: tag_articles_view_var_samp_order_by
+  variance: tag_articles_view_variance_order_by
+}
+
+# aggregate avg on columns
+type tag_articles_view_avg_fields {
+  rating: Float
+}
+
+# order by avg() on columns of table "tag_articles_view"
+input tag_articles_view_avg_order_by {
+  rating: order_by
+}
+
+# Boolean expression to filter rows from the table "tag_articles_view". All fields are combined with a logical 'AND'.
+input tag_articles_view_bool_exp {
+  _and: [tag_articles_view_bool_exp]
+  _not: tag_articles_view_bool_exp
+  _or: [tag_articles_view_bool_exp]
+  author_id: uuid_comparison_exp
+  content: String_comparison_exp
+  id: uuid_comparison_exp
+  rating: Int_comparison_exp
+  tag_id: uuid_comparison_exp
+  title: String_comparison_exp
+}
+
+# aggregate max on columns
+type tag_articles_view_max_fields {
+  content: String
+  rating: Int
+  title: String
+}
+
+# order by max() on columns of table "tag_articles_view"
+input tag_articles_view_max_order_by {
+  content: order_by
+  rating: order_by
+  title: order_by
+}
+
+# aggregate min on columns
+type tag_articles_view_min_fields {
+  content: String
+  rating: Int
+  title: String
+}
+
+# order by min() on columns of table "tag_articles_view"
+input tag_articles_view_min_order_by {
+  content: order_by
+  rating: order_by
+  title: order_by
+}
+
+# ordering options when selecting data from "tag_articles_view"
+input tag_articles_view_order_by {
+  author_id: order_by
+  content: order_by
+  id: order_by
+  rating: order_by
+  tag_id: order_by
+  title: order_by
+}
+
+# select columns of table "tag_articles_view"
+enum tag_articles_view_select_column {
+  # column name
+  author_id
+
+  # column name
+  content
+
+  # column name
+  id
+
+  # column name
+  rating
+
+  # column name
+  tag_id
+
+  # column name
+  title
+}
+
+# aggregate stddev on columns
+type tag_articles_view_stddev_fields {
+  rating: Float
+}
+
+# order by stddev() on columns of table "tag_articles_view"
+input tag_articles_view_stddev_order_by {
+  rating: order_by
+}
+
+# aggregate stddev_pop on columns
+type tag_articles_view_stddev_pop_fields {
+  rating: Float
+}
+
+# order by stddev_pop() on columns of table "tag_articles_view"
+input tag_articles_view_stddev_pop_order_by {
+  rating: order_by
+}
+
+# aggregate stddev_samp on columns
+type tag_articles_view_stddev_samp_fields {
+  rating: Float
+}
+
+# order by stddev_samp() on columns of table "tag_articles_view"
+input tag_articles_view_stddev_samp_order_by {
+  rating: order_by
+}
+
+# aggregate sum on columns
+type tag_articles_view_sum_fields {
+  rating: Int
+}
+
+# order by sum() on columns of table "tag_articles_view"
+input tag_articles_view_sum_order_by {
+  rating: order_by
+}
+
+# aggregate var_pop on columns
+type tag_articles_view_var_pop_fields {
+  rating: Float
+}
+
+# order by var_pop() on columns of table "tag_articles_view"
+input tag_articles_view_var_pop_order_by {
+  rating: order_by
+}
+
+# aggregate var_samp on columns
+type tag_articles_view_var_samp_fields {
+  rating: Float
+}
+
+# order by var_samp() on columns of table "tag_articles_view"
+input tag_articles_view_var_samp_order_by {
+  rating: order_by
+}
+
+# aggregate variance on columns
+type tag_articles_view_variance_fields {
+  rating: Float
+}
+
+# order by variance() on columns of table "tag_articles_view"
+input tag_articles_view_variance_order_by {
+  rating: order_by
+}
+
+# Boolean expression to filter rows from the table "tag". All fields are combined with a logical 'AND'.
+input tag_bool_exp {
+  _and: [tag_bool_exp]
+  _not: tag_bool_exp
+  _or: [tag_bool_exp]
+  articles: tag_articles_view_bool_exp
+  id: uuid_comparison_exp
+  tag_articles: article_tag_bool_exp
+  tag_value: String_comparison_exp
+}
+
+# unique or primary key constraints on table "tag"
+enum tag_constraint {
+  # unique or primary key constraint
+  tag_pkey
+}
+
+# input type for inserting data into table "tag"
+input tag_insert_input {
+  id: uuid
+  tag_articles: article_tag_arr_rel_insert_input
+  tag_value: String
+}
+
+# aggregate max on columns
+type tag_max_fields {
+  tag_value: String
+}
+
+# order by max() on columns of table "tag"
+input tag_max_order_by {
+  tag_value: order_by
+}
+
+# aggregate min on columns
+type tag_min_fields {
+  tag_value: String
+}
+
+# order by min() on columns of table "tag"
+input tag_min_order_by {
+  tag_value: order_by
+}
+
+# response of any mutation on the table "tag"
+type tag_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [tag!]!
+}
+
+# input type for inserting object relation for remote table "tag"
+input tag_obj_rel_insert_input {
+  data: tag_insert_input!
+  on_conflict: tag_on_conflict
+}
+
+# on conflict condition type for table "tag"
+input tag_on_conflict {
+  constraint: tag_constraint!
+  update_columns: [tag_update_column!]!
+  where: tag_bool_exp
+}
+
+# ordering options when selecting data from "tag"
+input tag_order_by {
+  articles_aggregate: tag_articles_view_aggregate_order_by
+  id: order_by
+  tag_articles_aggregate: article_tag_aggregate_order_by
+  tag_value: order_by
+}
+
+# select columns of table "tag"
+enum tag_select_column {
+  # column name
+  id
+
+  # column name
+  tag_value
+}
+
+# input type for updating data in table "tag"
+input tag_set_input {
+  id: uuid
+  tag_value: String
+}
+
+# update columns of table "tag"
+enum tag_update_column {
+  # column name
+  id
+
+  # column name
+  tag_value
+}
+
+scalar timestamptz
+
+# expression to compare columns of type timestamptz. All fields are combined with logical 'AND'.
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
+
+scalar uuid
+
+# expression to compare columns of type uuid. All fields are combined with logical 'AND'.
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
+}
+
