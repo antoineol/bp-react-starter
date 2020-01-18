@@ -5,14 +5,17 @@ import { History } from 'history';
 import React, { Fragment, memo } from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { Route, Switch } from 'react-router';
+import { initAuth } from './auth/auth.service';
 import SignInDialog from './auth/SignInDialog';
 import Header from './common/components/Header';
-import { gqlClient } from './common/graphql.client';
+import { getGqlClient } from './common/graphql.client';
 import { appTheme } from './core/app.theme';
 import Home from './home/Home';
 import Profile from './profile/Profile';
 
 const muiTheme = responsiveFontSizes(createMuiTheme(appTheme));
+const gqlClient = getGqlClient();
+initAuth();
 
 export interface Props {
   history: History;

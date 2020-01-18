@@ -1,0 +1,13 @@
+- args:
+    permission:
+      allow_aggregations: false
+      columns:
+        - name
+        - id
+      computed_fields: []
+      filter: {}
+    role: team@earlymetrics.com
+    table:
+      name: author
+      schema: public
+  type: create_select_permission

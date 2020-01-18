@@ -1,7 +1,6 @@
 import { connectRouter } from 'connected-react-router/immutable';
 import { History } from 'history';
 import { combineReducers } from 'redux-immutable';
-import { AUTH_REDUCER, authReducer } from '../auth/auth.service';
 import { AppStoreModel } from '../common/app.models';
 import { FEATURES_REDUCER, featuresReducer } from '../common/services/features.service';
 import { COUNT_REDUCER, countReducer } from '../home/count.service';
@@ -25,7 +24,6 @@ export function createRootReducer(history: History) {
       router: connectRouter(history),
       [COUNT_REDUCER]: countReducer,
       [SECRET_REDUCER]: secretReducer,
-      [AUTH_REDUCER]: authReducer,
       [FEATURES_REDUCER]: featuresReducer,
       [PROFILE_REDUCER]: profileReducer,
       [AUTHOR_REDUCER]: authorReducer,

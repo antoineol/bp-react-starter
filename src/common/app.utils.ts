@@ -1,3 +1,4 @@
+import { QueryHookOptions, useQuery } from '@apollo/react-hooks';
 import { OperationVariables } from 'apollo-client';
 import { Observable } from 'apollo-client/util/Observable';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -8,33 +9,72 @@ import { Action } from 'redux';
 import { put, PutEffect } from 'redux-saga/effects';
 import { createSelector, OutputSelector } from 'reselect';
 import { Query_Root, Subscription_Root } from '../../hasura/gen/types';
-import { backgroundSignOut, signIn } from '../auth/auth.service';
+import { showSignIn } from '../auth/auth.service';
 import { getStoreAndHistory } from '../core/app.store';
 import { env } from '../environment/env';
 import { appConfig } from './app.config';
-import { AppStore, AppStoreDirectModel, StoreEntry, StoreOf, ToStoreEntry } from './app.models';
-import { gqlClient } from './graphql.client';
+import { AppStore, AppStoreDirectModel, StoreEntry, StoreOf } from './app.models';
+import { getGqlClient } from './graphql.client';
+import { AppCache } from './models/defaultStore';
 import { handleError } from './services/error.service';
 
 /**
- * Selectors utility, to wrap values returned by reselect selectors to convert immutable object
- * into JavaScript values.
- * @param selectorImmutable
+ * Use it to wrap functions, e.g. components handlers to add loading and error
+ * handling, both synchronous and asynchronous with promise. If an error is thrown
+ * and setError is not provided, `handleError` is called instead.
+ * @param fn function surrounded with try/catch
+ * @param setLoading component loading state setter
+ * @param setError component error state setter
  */
-// Nice to have: find a better typing that don't require consumer to provide the generic type
-// (should be inferred)
-// type ExtractGeneric<Type> = Type extends TypeWithGeneric<infer X> ? X : Type;
-// Extra notes: https://itnext.io/typescript-extract-unpack-a-type-from-a-generic-baca7af14e51
-export function toJS<T>(selectorImmutable: ToStoreEntry<T>): Readonly<T> {
-  const record = selectorImmutable;
-  if (record && typeof (record as any).toJS === 'function') {
-    return (record as any).toJS();
+export function asyncHandler(
+  fn: (...args: any[]) => any | Promise<any>,
+  setLoading?: (loading: boolean) => void,
+  setError?: (error: any) => void) {
+  const hasLoadingHandler = arguments.length >= 2 && setLoading;
+  const hasErrorHandler = arguments.length >= 3 && setError;
+  return async (...args: any[]) => {
+    if (hasLoadingHandler) setLoading!(true);
+    try {
+      return await fn(...args);
+    } catch (e) {
+      if (hasErrorHandler) {
+        setError!(e);
+      } else {
+        handleError(e);
+      }
+    } finally {
+      if (hasLoadingHandler) setLoading!(false);
+    }
+  };
+}
+
+/**
+ * Write data to Apollo cache. Cache can be read in components with useQuery hook. The cache
+ * should remain the source of truth. To enforce this pattern, its values are immutable. Use
+ * writeCache to change their value.
+ * @param data
+ * @param id
+ */
+export function writeCache<TData extends Partial<AppCache>>(data: TData, id?: string) {
+  const gqlClient = getGqlClient();
+  gqlClient.writeData({ data, id });
+}
+
+/**
+ * Custom hook to read from cache with a slightly improved syntax and typing. The result is not
+ * systematically typed with undefined (which does not make sense for local cache and breaks
+ * destructuring) but with only the generic type, leaving the type responsibility to the
+ * specific model and component.
+ * @param query
+ * @param options
+ */
+export function useCache<TData extends AppCache, TVariables = OperationVariables>
+(query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
+  const { data, error } = useQuery(query, options);
+  if (error) {
+    console.error('Error when retrieving cache:', error);
   }
-  // It's a bit hard to handle primitives well, so we make a shortcut: always assume it's a Record
-  // (cf. app.models.ts) and return encapsulated type.
-  // Primitives are also assumed to be wrapped into a record, but it's not the case in reality,
-  // so we use a cast in implementation for this specific case not to break the safe typing.
-  return selectorImmutable as any;
+  return data as TData || {};
 }
 
 // new redux utils
@@ -106,6 +146,7 @@ export function selectState<T extends keyof AppStoreDirectModel, U extends keyof
  */
 export async function apiQuery<T = Query_Root, TVariables = OperationVariables>(
   query: DocumentNode): Promise<T> {
+  const gqlClient = getGqlClient();
   const { data, errors } = await gqlClient.query<T, TVariables>({ query });
   if (errors) {
     throw errors;
@@ -115,6 +156,7 @@ export async function apiQuery<T = Query_Root, TVariables = OperationVariables>(
 
 export async function apiMutate<T = any, TVariables = OperationVariables>(
   mutation: DocumentNode, variables?: TVariables): Promise<T | null | undefined> {
+  const gqlClient = getGqlClient();
   const { data, errors } = await gqlClient.mutate<T, TVariables>({ mutation, variables });
   if (errors) {
     throw errors;
@@ -124,6 +166,7 @@ export async function apiMutate<T = any, TVariables = OperationVariables>(
 
 export function apiSubscribe<T = Subscription_Root, TVariables = OperationVariables>(
   query: DocumentNode): Observable<T | null | undefined> {
+  const gqlClient = getGqlClient();
   return gqlClient.subscribe<T, TVariables>({ query }).map((res => res.data));
 }
 
@@ -172,8 +215,7 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
     }
     // Retry
     if (err.response.status === 401) {
-      await backgroundSignOut();
-      await signIn();
+      await showSignIn();
     } else {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }

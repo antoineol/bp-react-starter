@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "________________ development ________________": "",
-    "start": "yarn gen:schema && yarn gen:types && react-scripts start",
+    "start": "yarn gen:types && react-scripts start",
     "start:staging": "env-cmd .env.staging react-scripts start",
     "start:prod": "env-cmd .env.prod react-scripts start",
     "db": "yarn hasura console",
@@ -19,8 +19,7 @@
     "build:prod": "env-cmd .env.prod npm run build",
     "migrate:staging": "yarn hasura migrate apply --endpoint http://another-graphql-instance.herokuapp.com",
     "________________ implementation details ________________": "",
-    "gen:schema": "mkdirp hasura/gen && gq http://localhost:8080/v1/graphql -H \"X-Hasura-Admin-Secret: secret\" --introspect > hasura/gen/schema.graphql",
-    "gen:types": "graphql-codegen --config ./hasura/codegen.yml",
+    "gen:types": "(mkdirp hasura/gen && gq http://localhost:8080/v1/graphql -H \"X-Hasura-Admin-Secret: secret\" --introspect > hasura/gen/schema.graphql && graphql-codegen --config ./hasura/codegen.yml) || echo WARN: could not regenerate schemas. Maybe hasura is not started?",
     "build": "react-scripts build",
     "build-snapshot": "yarn build && react-snapshot",
     "eject": "react-scripts eject"
@@ -59,7 +58,8 @@
     "redux-saga": "1.1.3",
     "reselect": "4.0.0",
     "subscriptions-transport-ws": "^0.9.16",
-    "typeface-roboto": "0.0.75"
+    "typeface-roboto": "0.0.75",
+    "zen-observable-ts": "^0.8.20"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.11.2",

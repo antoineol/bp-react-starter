@@ -7,8 +7,9 @@ import { RetryLink } from 'apollo-link-retry';
 import { buildDelayFunction } from 'apollo-link-retry/lib/delayFunction';
 import { WebSocketLink } from 'apollo-link-ws';
 import Observable from 'zen-observable-ts';
-import { addJwtToHeaders, backgroundSignOut, signIn } from '../auth/auth.service';
+import { addJwtToHeaders, showSignIn } from '../auth/auth.service';
 import { env } from '../environment/env';
+import { defaultStore } from './models/defaultStore';
 
 const delayOptions = {
   initial: 500,
@@ -32,8 +33,6 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
       const code = err.extensions?.code;
       if (code === 'invalid-jwt'
         || (code === 'invalid-headers' && err.message.includes('Missing Authorization header'))) {
-        // TODO Update to not use redux store: either apollo cache (not clear) or a separate
-        //  observable/promise system
         return reauthAndRetry(operation, forward);
       }
     }
@@ -47,8 +46,8 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   }
 });
 
-const authLink = setContext((_, { headers }) =>
-  ({ headers: addJwtToHeaders(headers) }));
+const authLink = setContext(async (_, { headers }) =>
+  ({ headers: await addJwtToHeaders(headers) }));
 
 const wsLink = new WebSocketLink({
   uri: `${env.hasuraWs}/graphql`,
@@ -56,7 +55,7 @@ const wsLink = new WebSocketLink({
     reconnect: true,
     lazy: true,
     // reconnectionAttempts: 10,
-    connectionParams: () => ({ headers: addJwtToHeaders({}) }),
+    connectionParams: async () => ({ headers: await addJwtToHeaders({}) }),
   } as any,
 });
 
@@ -74,13 +73,23 @@ const wsLink = new WebSocketLink({
 //   httpLink,
 // );
 
-export const gqlClient = new ApolloClient({
-  link: ApolloLink.from([retryLink, errorLink, authLink, wsLink]),
-  cache: new InMemoryCache({
-    freezeResults: true,
-  }),
-  assumeImmutableResults: true,
+const cache = new InMemoryCache({
+  freezeResults: true,
 });
+const gqlClient = new ApolloClient({
+  cache,
+  link: ApolloLink.from([retryLink, errorLink, authLink, wsLink]),
+  assumeImmutableResults: true,
+  // {} So that cache access does not run resolvers functions. Avoids irrelevant network
+  // errors when accessing local cache (source: Apollo doc and PR).
+  resolvers: {},
+});
+gqlClient.writeData({ data: defaultStore });
+gqlClient.onResetStore(() => cache.writeData({ data: defaultStore }) as any);
+
+export function getGqlClient() {
+  return gqlClient;
+}
 
 // Utilities
 
@@ -90,8 +99,7 @@ export function resetWsConnection() {
 }
 
 function reauthAndRetry(operation: Operation, forward: NextLink): Observable<FetchResult> {
-  const reauthenticate = backgroundSignOut().then(() => signIn());
-  return fromPromise(reauthenticate)
+  return fromPromise(showSignIn())
     .flatMap(() => {
       return forward(operation);
     });
