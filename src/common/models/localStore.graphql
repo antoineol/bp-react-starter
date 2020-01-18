@@ -1,0 +1,10 @@
+# Declare Apollo built-in directive so that the IDE doesn't throw an error when parsing.
+directive @client on FIELD
+
+# Extra fields stored in local cache (used as local store).
+# Also update default store (defaultStore.ts in same directory).
+# Root fields should only contain service names to limit collision risks between services
+#  and with remote data.
+extend type query_root {
+  jwt: String
+}

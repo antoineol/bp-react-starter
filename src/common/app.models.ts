@@ -1,7 +1,6 @@
 import { RouterRootState } from 'connected-react-router';
 import { RouterState } from 'connected-react-router/immutable';
 import { List, Record } from 'immutable';
-import { AUTH_REDUCER, AuthModel } from '../auth/auth.service';
 import { COUNT_REDUCER, CountModel } from '../home/count.service';
 import { SECRET_REDUCER, SecretModel } from '../home/secret/secret.service';
 import { AUTHOR_REDUCER, AuthorModel } from '../profile/author.service';
@@ -11,7 +10,6 @@ import { FEATURES_REDUCER, FeaturesModel } from './services/features.service';
 export interface AppStoreDirectModel extends RouterRootState {
   [COUNT_REDUCER]: CountModel;
   [SECRET_REDUCER]: SecretModel;
-  [AUTH_REDUCER]: AuthModel;
   [FEATURES_REDUCER]: FeaturesModel;
   [PROFILE_REDUCER]: ProfileModel;
   [AUTHOR_REDUCER]: AuthorModel;

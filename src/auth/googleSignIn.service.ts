@@ -1,46 +1,19 @@
 import jwtDecode from 'jwt-decode';
 import { appConfig } from '../common/app.config';
 import { JwtFields } from '../common/app.models';
-import { apiPost, deleteCookie, getCookie } from '../common/app.utils';
-import { gqlClient, resetWsConnection } from '../common/graphql.client';
+import { apiPost, getCookie } from '../common/app.utils';
 import { handleError } from '../common/services/error.service';
 import { env } from '../environment/env';
-import { signIn } from './auth.service';
+import { showSignIn } from './auth.service';
 
-type MessageEventHandler = (event: MessageEvent) => void;
-
-let popup: Window | null = null;
-let signInMsgHandler: MessageEventHandler | null = null;
-let timer: NodeJS.Timeout | null = null;
-const checkPopupFrequency = 1000; // ms
+let refreshTimer: NodeJS.Timeout | null = null;
+let prevRefreshTime: number;
 
 export async function signInWithGoogle(): Promise<string> {
   const jwt = await gSignInPopup();
   scheduleJwtRefresh(jwt);
   return jwt;
 }
-
-interface TokenDto {
-  iat: number;
-  exp: number;
-  iss: string;
-  sub: string;
-  [JwtFields.jwtNamespace]: JwtClaims;
-}
-
-interface JwtClaims {
-  email: string;
-  name: string;
-  locale: string;
-  hd: string;
-  refresh: string;
-  [JwtFields.jwtClaimRoles]: string;
-  [JwtFields.jwtClaimDefaultRole]: string;
-  [JwtFields.jwtClaimUserId]: string;
-}
-
-let refreshTimer: NodeJS.Timeout | null = null;
-let prevRefreshTime: number;
 
 export function scheduleJwtRefresh(jwt: string | undefined) {
   // If handling error is simpler, we could make it return a promise rejected if any error
@@ -70,11 +43,32 @@ export function scheduleJwtRefresh(jwt: string | undefined) {
   refreshTimer = setTimeout(refreshJwt, renewInMs);
 }
 
-export async function localSignOut() {
-  deleteCookie(appConfig.jwtCookieName);
-  deleteCookie(appConfig.jwtSignatureCookieName);
-  resetWsConnection();
-  await gqlClient.resetStore();
+// Implementation details
+
+type MessageEventHandler = (event: MessageEvent) => void;
+
+let popup: Window | null = null;
+let signInMsgHandler: MessageEventHandler | null = null;
+let timer: NodeJS.Timeout | null = null;
+const checkPopupFrequency = 1000; // ms
+
+interface TokenDto {
+  iat: number;
+  exp: number;
+  iss: string;
+  sub: string;
+  [JwtFields.jwtNamespace]: JwtClaims;
+}
+
+interface JwtClaims {
+  email: string;
+  name: string;
+  locale: string;
+  hd: string;
+  refresh: string;
+  [JwtFields.jwtClaimRoles]: string;
+  [JwtFields.jwtClaimDefaultRole]: string;
+  [JwtFields.jwtClaimUserId]: string;
 }
 
 function gSignInPopup(): Promise<string> {
@@ -117,7 +111,7 @@ async function refreshJwt() {
     scheduleJwtRefresh(jwt);
   } catch (e) {
     handleError(e);
-    signIn().catch(handleError);
+    showSignIn().catch(handleError);
   }
 }
 

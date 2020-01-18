@@ -6,7 +6,12 @@ interface Props {
 }
 
 function ErrorComp({ error }: Props) {
-  return <Typography color={'error'}>{error}</Typography>;
+  const err = isObject(error) || Array.isArray(error) ? JSON.stringify(error) : error;
+  return <Typography color={'error'}>{err}</Typography>;
 }
 
 export default memo(ErrorComp);
+
+function isObject(obj: any) {
+  return typeof obj === 'object' && obj !== null;
+}

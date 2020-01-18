@@ -30,6 +30,7 @@ export type Article = {
   title: Scalars['String'],
 };
 
+
 /** columns and relationships of "article" */
 export type ArticleArticle_TagsArgs = {
   distinct_on?: Maybe<Array<Article_Tag_Select_Column>>,
@@ -38,6 +39,7 @@ export type ArticleArticle_TagsArgs = {
   order_by?: Maybe<Array<Article_Tag_Order_By>>,
   where?: Maybe<Article_Tag_Bool_Exp>
 };
+
 
 /** columns and relationships of "article" */
 export type ArticleArticle_Tags_AggregateArgs = {
@@ -48,6 +50,7 @@ export type ArticleArticle_Tags_AggregateArgs = {
   where?: Maybe<Article_Tag_Bool_Exp>
 };
 
+
 /** columns and relationships of "article" */
 export type ArticleTagsArgs = {
   distinct_on?: Maybe<Array<Article_Tags_View_Select_Column>>,
@@ -56,6 +59,7 @@ export type ArticleTagsArgs = {
   order_by?: Maybe<Array<Article_Tags_View_Order_By>>,
   where?: Maybe<Article_Tags_View_Bool_Exp>
 };
+
 
 /** columns and relationships of "article" */
 export type ArticleTags_AggregateArgs = {
@@ -88,6 +92,7 @@ export type Article_Aggregate_Fields = {
   var_samp?: Maybe<Article_Var_Samp_Fields>,
   variance?: Maybe<Article_Variance_Fields>,
 };
+
 
 /** aggregate fields of "article" */
 export type Article_Aggregate_FieldsCountArgs = {
@@ -319,6 +324,7 @@ export type Article_Tag_Aggregate_Fields = {
   count?: Maybe<Scalars['Int']>,
 };
 
+
 /** aggregate fields of "article_tag" */
 export type Article_Tag_Aggregate_FieldsCountArgs = {
   columns?: Maybe<Array<Article_Tag_Select_Column>>,
@@ -435,6 +441,7 @@ export type Article_Tags_View_Aggregate_Fields = {
   max?: Maybe<Article_Tags_View_Max_Fields>,
   min?: Maybe<Article_Tags_View_Min_Fields>,
 };
+
 
 /** aggregate fields of "article_tags_view" */
 export type Article_Tags_View_Aggregate_FieldsCountArgs = {
@@ -556,6 +563,7 @@ export type Author = {
   name: Scalars['String'],
 };
 
+
 /** columns and relationships of "author" */
 export type AuthorArticlesArgs = {
   distinct_on?: Maybe<Array<Article_Select_Column>>,
@@ -564,6 +572,7 @@ export type AuthorArticlesArgs = {
   order_by?: Maybe<Array<Article_Order_By>>,
   where?: Maybe<Article_Bool_Exp>
 };
+
 
 /** columns and relationships of "author" */
 export type AuthorArticles_AggregateArgs = {
@@ -588,6 +597,7 @@ export type Author_Aggregate_Fields = {
   max?: Maybe<Author_Max_Fields>,
   min?: Maybe<Author_Min_Fields>,
 };
+
 
 /** aggregate fields of "author" */
 export type Author_Aggregate_FieldsCountArgs = {
@@ -752,30 +762,36 @@ export type Mutation_Root = {
   update_tag?: Maybe<Tag_Mutation_Response>,
 };
 
+
 /** mutation root */
 export type Mutation_RootDelete_ArticleArgs = {
   where: Article_Bool_Exp
 };
+
 
 /** mutation root */
 export type Mutation_RootDelete_Article_TagArgs = {
   where: Article_Tag_Bool_Exp
 };
 
+
 /** mutation root */
 export type Mutation_RootDelete_AuthorArgs = {
   where: Author_Bool_Exp
 };
+
 
 /** mutation root */
 export type Mutation_RootDelete_ProfileArgs = {
   where: Profile_Bool_Exp
 };
 
+
 /** mutation root */
 export type Mutation_RootDelete_TagArgs = {
   where: Tag_Bool_Exp
 };
+
 
 /** mutation root */
 export type Mutation_RootInsert_ArticleArgs = {
@@ -783,11 +799,13 @@ export type Mutation_RootInsert_ArticleArgs = {
   on_conflict?: Maybe<Article_On_Conflict>
 };
 
+
 /** mutation root */
 export type Mutation_RootInsert_Article_TagArgs = {
   objects: Array<Article_Tag_Insert_Input>,
   on_conflict?: Maybe<Article_Tag_On_Conflict>
 };
+
 
 /** mutation root */
 export type Mutation_RootInsert_AuthorArgs = {
@@ -795,17 +813,20 @@ export type Mutation_RootInsert_AuthorArgs = {
   on_conflict?: Maybe<Author_On_Conflict>
 };
 
+
 /** mutation root */
 export type Mutation_RootInsert_ProfileArgs = {
   objects: Array<Profile_Insert_Input>,
   on_conflict?: Maybe<Profile_On_Conflict>
 };
 
+
 /** mutation root */
 export type Mutation_RootInsert_TagArgs = {
   objects: Array<Tag_Insert_Input>,
   on_conflict?: Maybe<Tag_On_Conflict>
 };
+
 
 /** mutation root */
 export type Mutation_RootUpdate_ArticleArgs = {
@@ -814,11 +835,13 @@ export type Mutation_RootUpdate_ArticleArgs = {
   where: Article_Bool_Exp
 };
 
+
 /** mutation root */
 export type Mutation_RootUpdate_Article_TagArgs = {
   _set?: Maybe<Article_Tag_Set_Input>,
   where: Article_Tag_Bool_Exp
 };
+
 
 /** mutation root */
 export type Mutation_RootUpdate_AuthorArgs = {
@@ -826,11 +849,13 @@ export type Mutation_RootUpdate_AuthorArgs = {
   where: Author_Bool_Exp
 };
 
+
 /** mutation root */
 export type Mutation_RootUpdate_ProfileArgs = {
   _set?: Maybe<Profile_Set_Input>,
   where: Profile_Bool_Exp
 };
+
 
 /** mutation root */
 export type Mutation_RootUpdate_TagArgs = {

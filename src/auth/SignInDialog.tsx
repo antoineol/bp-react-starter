@@ -1,8 +1,8 @@
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
+import gql from 'graphql-tag';
 import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
-import { selectIsLoggedIn } from './auth.service';
+import { useCache } from '../common/app.utils';
 import GoogleSignIn from './GoogleSignIn';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -17,12 +17,14 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   }),
 );
 
+const GET_JWT = gql`{ jwt @client }`;
+
 function SignInDialog() {
   const classes = useStyles(); // MUI Styles
-  const isLoggedIn = useSelector(selectIsLoggedIn); // Redux Selector
+  const { jwt } = useCache(GET_JWT);
 
   return <Dialog fullScreen disableBackdropClick disableEscapeKeyDown
-                 open={!isLoggedIn} classes={{ paper: classes.dialog }}>
+                 open={!jwt} classes={{ paper: classes.dialog }}>
     <Typography variant={'h2'} className={classes.title}>My starter app</Typography>
     <GoogleSignIn />
   </Dialog>;
