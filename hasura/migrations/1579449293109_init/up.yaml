@@ -37,7 +37,16 @@
             name: author
             using:
               foreign_key_constraint_on: author_id
-        select_permissions: []
+        select_permissions:
+          - comment: null
+            permission:
+              allow_aggregations: false
+              columns:
+                - id
+                - title
+              computed_fields: []
+              filter: {}
+            role: anonymous
         table: article
         update_permissions: []
       - array_relationships: []
@@ -108,7 +117,33 @@
         insert_permissions: []
         is_enum: false
         object_relationships: []
-        select_permissions: []
+        select_permissions:
+          - comment: null
+            permission:
+              allow_aggregations: false
+              columns:
+                - id
+                - name
+              computed_fields: []
+              filter: {}
+            role: all@foo.com
+          - comment: null
+            permission:
+              allow_aggregations: false
+              columns:
+                - id
+              computed_fields: []
+              filter: {}
+            role: anonymous
+          - comment: null
+            permission:
+              allow_aggregations: false
+              columns:
+                - name
+                - id
+              computed_fields: []
+              filter: {}
+            role: team@earlymetrics.com
         table: author
         update_permissions: []
       - array_relationships: []
@@ -123,26 +158,7 @@
             select_by_pk: null
             update: null
         delete_permissions: []
-        event_triggers:
-          - definition:
-              delete:
-                columns: '*'
-              enable_manual: true
-              insert:
-                columns: '*'
-              update:
-                columns:
-                  - name
-                  - created_at
-                  - updated_at
-                  - id
-            headers: []
-            name: echo
-            retry_conf:
-              interval_sec: 10
-              num_retries: 0
-              timeout_sec: 60
-            webhook: https://httpbin.org/post
+        event_triggers: []
         insert_permissions: []
         is_enum: false
         object_relationships: []
