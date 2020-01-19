@@ -11,15 +11,15 @@ import { handleError } from '../services/error.service';
  * handling, both synchronous and asynchronous with promise. If an error is thrown
  * and setError is not provided, `handleError` is called instead.
  *
- * If the reference to fn can change (e.g. arrow notation function), consider wrapping it with
- * useCallback to optimize it.
+ * If the reference to the handler can change (e.g. arrow notation function), consider wrapping it
+ * with useCallback to optimize it.
  *
- * @param fn function surrounded with try/catch
- * @param setLoading component loading state setter
- * @param setError component error state setter
+ * @param handler async function surrounded with try/catch
+ * @param setLoading component loading state setter (useState is recommended to generate it)
+ * @param setError component error state setter (useState is recommended to generate it)
  */
 export function useAsyncHandler(
-  fn: (...args: any[]) => Promise<any>,
+  handler: (...args: any[]) => Promise<any>,
   setLoading?: (loading: boolean) => void,
   setError?: (error: any) => void) {
   const hasLoadingHandler = arguments.length >= 2 && setLoading;
@@ -27,7 +27,7 @@ export function useAsyncHandler(
   return useCallback(async (...args: any[]) => {
     if (hasLoadingHandler) setLoading!(true);
     try {
-      return await fn(...args);
+      return await handler(...args);
     } catch (e) {
       if (hasErrorHandler) {
         setError!(e);
@@ -37,7 +37,7 @@ export function useAsyncHandler(
     } finally {
       if (hasLoadingHandler) setLoading!(false);
     }
-  }, [fn, hasErrorHandler, hasLoadingHandler, setError, setLoading]);
+  }, [handler, hasErrorHandler, hasLoadingHandler, setError, setLoading]);
 }
 
 /**

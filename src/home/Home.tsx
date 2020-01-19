@@ -67,7 +67,7 @@ const Home: FC = () => {
     <div className={classes.root}>
       <img src={logo} className={classes.logo} alt="logo" />
       <Typography variant="body1">
-        Edit2 <code>src/home/Home.tsx</code> and save to reload.
+        Edit <code>src/home/Home.tsx</code> and save to reload.
       </Typography>
       <Link href='https://reactjs.org' target='_blank' rel='noopener noreferrer' color={'primary'}>
         Learn React</Link>
