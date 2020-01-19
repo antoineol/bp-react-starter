@@ -1,5 +1,6 @@
 import { Typography } from '@material-ui/core';
 import React, { memo } from 'react';
+import { isObject } from '../utils/app.utils';
 
 interface Props {
   error: any;
@@ -11,7 +12,3 @@ function ErrorComp({ error }: Props) {
 }
 
 export default memo(ErrorComp);
-
-function isObject(obj: any) {
-  return typeof obj === 'object' && obj !== null;
-}

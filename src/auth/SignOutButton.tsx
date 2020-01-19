@@ -1,18 +1,18 @@
 import { Button } from '@material-ui/core';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import gql from 'graphql-tag';
-import React, { Fragment, memo, useCallback, useState } from 'react';
-import { asyncHandler, useCache } from '../common/app.utils';
+import React, { FC, Fragment, memo, useState } from 'react';
 import ErrorComp from '../common/components/ErrorComp';
+import { useAsyncHandler, useCache } from '../common/utils/app.utils';
 import { signOut } from './auth.service';
 
 const GET_JWT = gql`{ jwt @client }`;
 
-function SignOutButton(props: { className?: string }) {
+const SignOutButton: FC<{ className?: string }> = props => {
   const { jwt } = useCache(GET_JWT);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(undefined);
-  const handleClick = useCallback(asyncHandler(signOut, setLoading, setError), []);
+  const handleClick = useAsyncHandler(signOut, setLoading, setError);
 
   if (!jwt) {
     return null;
@@ -30,6 +30,6 @@ function SignOutButton(props: { className?: string }) {
     </Button>
     <ErrorComp error={error} />
   </Fragment>;
-}
+};
 
 export default memo(SignOutButton);

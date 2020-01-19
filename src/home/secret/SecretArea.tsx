@@ -9,10 +9,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import React, { Fragment, memo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../../common/app.utils';
-import { SecretAT, selectShowSecret } from './secret.service';
+import React, { Fragment, memo, useCallback, useState } from 'react';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
 // hope to have a fix in TypeScript 3.3. Issues to follow up:
@@ -25,23 +22,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-// Redux bindings
-
-export enum SecretStatus {
-  Show = 'Show', Hide = 'Hide',
-}
-
 // Component
 
 function SecretAreaComp() {
   const classes = useStyles(); // MUI Styles
-  const show = useSelector(selectShowSecret); // Redux Selector
-  const dispatch = useAppDispatch(); // Redux dispatcher
-  // Callback optimized to keep the same reference to avoid re-rendering child components
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(SecretAT.Show, e.target.value === SecretStatus.Show);
-  }, [dispatch]);
-  const value = show ? SecretStatus.Show : SecretStatus.Hide;
+  const [show, setShow] = useState(false);
+  const handleChange = useCallback(() => setShow(show => !show), []);
 
   return <Fragment>
     <FormControl className={classes.formControl}>
@@ -49,12 +35,12 @@ function SecretAreaComp() {
       <RadioGroup
         aria-label="Secret"
         name="secret"
-        value={value}
+        value={show}
         onChange={handleChange}
       >
-        <FormControlLabel value={SecretStatus.Show} control={<Radio />}
+        <FormControlLabel value={true} control={<Radio />}
                           label="Montrer les secrets" />
-        <FormControlLabel value={SecretStatus.Hide} control={<Radio />}
+        <FormControlLabel value={false} control={<Radio />}
                           label="Ne rien montrer" />
       </RadioGroup>
     </FormControl>

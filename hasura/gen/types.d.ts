@@ -903,6 +903,7 @@ export type Profile_Aggregate_Fields = {
   min?: Maybe<Profile_Min_Fields>,
 };
 
+
 /** aggregate fields of "profile" */
 export type Profile_Aggregate_FieldsCountArgs = {
   columns?: Maybe<Array<Profile_Select_Column>>,
@@ -1082,6 +1083,7 @@ export type Query_Root = {
   tag_by_pk?: Maybe<Tag>,
 };
 
+
 /** query root */
 export type Query_RootArticleArgs = {
   distinct_on?: Maybe<Array<Article_Select_Column>>,
@@ -1090,6 +1092,7 @@ export type Query_RootArticleArgs = {
   order_by?: Maybe<Array<Article_Order_By>>,
   where?: Maybe<Article_Bool_Exp>
 };
+
 
 /** query root */
 export type Query_RootArticle_AggregateArgs = {
@@ -1100,10 +1103,12 @@ export type Query_RootArticle_AggregateArgs = {
   where?: Maybe<Article_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootArticle_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** query root */
 export type Query_RootArticle_TagArgs = {
@@ -1114,6 +1119,7 @@ export type Query_RootArticle_TagArgs = {
   where?: Maybe<Article_Tag_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootArticle_Tag_AggregateArgs = {
   distinct_on?: Maybe<Array<Article_Tag_Select_Column>>,
@@ -1123,11 +1129,13 @@ export type Query_RootArticle_Tag_AggregateArgs = {
   where?: Maybe<Article_Tag_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootArticle_Tag_By_PkArgs = {
   article_id: Scalars['uuid'],
   tag_id: Scalars['uuid']
 };
+
 
 /** query root */
 export type Query_RootArticle_Tags_ViewArgs = {
@@ -1138,6 +1146,7 @@ export type Query_RootArticle_Tags_ViewArgs = {
   where?: Maybe<Article_Tags_View_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootArticle_Tags_View_AggregateArgs = {
   distinct_on?: Maybe<Array<Article_Tags_View_Select_Column>>,
@@ -1146,6 +1155,7 @@ export type Query_RootArticle_Tags_View_AggregateArgs = {
   order_by?: Maybe<Array<Article_Tags_View_Order_By>>,
   where?: Maybe<Article_Tags_View_Bool_Exp>
 };
+
 
 /** query root */
 export type Query_RootAuthorArgs = {
@@ -1156,6 +1166,7 @@ export type Query_RootAuthorArgs = {
   where?: Maybe<Author_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootAuthor_AggregateArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>,
@@ -1165,10 +1176,12 @@ export type Query_RootAuthor_AggregateArgs = {
   where?: Maybe<Author_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootAuthor_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** query root */
 export type Query_RootProfileArgs = {
@@ -1179,6 +1192,7 @@ export type Query_RootProfileArgs = {
   where?: Maybe<Profile_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootProfile_AggregateArgs = {
   distinct_on?: Maybe<Array<Profile_Select_Column>>,
@@ -1188,10 +1202,12 @@ export type Query_RootProfile_AggregateArgs = {
   where?: Maybe<Profile_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootProfile_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** query root */
 export type Query_RootTagArgs = {
@@ -1202,6 +1218,7 @@ export type Query_RootTagArgs = {
   where?: Maybe<Tag_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootTag_AggregateArgs = {
   distinct_on?: Maybe<Array<Tag_Select_Column>>,
@@ -1210,6 +1227,7 @@ export type Query_RootTag_AggregateArgs = {
   order_by?: Maybe<Array<Tag_Order_By>>,
   where?: Maybe<Tag_Bool_Exp>
 };
+
 
 /** query root */
 export type Query_RootTag_Articles_ViewArgs = {
@@ -1220,6 +1238,7 @@ export type Query_RootTag_Articles_ViewArgs = {
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
 
+
 /** query root */
 export type Query_RootTag_Articles_View_AggregateArgs = {
   distinct_on?: Maybe<Array<Tag_Articles_View_Select_Column>>,
@@ -1228,6 +1247,7 @@ export type Query_RootTag_Articles_View_AggregateArgs = {
   order_by?: Maybe<Array<Tag_Articles_View_Order_By>>,
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
+
 
 /** query root */
 export type Query_RootTag_By_PkArgs = {

@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from 'axios';
-import { defaultOptions } from '../common/app.utils';
 import {
   changeInput,
   clickElt,
@@ -7,6 +6,7 @@ import {
   renderTestAppSignedIn,
   submitInput,
 } from '../common/test/test.utils';
+import { defaultOptions } from '../common/utils/http.utils';
 import { TodoItem } from './count.service';
 
 it('should display the home page by default and with / URL', async () => {

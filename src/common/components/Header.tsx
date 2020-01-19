@@ -3,11 +3,10 @@ import AppBar from '@material-ui/core/AppBar/AppBar';
 import { ButtonBaseProps } from '@material-ui/core/ButtonBase';
 import Tab from '@material-ui/core/Tab/Tab';
 import Tabs from '@material-ui/core/Tabs/Tabs';
-import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { FC, memo } from 'react';
+import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import SignOutButton from '../../auth/SignOutButton';
-import { selectLocation } from '../services/routes.service';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     appBar: {
@@ -43,9 +42,9 @@ function LinkTab(props: LinkTabProps) {
   return <Tab component={Link}{...(props as any)} />;
 }
 
-function Header() {
+const Header: FC = () => {
   const classes = useStyles(); // MUI Styles
-  const pathname = useSelector(selectLocation).get('pathname'); // Redux Selector
+  const { pathname } = useLocation();
   return (
     <AppBar position="static" classes={{ root: classes.appBar }}>
       <Tabs value={pathname} classes={{ root: classes.tabs }}>
@@ -54,6 +53,6 @@ function Header() {
       <SignOutButton className={classes.signOutButton} />
     </AppBar>
   );
-}
+};
 
 export default memo(Header);
