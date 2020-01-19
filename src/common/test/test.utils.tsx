@@ -2,9 +2,10 @@ import { fireEvent, render } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
 import { createBrowserHistory } from 'history';
 import React from 'react';
+import { Features } from '../../../hasura/gen/types';
 import App from '../../App';
-import { AppCache, defaultStore } from '../models/defaultStore';
-import { Features } from '../services/features.service';
+import { AppCache } from '../models/defaultStore';
+import { featuresMock } from '../services/features.service';
 import { writeCache } from '../utils/app.utils';
 
 // Default HTTP mocks. Can be overridden in each test.
@@ -131,10 +132,11 @@ function mockApi<T>(method: 'get' | 'post') {
 }
 
 function allFeaturesEnabled(): Features {
-  const feats = defaultStore.features as unknown as Features;
-  for (const featName of Object.keys(feats)) {
-    if (!feats[featName]) {
-      feats[featName] = true;
+  const feats = { ...featuresMock }; // Shallow copy
+  for (const featName of Object.keys(feats) as (keyof typeof feats)[]) {
+    if (feats[featName] === false) {
+      // Type patch required, probably because of the __typename which is not a boolean.
+      (feats[featName] as boolean) = true;
     }
   }
   return feats;

@@ -704,6 +704,10 @@ enum author_update_column {
   name
 }
 
+type Features {
+  queryJsonPlaceholder: Boolean!
+}
+
 # expression to compare columns of type Int. All fields are combined with logical 'AND'.
 input Int_comparison_exp {
   _eq: Int
@@ -1019,6 +1023,10 @@ enum profile_update_column {
   updated_at
 }
 
+type Query {
+  features: Features!
+}
+
 # query root
 type query_root {
   # fetch data from the table: "article"
@@ -1173,6 +1181,7 @@ type query_root {
 
   # fetch data from the table: "author" using primary key columns
   author_by_pk(id: uuid!): author
+  features: Features!
 
   # fetch data from the table: "profile"
   profile(

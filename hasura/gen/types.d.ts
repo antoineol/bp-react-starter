@@ -714,6 +714,11 @@ export enum Author_Update_Column {
   Name = 'name'
 }
 
+export type Features = {
+  __typename?: 'Features',
+  queryJsonPlaceholder: Scalars['Boolean'],
+};
+
 /** expression to compare columns of type Int. All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: Maybe<Scalars['Int']>,
@@ -1040,6 +1045,11 @@ export enum Profile_Update_Column {
   UpdatedAt = 'updated_at'
 }
 
+export type Query = {
+  __typename?: 'Query',
+  features: Features,
+};
+
 /** query root */
 export type Query_Root = {
   __typename?: 'query_root',
@@ -1065,6 +1075,7 @@ export type Query_Root = {
   author_aggregate: Author_Aggregate,
   /** fetch data from the table: "author" using primary key columns */
   author_by_pk?: Maybe<Author>,
+  features: Features,
   /** fetch data from the table: "profile" */
   profile: Array<Profile>,
   /** fetch aggregated fields from the table: "profile" */
@@ -1316,6 +1327,7 @@ export type Subscription_Root = {
   tag_by_pk?: Maybe<Tag>,
 };
 
+
 /** subscription root */
 export type Subscription_RootArticleArgs = {
   distinct_on?: Maybe<Array<Article_Select_Column>>,
@@ -1324,6 +1336,7 @@ export type Subscription_RootArticleArgs = {
   order_by?: Maybe<Array<Article_Order_By>>,
   where?: Maybe<Article_Bool_Exp>
 };
+
 
 /** subscription root */
 export type Subscription_RootArticle_AggregateArgs = {
@@ -1334,10 +1347,12 @@ export type Subscription_RootArticle_AggregateArgs = {
   where?: Maybe<Article_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootArticle_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** subscription root */
 export type Subscription_RootArticle_TagArgs = {
@@ -1348,6 +1363,7 @@ export type Subscription_RootArticle_TagArgs = {
   where?: Maybe<Article_Tag_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootArticle_Tag_AggregateArgs = {
   distinct_on?: Maybe<Array<Article_Tag_Select_Column>>,
@@ -1357,11 +1373,13 @@ export type Subscription_RootArticle_Tag_AggregateArgs = {
   where?: Maybe<Article_Tag_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootArticle_Tag_By_PkArgs = {
   article_id: Scalars['uuid'],
   tag_id: Scalars['uuid']
 };
+
 
 /** subscription root */
 export type Subscription_RootArticle_Tags_ViewArgs = {
@@ -1372,6 +1390,7 @@ export type Subscription_RootArticle_Tags_ViewArgs = {
   where?: Maybe<Article_Tags_View_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootArticle_Tags_View_AggregateArgs = {
   distinct_on?: Maybe<Array<Article_Tags_View_Select_Column>>,
@@ -1380,6 +1399,7 @@ export type Subscription_RootArticle_Tags_View_AggregateArgs = {
   order_by?: Maybe<Array<Article_Tags_View_Order_By>>,
   where?: Maybe<Article_Tags_View_Bool_Exp>
 };
+
 
 /** subscription root */
 export type Subscription_RootAuthorArgs = {
@@ -1390,6 +1410,7 @@ export type Subscription_RootAuthorArgs = {
   where?: Maybe<Author_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootAuthor_AggregateArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>,
@@ -1399,10 +1420,12 @@ export type Subscription_RootAuthor_AggregateArgs = {
   where?: Maybe<Author_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootAuthor_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** subscription root */
 export type Subscription_RootProfileArgs = {
@@ -1413,6 +1436,7 @@ export type Subscription_RootProfileArgs = {
   where?: Maybe<Profile_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootProfile_AggregateArgs = {
   distinct_on?: Maybe<Array<Profile_Select_Column>>,
@@ -1422,10 +1446,12 @@ export type Subscription_RootProfile_AggregateArgs = {
   where?: Maybe<Profile_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootProfile_By_PkArgs = {
   id: Scalars['uuid']
 };
+
 
 /** subscription root */
 export type Subscription_RootTagArgs = {
@@ -1436,6 +1462,7 @@ export type Subscription_RootTagArgs = {
   where?: Maybe<Tag_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootTag_AggregateArgs = {
   distinct_on?: Maybe<Array<Tag_Select_Column>>,
@@ -1444,6 +1471,7 @@ export type Subscription_RootTag_AggregateArgs = {
   order_by?: Maybe<Array<Tag_Order_By>>,
   where?: Maybe<Tag_Bool_Exp>
 };
+
 
 /** subscription root */
 export type Subscription_RootTag_Articles_ViewArgs = {
@@ -1454,6 +1482,7 @@ export type Subscription_RootTag_Articles_ViewArgs = {
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
 
+
 /** subscription root */
 export type Subscription_RootTag_Articles_View_AggregateArgs = {
   distinct_on?: Maybe<Array<Tag_Articles_View_Select_Column>>,
@@ -1462,6 +1491,7 @@ export type Subscription_RootTag_Articles_View_AggregateArgs = {
   order_by?: Maybe<Array<Tag_Articles_View_Order_By>>,
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
+
 
 /** subscription root */
 export type Subscription_RootTag_By_PkArgs = {
