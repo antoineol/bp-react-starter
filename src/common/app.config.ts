@@ -1,6 +1,6 @@
 export const appConfig = {
   useRealWebService: true,
-  useServerFeatures: false,
+  useServerFeatures: true,
   useHotModuleReplacement: true,
   jwtCookieName: 'jwtHeaderPayload',
   jwtSignatureCookieName: 'jwtSignature',

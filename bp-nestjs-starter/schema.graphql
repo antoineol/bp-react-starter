@@ -3,24 +3,10 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Author {
-  id: Int!
-  firstName: String
-  lastName: String
-  posts: [Post!]!
-}
-
-type Mutation {
-  upvotePost(postId: Int!): Post!
-}
-
-type Post {
-  id: Int!
-  title: String!
-  votes: Int
+type Features {
+  queryJsonPlaceholder: Boolean!
 }
 
 type Query {
-  authors(id: Int): [Author!]!
-  author(id: Int): Author!
+  features: Features!
 }

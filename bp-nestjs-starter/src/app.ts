@@ -17,6 +17,7 @@ export async function initApp(): Promise<INestApplication> {
   if (env.allowedHosts) {
     app.enableCors({ credentials: true, origin: env.allowedHosts });
   }
+  app.use(morgan('[:date[iso]] :remote-addr :method :url :status - :response-time ms'));
   // In development, a small lag is added artificially to simulate real-life network constraints.
   if (env.isDev && !env.isJest) {
     app.use((req, res, next) => setTimeout(next, appConfig.localhostLatency));
@@ -31,7 +32,6 @@ export async function initApp(): Promise<INestApplication> {
   }));
   app.use(cookieParser(env.secretKey));
   // Log incoming requests with the specified format
-  app.use(morgan('[:date[iso]] :remote-addr :method :url :status - :response-time ms'));
   // For validation, we may want to use a toolkit that works both on client-side and server-side
   // with a validation/data model format shared between the two apps.
   // It would replace nestjs' embedded validation (from class-validator).

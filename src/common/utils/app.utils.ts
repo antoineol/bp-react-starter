@@ -49,16 +49,16 @@ export function useAsyncHandler(
  * type name in localStore.graphql schema).
  * @param id Optional id property used to write a fragment to an existing object in the store.
  */
-export function writeCache<TData extends RecursivePartial<AppCache>>(data: TData, id?: string) {
+export function writeCache(data: RecursivePartial<AppCache>, id?: string) {
   const gqlClient = getGqlClient();
   addTypeNames(data);
   gqlClient.writeData({ data, id });
 }
 
-function addTypeNames<TData extends RecursivePartial<AppCache>>(data: TData) {
-  for (const key of Object.keys(data) as (keyof AppCache)[]) {
+function addTypeNames(data: RecursivePartial<AppCache>) {
+  for (const key of Object.keys(data) as (keyof typeof data)[]) {
     const subObj = data[key] as any;
-    const initialCacheObj = defaultStore[key] as any;
+    const initialCacheObj = (defaultStore as AppCache)[key] as any;
     if (isObject(subObj) && isObject(initialCacheObj) && !subObj.__typename) {
       subObj.__typename = initialCacheObj.__typename;
     }
