@@ -1,7 +1,7 @@
 export const appConfig = {
   useRealWebService: true,
   useServerFeatures: false,
-  useHotModuleReplacement: false,
+  useHotModuleReplacement: true,
   jwtCookieName: 'jwtHeaderPayload',
   jwtSignatureCookieName: 'jwtSignature',
   authEndMessage: 'signInFinished',

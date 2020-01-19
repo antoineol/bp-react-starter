@@ -7,4 +7,14 @@ directive @client on FIELD
 #  and with remote data.
 extend type query_root {
   jwt: String
+  home: Home
+  features: Features
+}
+
+type Home {
+  count: Int
+}
+
+type Features {
+  queryJsonPlaceholder: Boolean
 }

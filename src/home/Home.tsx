@@ -9,11 +9,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import React, { memo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../common/app.utils';
-import { useFeatures } from '../common/services/features.service';
-import { CountAT, selectCount, selectIncrementLoading } from './count.service';
+import React, { FC, memo, useCallback, useState } from 'react';
+import ErrorComp from '../common/components/ErrorComp';
+import { GET_JSON_PL } from '../common/services/features.service';
+import { useAsyncHandler, useCache } from '../common/utils/app.utils';
+import { changeCount, doubleCount, GET_COUNT, incrementCount } from './count.service';
 import logo from './logo.svg';
 import SecretArea from './secret/SecretArea';
 
@@ -24,7 +24,7 @@ import SecretArea from './secret/SecretArea';
 // A workaround to have auto-completion is to set CSSProperties type to class values as below.
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
-    minHeight: '100vh',
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -52,27 +52,22 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 // Component
 
-function HomeComp() {
+const Home: FC = () => {
   const classes = useStyles(); // MUI Styles
-  const count = useSelector(selectCount); // Redux Selectors
-  const loading = useSelector(selectIncrementLoading);
-  const features = useFeatures();
-  const dispatch = useAppDispatch(); // Redux dispatcher
-  // Callbacks optimized to keep the same reference to avoid re-rendering child components
-  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(CountAT.DoubleCount);
-  }, [dispatch]);
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(CountAT.UpdateCount, parseFloat(e.target.value));
-  }, [dispatch]);
-  const handleClick = useCallback(() => dispatch(CountAT.Increment), [dispatch]);
+  const { home: { count } } = useCache(GET_COUNT);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(undefined);
+  const handleClick = useAsyncHandler(incrementCount, setLoading, setError);
+  const handleSubmit = doubleCount;
+  // Callback optimized to keep the same reference to avoid re-rendering child components
+  const handleChange = useCallback(e => changeCount(e, parseFloat(e.target.value)), []);
+  const { features: { queryJsonPlaceholder } } = useCache(GET_JSON_PL);
 
   return (
     <div className={classes.root}>
       <img src={logo} className={classes.logo} alt="logo" />
       <Typography variant="body1">
-        Edit <code>src/home/Home.tsx</code> and save to reload.
+        Edit2 <code>src/home/Home.tsx</code> and save to reload.
       </Typography>
       <Link href='https://reactjs.org' target='_blank' rel='noopener noreferrer' color={'primary'}>
         Learn React</Link>
@@ -84,9 +79,10 @@ function HomeComp() {
           value={isNaN(count) ? '' : count}
           onChange={handleChange}
           type={'number'}
+          disabled={loading}
         />
       </form>
-      {features.get('queryJsonPlaceholder') && <Button
+      {queryJsonPlaceholder && <Button
         variant={'outlined'}
         color={'primary'}
         className={classes.incrButton}
@@ -95,9 +91,10 @@ function HomeComp() {
         Fetch n°{isNaN(count) ? '-' : count}
         {loading && <CircularProgress className={classes.loader} />}
       </Button>}
+      <ErrorComp error={error} />
       <SecretArea />
     </div>
   );
-}
+};
 
-export default memo(HomeComp);
+export default memo(Home);

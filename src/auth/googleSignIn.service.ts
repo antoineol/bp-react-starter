@@ -1,10 +1,17 @@
 import jwtDecode from 'jwt-decode';
 import { appConfig } from '../common/app.config';
-import { JwtFields } from '../common/app.models';
-import { apiPost, getCookie } from '../common/app.utils';
 import { handleError } from '../common/services/error.service';
+import { getCookie } from '../common/utils/app.utils';
+import { apiPost } from '../common/utils/http.utils';
 import { env } from '../environment/env';
 import { showSignIn } from './auth.service';
+
+enum JwtFields {
+  jwtNamespace = 'https://hasura.io/jwt/claims',
+  jwtClaimRoles = 'x-hasura-allowed-roles',
+  jwtClaimDefaultRole = 'x-hasura-default-role',
+  jwtClaimUserId = 'x-hasura-user-id',
+}
 
 let refreshTimer: NodeJS.Timeout | null = null;
 let prevRefreshTime: number;
@@ -15,7 +22,7 @@ export async function signInWithGoogle(): Promise<string> {
   return jwt;
 }
 
-export function scheduleJwtRefresh(jwt: string | undefined) {
+export function scheduleJwtRefresh(jwt: string | null, allowCallTwice = false) {
   // If handling error is simpler, we could make it return a promise rejected if any error
   // interrupting the process happens, instead of handling error here.
   if (!jwt) {
@@ -28,7 +35,7 @@ export function scheduleJwtRefresh(jwt: string | undefined) {
   }
   const date = new Date(claims.refresh);
   const time = date.getTime();
-  if (time === prevRefreshTime) {
+  if (!allowCallTwice && time === prevRefreshTime) {
     throw new Error(`Refresh time was not updated. Old: ${new Date(
       prevRefreshTime).toISOString()}, new: ${date.toISOString()}`);
   }

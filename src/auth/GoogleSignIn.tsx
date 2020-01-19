@@ -1,7 +1,7 @@
 import { Button, createStyles, Icon, makeStyles, Theme } from '@material-ui/core';
-import React, { Fragment, memo, useCallback, useState } from 'react';
-import { asyncHandler } from '../common/app.utils';
+import React, { Fragment, memo, useState } from 'react';
 import ErrorComp from '../common/components/ErrorComp';
+import { useAsyncHandler } from '../common/utils/app.utils';
 import signInIcon from '../resources/btn_google_dark_normal_ios.svg';
 import { dialogSignIn } from './auth.service';
 
@@ -31,7 +31,7 @@ function GoogleSignIn() {
   const classes = useStyles(); // MUI Styles
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(undefined);
-  const handleSignIn = useCallback(asyncHandler(dialogSignIn, setLoading, setError), []);
+  const handleSignIn = useAsyncHandler(dialogSignIn, setLoading, setError);
 
   return <Fragment>
     <Button

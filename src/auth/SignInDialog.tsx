@@ -2,7 +2,7 @@ import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import gql from 'graphql-tag';
 import React, { memo } from 'react';
-import { useCache } from '../common/app.utils';
+import { useCache } from '../common/utils/app.utils';
 import GoogleSignIn from './GoogleSignIn';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({

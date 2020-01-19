@@ -1,12 +1,13 @@
 import { appConfig } from '../common/app.config';
-import { apiPost, deleteCookie, getCookie, writeCache } from '../common/app.utils';
 import { getGqlClient, resetWsConnection } from '../common/graphql.client';
 import { handleError } from '../common/services/error.service';
+import { deleteCookie, getCookie, writeCache } from '../common/utils/app.utils';
+import { apiPost } from '../common/utils/http.utils';
 import { scheduleJwtRefresh, signInWithGoogle } from './googleSignIn.service';
 
 export function initAuth() {
   const jwt = getCookie(appConfig.jwtCookieName);
-  scheduleJwtRefresh(jwt);
+  scheduleJwtRefresh(jwt, true);
   writeCache({ jwt });
 }
 

@@ -1,37 +1,28 @@
 import { fireEvent, render } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
+import { createBrowserHistory } from 'history';
+import React from 'react';
 import App from '../../App';
-import { makeApp } from '../../core/_bootstrap/core.utils';
-import * as initialStoreModule from '../../core/_bootstrap/initialStore';
-import { AppStoreDirectModel } from '../app.models';
-import { writeCache } from '../app.utils';
-import * as featuresService from '../services/features.service';
+import { AppCache, defaultStore } from '../models/defaultStore';
+import { Features } from '../services/features.service';
+import { writeCache } from '../utils/app.utils';
 
 // Default HTTP mocks. Can be overridden in each test.
 mockApiGet(() => ({}));
 mockApiPost(() => ({ success: true }));
 
-// All features are enabled in test environment
-(featuresService as any).useFeatures = () => ({ get: () => true });
-
-// featuresSaga early mock is located in src/setupTests.ts
-
-export async function renderTestAppSignedIn(initialStore: Partial<AppStoreDirectModel> = {},
+export async function renderTestAppSignedIn(initialCache: Partial<AppCache> = {},
                                             initialLocalStorage: LocalStorageModel = {},
                                             jwt = 'fake jwt') {
-  // const signedInStore: Partial<AppStoreDirectModel> = { [AUTH_REDUCER]: { jwt } };
-  writeCache({ jwt });
-  return renderTestApp({ ...initialStore }, initialLocalStorage);
+  return renderTestApp({ ...initialCache, ...{ jwt } }, initialLocalStorage);
 }
 
-export async function renderTestApp(initialStore: Partial<AppStoreDirectModel> = {},
+export async function renderTestApp(initialCache: Partial<AppCache> = {},
                                     initialLocalStorage: LocalStorageModel = {}) {
-  // Mock initial store
-  (initialStoreModule as any).initialStore = initialStore;
+  writeCache({ ...initialCache, ...{ features: allFeaturesEnabled() } });
   mockLocalStorage(initialLocalStorage);
-  const { app, history, store } = makeApp(App);
-  const wrapper = render(app);
-  return { history, store, ...wrapper };
+  const wrapper = render(<App history={createBrowserHistory()} />);
+  return { ...wrapper };
 }
 
 /**
@@ -137,6 +128,16 @@ function mockApi<T>(method: 'get' | 'post') {
       }
     });
   };
+}
+
+function allFeaturesEnabled(): Features {
+  const feats = defaultStore.features as unknown as Features;
+  for (const featName of Object.keys(feats)) {
+    if (!feats[featName]) {
+      feats[featName] = true;
+    }
+  }
+  return feats;
 }
 
 class LocalStorageMock extends LocalStorageModel {
