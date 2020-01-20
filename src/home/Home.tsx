@@ -52,8 +52,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-// Component
-
 const Home: FC = () => {
   const classes = useStyles(); // MUI Styles
   const { home: { count } } = useCache(GET_COUNT);

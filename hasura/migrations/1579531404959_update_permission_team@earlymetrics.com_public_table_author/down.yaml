@@ -1,0 +1,6 @@
+- args:
+    role: team@earlymetrics.com
+    table:
+      name: author
+      schema: public
+  type: drop_insert_permission

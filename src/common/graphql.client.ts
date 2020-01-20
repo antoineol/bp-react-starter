@@ -25,7 +25,6 @@ const retryLink = new RetryLink({
   },
 });
 
-// TODO mutations through websocket: useful?
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     console.error('graphQLErrors:', graphQLErrors);
@@ -58,20 +57,6 @@ const wsLink = new WebSocketLink({
     connectionParams: async () => ({ headers: await addJwtToHeaders({}) }),
   } as any,
 });
-
-// const httpLink = createHttpLink({
-//   uri: `${env.hasuraPath}/graphql`,
-//   // fetch: customFetch,
-//   // headers: { 'Authorization': `Bearer ${jwt}` },
-// });
-//
-// const link = split(({ query }) => {
-//     const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
-//     return kind === 'OperationDefinition' && operation === 'subscription';
-//   },
-//   wsLink,
-//   httpLink,
-// );
 
 const cache = new InMemoryCache({
   freezeResults: true,

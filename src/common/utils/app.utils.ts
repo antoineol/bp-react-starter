@@ -2,6 +2,7 @@ import { QueryHookOptions, useQuery } from '@apollo/react-hooks';
 import { OperationVariables } from 'apollo-client';
 import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
+import { Mutation_Root } from '../../../hasura/gen/types';
 import { getGqlClient } from '../graphql.client';
 import { AppCache, defaultStore, RecursivePartial } from '../models/defaultStore';
 import { handleError } from '../services/error.service';
@@ -107,4 +108,34 @@ export function deleteCookie(name: string) {
 
 export function isObject(obj: any): boolean {
   return typeof obj === 'object' && obj !== null;
+}
+
+/**
+ * Appends mutationResult to elts if it is not found in the list (loopup by id field). Only
+ * works for a single mutation and a single inserted element. This method needs to be
+ * generalized to support more elements / mutations.
+ * @param elts
+ * @param mutationResult
+ */
+export function optimisticInsert<T extends { id: string }>
+(elts: T[], mutationResult: Mutation_Root | undefined): T[] {
+  if (!mutationResult) {
+    return elts;
+  }
+  const keys = Object.keys(mutationResult) as (keyof Mutation_Root)[];
+  if (!keys.length) {
+    return elts;
+  }
+  const mutRes = mutationResult[keys[0]] as any;
+  if (!mutRes || !mutRes.returning || !mutRes.returning.length ||
+    !mutRes.returning[0]) {
+    return elts;
+  }
+  const newElt: T = mutRes.returning[0];
+  for (const elt of elts) {
+    if (elt.id === newElt.id) {
+      return elts;
+    }
+  }
+  return [...elts, newElt];
 }
