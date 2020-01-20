@@ -28,21 +28,13 @@ function Profile() {
     AUTHORS_SUB);
   const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
   const handleClick = useCallback(addAuthor(addMutator), []);
-  const [delMutator, { error: errDel, data }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
+  const [delMutator, { error: errDel }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
   const handleDelete = useCallback(deleteAuthor(delMutator), []);
-  if (data) {
-    const { delete_author } = data;
-    if (delete_author) {
-      const { affected_rows, returning } = delete_author;
-      console.log('delete affected_rows:', affected_rows, returning);
-    }
-  }
 
   if (!dataAuthors) {
     return <ErrorComp error={error} />;
   }
   const authors = dataAuthors!.author;
-  // const authors = optimisticInsert(dataAuthors!.author, dataAdd); // Optimistic UI attempt
 
   return <div className={classes.root}>
     <Button
