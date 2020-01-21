@@ -1513,6 +1513,7 @@ export type Tag = {
   tag_value: Scalars['String'],
 };
 
+
 /** columns and relationships of "tag" */
 export type TagArticlesArgs = {
   distinct_on?: Maybe<Array<Tag_Articles_View_Select_Column>>,
@@ -1521,6 +1522,7 @@ export type TagArticlesArgs = {
   order_by?: Maybe<Array<Tag_Articles_View_Order_By>>,
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
+
 
 /** columns and relationships of "tag" */
 export type TagArticles_AggregateArgs = {
@@ -1531,6 +1533,7 @@ export type TagArticles_AggregateArgs = {
   where?: Maybe<Tag_Articles_View_Bool_Exp>
 };
 
+
 /** columns and relationships of "tag" */
 export type TagTag_ArticlesArgs = {
   distinct_on?: Maybe<Array<Article_Tag_Select_Column>>,
@@ -1539,6 +1542,7 @@ export type TagTag_ArticlesArgs = {
   order_by?: Maybe<Array<Article_Tag_Order_By>>,
   where?: Maybe<Article_Tag_Bool_Exp>
 };
+
 
 /** columns and relationships of "tag" */
 export type TagTag_Articles_AggregateArgs = {
@@ -1563,6 +1567,7 @@ export type Tag_Aggregate_Fields = {
   max?: Maybe<Tag_Max_Fields>,
   min?: Maybe<Tag_Min_Fields>,
 };
+
 
 /** aggregate fields of "tag" */
 export type Tag_Aggregate_FieldsCountArgs = {
@@ -1616,6 +1621,7 @@ export type Tag_Articles_View_Aggregate_Fields = {
   var_samp?: Maybe<Tag_Articles_View_Var_Samp_Fields>,
   variance?: Maybe<Tag_Articles_View_Variance_Fields>,
 };
+
 
 /** aggregate fields of "tag_articles_view" */
 export type Tag_Articles_View_Aggregate_FieldsCountArgs = {

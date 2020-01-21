@@ -38,10 +38,10 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   }
   if (networkError) {
     const code = (networkError as any)?.extensions?.code;
+    console.error('[Network error]:', networkError);
     if (code === 'start-failed') {
       return reauthAndRetry(operation, forward);
     }
-    console.error('[Network error]:', networkError);
   }
 });
 
