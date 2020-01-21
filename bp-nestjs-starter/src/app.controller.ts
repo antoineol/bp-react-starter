@@ -3,7 +3,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { Roles } from './auth/role.decorator';
 import { RolesGuard } from './auth/role.guard';
-import { features } from './common/features.config';
 import { User } from './user/user.entity';
 
 @Controller()
@@ -16,11 +15,6 @@ export class AppController {
   @Get()
   isAlive() {
     return this.appService.isAlive();
-  }
-
-  @Get('features')
-  features() {
-    return features;
   }
 
   @Get('db')

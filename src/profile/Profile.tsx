@@ -46,7 +46,7 @@ function Profile() {
     {loadingSub
       ? <CircularProgress />
       : <ul>
-        {authors.map(author => <li key={author.id}>{author.id} {author.name} <IconButton
+        {authors.map(author => <li key={author.id}>{author.name} <IconButton
           aria-label="delete"
           data-id={author.id}
           onClick={handleDelete}>

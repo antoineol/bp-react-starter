@@ -58,6 +58,8 @@ const wsLink = new WebSocketLink({
   } as any,
 });
 
+// TODO consider cache & network + dedupe:
+//  https://github.com/apollographql/apollo-cache-persist/issues/53#issuecomment-394733564
 const cache = new InMemoryCache({
   freezeResults: true,
 });
