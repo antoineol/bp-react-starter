@@ -83,6 +83,7 @@
     "graphqurl": "^0.3.3",
     "hasura-cli": "^1.0.0",
     "http-proxy-middleware": "^0.20.0",
+    "jest-when": "^2.7.0",
     "mkdirp": "^0.5.1",
     "prettier": "1.19.1",
     "react-scripts": "3.3.0",

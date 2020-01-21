@@ -56,5 +56,6 @@ describe('Webservice interactions', () => {
 });
 
 function mockWebservice() {
-  return mockApiGet(() => [{ 'id': 1, 'title': 'delectus aut autem' } as TodoItem]);
+  return mockApiGet('https://jsonplaceholder.typicode.com/todos',
+    [{ 'id': 1, 'title': 'delectus aut autem' } as TodoItem]);
 }

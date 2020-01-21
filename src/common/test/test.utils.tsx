@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
 import { createBrowserHistory } from 'history';
+import { when } from 'jest-when';
 import React from 'react';
 import { Features } from '../../../hasura/gen/types';
 import App from '../../App';
@@ -8,9 +9,10 @@ import { AppCache } from '../models/defaultStore';
 import { featuresMock } from '../services/features.service';
 import { writeCache } from '../utils/app.utils';
 
+type HttpMethod = 'get' | 'post';
+
 // Default HTTP mocks. Can be overridden in each test.
-mockApiGet(() => ({}));
-mockApiPost(() => ({ success: true }));
+for (const method of ['get'] as HttpMethod[]) initialAxiosMock(method);
 
 export async function renderTestAppSignedIn(initialCache: Partial<AppCache> = {},
                                             initialLocalStorage: LocalStorageModel = {},
@@ -52,10 +54,15 @@ export function submitInput(element: Document | Element | Window) {
   fireEvent.submit(element);
 }
 
+// export function mockApiGet<T>(mockImplementation: (url?: string) => T) {
+//   return mockApi('get')(mockImplementation);
+// }
+
 /**
  * Mock axios get method for tests that involve HTTP requests.
- * @param mockImplementation a method that returns the response body or a promise resolved with
  * the response body.
+ * @param url URL to mock with this returned value
+ * @param returnValue Response body or a promise resolved with response body
  * @return jest mock object that can be used for assertions, e.g. axios.get was called n times,
  * with the right parameters...
  * @example
@@ -66,20 +73,20 @@ export function submitInput(element: Document | Element | Window) {
  * expect(mockApi).toHaveBeenCalledWith(simulateUrl, expectedRequestParams);
  * ```
  */
-export function mockApiGet<T>(mockImplementation: (url?: string) => T) {
-  return mockApi('get')(mockImplementation);
+export function mockApiGet<T>(url: string, returnValue: T) {
+  return mockApi('get', url, returnValue);
 }
 
-export function mockApiGetReject<T>(mockImplementation: (...args: any) => T) {
-  return mockApiGet((...args) => Promise.reject(mockImplementation(...args)));
+export function mockApiGetReject<T>(url: string, returnValue: T) {
+  return mockApiGet(url, Promise.reject(returnValue));
 }
 
-export function mockApiPost<T>(mockImplementation: (...args: any) => T) {
-  return mockApi('post')(mockImplementation);
+export function mockApiPost<T>(url: string, returnValue: T) {
+  return mockApi('post', url, returnValue);
 }
 
-export function mockApiPostReject<T>(mockImplementation: (...args: any) => T) {
-  return mockApiPost((...args) => Promise.reject(mockImplementation(...args)));
+export function mockApiPostReject<T>(url: string, returnValue: T) {
+  return mockApiPost(url, Promise.reject(returnValue));
 }
 
 export function flushAllPromises() {
@@ -104,31 +111,38 @@ export class LocalStorageModel {
 
 // Implementation details
 
-function mockApi<T>(method: 'get' | 'post') {
-  return (mockImplementation: (...args: any) => T | Promise<T>) => {
-    return jest.spyOn(axios, method).mockImplementation(async (...args) => {
-      try {
-        const res = await mockImplementation(...args);
-        return {
-          status: 200,
-          statusText: 'OK',
-          data: res,
+function mockApi<T>(method: HttpMethod, url: string, returnValue: T) {
+  initialAxiosMock(method);
+  const fn = axios[method] as any;
+  when(fn).calledWith(url).mockImplementation(async () => {
+    try {
+      const res = await returnValue;
+      return {
+        status: 200,
+        statusText: 'OK',
+        data: res,
+        headers: {},
+        config: {},
+      } as AxiosResponse<T>;
+    } catch (e) {
+      throw Object.assign(new Error('Fake Axios Error'), {
+        response: {
+          status: e.status || 400,
+          statusText: 'Bad Request',
+          data: e,
           headers: {},
           config: {},
-        } as AxiosResponse<T>;
-      } catch (e) {
-        throw Object.assign(new Error('Fake Axios Error'), {
-          response: {
-            status: e.status || 400,
-            statusText: 'Bad Request',
-            data: e,
-            headers: {},
-            config: {},
-          },
-        });
-      }
-    });
-  };
+        },
+      });
+    }
+  });
+  return fn;
+}
+
+function initialAxiosMock(method: HttpMethod) {
+  if (!(axios[method] as any).mock) {
+    axios[method] = jest.fn();
+  }
 }
 
 function allFeaturesEnabled(): Features {
