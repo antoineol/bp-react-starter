@@ -24,22 +24,17 @@ export function useAsyncHandler(
   handler: (...args: any[]) => Promise<any>,
   setLoading?: (loading: boolean) => void,
   setError?: (error: any) => void) {
-  const hasLoadingHandler = arguments.length >= 2 && setLoading;
-  const hasErrorHandler = arguments.length >= 3 && setError;
   return useCallback(async (...args: any[]) => {
-    if (hasLoadingHandler) setLoading!(true);
+    if (setLoading) setLoading(true);
     try {
       return await handler(...args);
     } catch (e) {
-      if (hasErrorHandler) {
-        setError!(e);
-      } else {
-        handleError(e);
-      }
+      handleError(e);
+      if (setError) setError(e);
     } finally {
-      if (hasLoadingHandler) setLoading!(false);
+      if (setLoading) setLoading(false);
     }
-  }, [handler, hasErrorHandler, hasLoadingHandler, setError, setLoading]);
+  }, [handler, setError, setLoading]);
 }
 
 /**
@@ -55,17 +50,6 @@ export function writeCache(data: RecursivePartial<AppCache>, id?: string) {
   const gqlClient = getGqlClient();
   addTypeNames(data);
   gqlClient.writeData({ data, id });
-}
-
-function addTypeNames(data: RecursivePartial<AppCache>) {
-  for (const key of Object.keys(data) as (keyof typeof data)[]) {
-    const subObj = data[key] as any;
-    const initialCacheObj = (defaultStore as AppCache)[key] as any;
-    if (isObject(subObj) && isObject(initialCacheObj) && !subObj.__typename) {
-      subObj.__typename = initialCacheObj.__typename;
-    }
-  }
-  return data;
 }
 
 /**
@@ -113,6 +97,26 @@ export function isObject(obj: any): boolean {
 
 export function wait(ms?: number) {
   return new Promise<void>(resolve => setTimeout(resolve, ms));
+}
+
+// Implementation details
+
+function addTypeNames(data: RecursivePartial<AppCache>) {
+  for (const key of Object.keys(data) as (keyof typeof data)[]) {
+    const subObj = data[key] as any;
+    const initialCacheObj = (defaultStore as AppCache)[key] as any;
+    const newObjDoesNotHaveTypeName = !subObj || !subObj.__typename;
+    const shouldHaveTypeNameInStore = isObject(subObj) || isObject(initialCacheObj);
+    const typeNameIsMissingInStore = !isObject(initialCacheObj) || !initialCacheObj.__typename;
+    if (newObjDoesNotHaveTypeName && shouldHaveTypeNameInStore && typeNameIsMissingInStore) {
+      throw new Error(
+        `You are trying to write in cache an object at key \`${key}\` but the default cache content (found in src/common/localStore.ts) does not have a __typename field. Apollo cache requires __typename to be provided with the data you write. writeCache utility adds it for you, but you need to add it in src/common/localStore.ts for that (check existing examples).`);
+    }
+    if (isObject(subObj) && isObject(initialCacheObj) && !subObj.__typename) {
+      subObj.__typename = initialCacheObj.__typename;
+    }
+  }
+  return data;
 }
 
 /**

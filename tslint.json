@@ -23,6 +23,7 @@
     "no-shadowed-variable": false,
     "no-empty": false,
     "function-name": false,
-    "no-unnecessary-initializer": true
+    "no-unnecessary-initializer": true,
+    "object-shorthand-properties-first": false
   }
 }
