@@ -9,7 +9,7 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import React, { Fragment, memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 // An issue with TypeScript prevents CSS properties auto-completion. We can
 // hope to have a fix in TypeScript 3.3. Issues to follow up:
@@ -29,7 +29,7 @@ function SecretAreaComp() {
   const [show, setShow] = useState(false);
   const handleChange = useCallback(() => setShow(show => !show), []);
 
-  return <Fragment>
+  return <>
     <FormControl className={classes.formControl}>
       <FormLabel>Affichage des secrets</FormLabel>
       <RadioGroup
@@ -45,7 +45,7 @@ function SecretAreaComp() {
       </RadioGroup>
     </FormControl>
     {show && <Typography>Voici le secret tant attendu !</Typography>}
-  </Fragment>;
+  </>;
 }
 
 export default memo(SecretAreaComp);

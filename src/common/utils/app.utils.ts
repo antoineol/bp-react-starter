@@ -4,7 +4,8 @@ import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
 import { Mutation_Root } from '../../../hasura/gen/types';
 import { getGqlClient } from '../graphql.client';
-import { AppCache, defaultStore, RecursivePartial } from '../models/defaultStore';
+import { AppCache, defaultStore } from '../localStore';
+import { RecursivePartial } from '../models/app.models';
 import { handleError } from '../services/error.service';
 
 /**
@@ -77,11 +78,11 @@ function addTypeNames(data: RecursivePartial<AppCache>) {
  */
 export function useCache<TData extends AppCache, TVariables = OperationVariables>
 (query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
-  const { data, error } = useQuery(query, options);
+  const { data = {}, error } = useQuery(query, { ...options, fetchPolicy: 'cache-only' });
   if (error) {
     console.error('Error when retrieving cache:', error);
   }
-  return data as TData || {};
+  return data as TData;
 }
 
 /**
@@ -92,7 +93,7 @@ export function useCache<TData extends AppCache, TVariables = OperationVariables
 export function readCache<TData extends AppCache, TVariables = OperationVariables>
 (query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
   const gqlClient = getGqlClient();
-  return gqlClient.readQuery({ query, variables: options?.variables }) as TData;
+  return gqlClient.readQuery({ query, variables: options?.variables }, true) as TData;
 }
 
 export function getCookie(name: string): string | null {
@@ -108,6 +109,10 @@ export function deleteCookie(name: string) {
 
 export function isObject(obj: any): boolean {
   return typeof obj === 'object' && obj !== null;
+}
+
+export function wait(ms?: number) {
+  return new Promise<void>(resolve => setTimeout(resolve, ms));
 }
 
 /**

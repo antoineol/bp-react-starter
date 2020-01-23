@@ -1,5 +1,5 @@
 import { Button, createStyles, Icon, makeStyles, Theme } from '@material-ui/core';
-import React, { Fragment, memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import ErrorComp from '../common/components/ErrorComp';
 import { useAsyncHandler } from '../common/utils/app.utils';
 import signInIcon from '../resources/btn_google_dark_normal_ios.svg';
@@ -33,7 +33,7 @@ function GoogleSignIn() {
   const [error, setError] = useState<any>(undefined);
   const handleSignIn = useAsyncHandler(dialogSignIn, setLoading, setError);
 
-  return <Fragment>
+  return <>
     <Button
       variant="contained"
       color="primary"
@@ -49,7 +49,7 @@ function GoogleSignIn() {
       Sign in with Google
     </Button>
     <ErrorComp error={error} />
-  </Fragment>;
+  </>;
 }
 
 export default memo(GoogleSignIn);

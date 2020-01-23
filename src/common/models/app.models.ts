@@ -2,3 +2,10 @@
 import { ExecutionResult, MutationFunctionOptions, OperationVariables } from '@apollo/react-common';
 
 export type Mutator<TData = any, TVariables = OperationVariables> = (options?: MutationFunctionOptions<TData, TVariables>) => Promise<ExecutionResult<TData>>;
+
+export type RecursivePartial<T> = {
+  [P in keyof T]?:
+  T[P] extends (infer U)[] ? RecursivePartial<U>[] :
+    T[P] extends object ? RecursivePartial<T[P]> :
+      T[P];
+};

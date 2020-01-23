@@ -1,13 +1,19 @@
-import { fireEvent, render } from '@testing-library/react';
+import { useApolloClient } from '@apollo/react-hooks';
+import { MockedProvider } from '@apollo/react-testing';
+import { fireEvent, render, RenderResult } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
 import { createBrowserHistory } from 'history';
 import { when } from 'jest-when';
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
+import { act } from 'react-dom/test-utils';
 import { Features } from '../../../hasura/gen/types';
 import App from '../../App';
-import { AppCache } from '../models/defaultStore';
+import { initAppServices } from '../../core/app.init';
+import * as gqlClientModule from '../graphql.client';
+import { AppCache, defaultStore } from '../localStore';
 import { featuresMock } from '../services/features.service';
 import { writeCache } from '../utils/app.utils';
+import { defaultStoreAdditionsForTests, mockGqlQueries } from './test.mocks';
 
 type HttpMethod = 'get' | 'post';
 
@@ -22,11 +28,40 @@ export async function renderTestAppSignedIn(initialCache: Partial<AppCache> = {}
 
 export async function renderTestApp(initialCache: Partial<AppCache> = {},
                                     initialLocalStorage: LocalStorageModel = {}) {
-  writeCache({ ...initialCache, ...{ features: allFeaturesEnabled() } });
-  mockLocalStorage(initialLocalStorage);
-  const wrapper = render(<App history={createBrowserHistory()} />);
-  return { ...wrapper };
+  let rendered: RenderResult | null = null;
+  await act(async () => {
+    const mergedCache: Partial<AppCache> = {
+      ...defaultStore,
+      ...defaultStoreAdditionsForTests,
+      ...initialCache,
+      ...{ features: allFeaturesEnabled() },
+    };
+    mockLocalStorage(initialLocalStorage);
+    rendered = render(
+      <MockedProvider mocks={mockGqlQueries} addTypename={false} resolvers={{}}>
+        <MockGqlClient cache={mergedCache}>
+          <App history={createBrowserHistory()} />
+        </MockGqlClient>
+      </MockedProvider>);
+    // If tests fail because the component didn't finish to render, we may need to replace this
+    // quick wait with a wait for a UI element to render (react test util has a wait function for
+    // that). Source: Apollo doc:
+    // https://www.apollographql.com/docs/react/development-testing/testing/#testing-final-state
+    await flushAllPromises;
+  });
+  return rendered as unknown as RenderResult;
 }
+
+const MockGqlClient: FC<{ cache: Partial<AppCache> }> = ({ children, cache }) => {
+  const client = useApolloClient();
+  // Mock gqlClient methods exposed for services
+  (gqlClientModule as any).getGqlClient = () => client;
+  (gqlClientModule as any).resetWsConnection = () => {
+  };
+  initAppServices().catch(err => console.error(err));
+  writeCache(cache);
+  return children as ReactElement;
+};
 
 /**
  * Simulates a click on an element
@@ -90,7 +125,7 @@ export function mockApiPostReject<T>(url: string, returnValue: T) {
 }
 
 export function flushAllPromises() {
-  return new Promise(resolve => setImmediate(resolve));
+  return new Promise<void>(resolve => setImmediate(resolve));
 }
 
 // For debug purpose only. Don't use for real test / code!

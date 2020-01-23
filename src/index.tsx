@@ -1,4 +1,5 @@
 // Polyfills imports should be the first lines.
+import { ApolloProvider } from '@apollo/react-common';
 import { createBrowserHistory } from 'history';
 import React from 'react';
 // Remove polyfills if you don't need IE11 support.
@@ -12,10 +13,17 @@ import 'react-app-polyfill/stable';
 import { render } from 'react-snapshot';
 import App from './App';
 import { appConfig } from './common/app.config';
+import { getGqlClient } from './common/graphql.client';
+import { handleError } from './common/services/error.service';
 import { unregister } from './core/_bootstrap/serviceWorker';
+import { initAppServices } from './core/app.init';
 
 // Init the app.
 const rootElt = document.getElementById('root');
+const gqlClient = getGqlClient();
+// Complete this function with all services initializations you need to do to bootstrap the app.
+// Example: load server config asap. initAppServices().catch(handleError); }, []);
+initAppServices().catch(handleError);
 
 renderApp(App);
 
@@ -35,5 +43,9 @@ if (appConfig.useHotModuleReplacement && module.hot) {
 unregister();
 
 function renderApp(AppComp: typeof App) {
-  return render(<AppComp history={createBrowserHistory()} />, rootElt);
+  return render(
+    // Initializes Apollo GraphQL client for child components
+    <ApolloProvider client={gqlClient}>
+      <AppComp history={createBrowserHistory()} />
+    </ApolloProvider>, rootElt);
 }

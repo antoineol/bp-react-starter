@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { showSignIn } from '../../auth/auth.service';
 import { env } from '../../environment/env';
 import { appConfig } from '../app.config';
+import { wait } from './app.utils';
 
 /**
  * Sends a GET request to the app API (REST classic method).
@@ -50,7 +51,7 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
     if (err.response.status === 401) {
       await showSignIn();
     } else {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await wait(1000);
     }
     resp = await sendRequest(conf);
   }
