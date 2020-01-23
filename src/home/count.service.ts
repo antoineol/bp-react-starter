@@ -9,7 +9,7 @@ export interface TodoItem {
   title: string;
 }
 
-export const GET_COUNT = gql`{ home @client { count @client } }`;
+export const GET_COUNT = gql`{ home @client { count } }`;
 
 export async function incrementCount(e: MouseEvent) {
   e.preventDefault();

@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import gql from 'graphql-tag';
-import React, { FC, Fragment, memo, useState } from 'react';
+import React, { FC, memo, useState } from 'react';
 import ErrorComp from '../common/components/ErrorComp';
 import { useAsyncHandler, useCache } from '../common/utils/app.utils';
 import { signOut } from './auth.service';
@@ -17,7 +17,7 @@ const SignOutButton: FC<{ className?: string }> = props => {
   if (!jwt) {
     return null;
   }
-  return <Fragment>
+  return <>
     <Button
       variant="outlined"
       size={'medium'}
@@ -29,7 +29,7 @@ const SignOutButton: FC<{ className?: string }> = props => {
       Sign out
     </Button>
     <ErrorComp error={error} />
-  </Fragment>;
+  </>;
 };
 
 export default memo(SignOutButton);

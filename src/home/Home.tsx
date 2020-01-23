@@ -12,6 +12,7 @@ import {
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import React, { FC, memo, useCallback, useState } from 'react';
 import { Query_Root } from '../../hasura/gen/types';
+import { ErrorBoundary } from '../common/components/ErrorBoundary';
 import ErrorComp from '../common/components/ErrorComp';
 import { GET_JSON_PL_REMOTE } from '../common/services/features.service';
 import { useAsyncHandler, useCache } from '../common/utils/app.utils';
@@ -68,36 +69,39 @@ const Home: FC = () => {
   const { features: { queryJsonPlaceholder } } = data;
 
   return (
-    <div className={classes.root}>
-      <img src={logo} className={classes.logo} alt="logo" />
-      <Typography variant="body1">
-        Edit <code>src/home/Home.tsx</code> and save to reload.
-      </Typography>
-      <Link href='https://reactjs.org' target='_blank' rel='noopener noreferrer' color={'primary'}>
-        Learn React</Link>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          id={'count'}
-          name={'count'}
-          label="Count"
-          value={isNaN(count) ? '' : count}
-          onChange={handleChange}
-          type={'number'}
+    <ErrorBoundary>
+      <div className={classes.root}>
+        <img src={logo} className={classes.logo} alt="logo" />
+        <Typography variant="body1">
+          Edit <code>src/home/Home.tsx</code> and save to reload.
+        </Typography>
+        <Link href='https://reactjs.org' target='_blank' rel='noopener noreferrer'
+              color={'primary'}>
+          Learn React</Link>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            id={'count'}
+            name={'count'}
+            label="Count"
+            value={isNaN(count) ? '' : count}
+            onChange={handleChange}
+            type={'number'}
+            disabled={loading}
+          />
+        </form>
+        {queryJsonPlaceholder && <Button
+          variant={'outlined'}
+          color={'primary'}
+          className={classes.incrButton}
           disabled={loading}
-        />
-      </form>
-      {queryJsonPlaceholder && <Button
-        variant={'outlined'}
-        color={'primary'}
-        className={classes.incrButton}
-        disabled={loading}
-        onClick={handleClick}>
-        Fetch n°{isNaN(count) ? '-' : count}
-        {loading && <CircularProgress className={classes.loader} />}
-      </Button>}
-      <ErrorComp error={error} />
-      <SecretArea />
-    </div>
+          onClick={handleClick}>
+          Fetch n°{isNaN(count) ? '-' : count}
+          {loading && <CircularProgress className={classes.loader} />}
+        </Button>}
+        <ErrorComp error={error} />
+        <SecretArea />
+      </div>
+    </ErrorBoundary>
   );
 };
 
