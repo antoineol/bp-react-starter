@@ -26,6 +26,12 @@
       <option name="IMPORT_SORT_MODULE_NAME" value="true" />
       <option name="BLACKLIST_IMPORTS" value="rxjs,rxjs/Rx,@material-ui/core/es,connected-react-router" />
     </TypeScriptCodeStyleSettings>
+    <codeStyleSettings language="GraphQL">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
     <codeStyleSettings language="JavaScript">
       <option name="SOFT_MARGINS" value="80" />
       <indentOptions>
