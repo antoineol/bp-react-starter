@@ -11,10 +11,10 @@ import {
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import React, { FC, memo, useCallback, useState } from 'react';
-import { Query_Root } from '../../hasura/gen/types';
-import ErrorComp from '../common/components/ErrorComp';
-import { GET_JSON_PL_REMOTE } from '../common/services/features.service';
-import { useAsyncHandler, useCache } from '../common/utils/app.utils';
+import { Query_Root } from '../../../hasura/gen/types';
+import ErrorComp from '../../common/components/ErrorComp';
+import { GET_JSON_PL_REMOTE } from '../../common/services/features.service';
+import { useAsyncHandler, useCache } from '../../common/utils/app.utils';
 import { changeCount, doubleCount, GET_COUNT, incrementCount } from './count.service';
 import logo from './logo.svg';
 import SecretArea from './secret/SecretArea';

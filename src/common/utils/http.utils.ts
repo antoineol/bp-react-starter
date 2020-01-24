@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { showSignIn } from '../../auth/auth.service';
 import { env } from '../../environment/env';
+import { showSignIn } from '../../views/auth/auth.service';
 import { appConfig } from '../app.config';
 import { wait } from './app.utils';
 

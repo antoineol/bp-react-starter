@@ -1,9 +1,9 @@
 import jwtDecode from 'jwt-decode';
-import { appConfig } from '../common/app.config';
-import { handleError } from '../common/services/error.service';
-import { getCookie } from '../common/utils/app.utils';
-import { apiPost } from '../common/utils/http.utils';
-import { env } from '../environment/env';
+import { appConfig } from '../../common/app.config';
+import { handleError } from '../../common/services/error.service';
+import { getCookie } from '../../common/utils/app.utils';
+import { apiPost } from '../../common/utils/http.utils';
+import { env } from '../../environment/env';
 import { showSignIn } from './auth.service';
 
 enum JwtFields {

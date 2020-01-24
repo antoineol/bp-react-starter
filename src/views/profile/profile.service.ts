@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 import { MouseEvent } from 'react';
 import * as yup from 'yup';
-import { Author, Mutation_Root } from '../../hasura/gen/types';
-import { Mutator } from '../common/models/app.models';
+import { Author, Mutation_Root } from '../../../hasura/gen/types';
+import { Mutator } from '../../common/models/app.models';
 
 export const AUTHORS_SUB = gql`subscription { author { id, name } }`;
 export const ADD_AUTHOR = gql`mutation insert_author($object: author_insert_input! ) {
@@ -19,13 +19,14 @@ export const DELETE_AUTHOR = gql`mutation delete_author($id: uuid) {
 export const newAuthorSchema = yup.object({
   name: yup.string()
     .max(15, 'Must be 15 characters or less')
-    .default('B'),
+    .default('John'),
 });
 
 type NewAuthor = yup.InferType<typeof newAuthorSchema>;
 
 export function addAuthor(mutator: Mutator<Mutation_Root>) {
   return async (values: NewAuthor) => {
+    console.log('will mutate');
     const formName = values.name;
     const name = formName ? formName : pickRandom(names);
     const author: Partial<Author> = { name };

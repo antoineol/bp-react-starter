@@ -7,8 +7,8 @@ import { RetryLink } from 'apollo-link-retry';
 import { buildDelayFunction } from 'apollo-link-retry/lib/delayFunction';
 import { WebSocketLink } from 'apollo-link-ws';
 import Observable from 'zen-observable-ts';
-import { addJwtToHeaders, showSignIn } from '../auth/auth.service';
 import { env } from '../environment/env';
+import { addJwtToHeaders, showSignIn } from '../views/auth/auth.service';
 import { defaultStore } from './localStore';
 
 let gqlClient: ApolloClient<NormalizedCacheObject>;

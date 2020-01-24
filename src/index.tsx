@@ -10,6 +10,7 @@ import React from 'react';
 // react-app-polyfill and polyfill.io.
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+import { Router } from 'react-router';
 import { render } from 'react-snapshot';
 import App from './App';
 import { appConfig } from './common/app.config';
@@ -21,6 +22,7 @@ import { initAppServices } from './core/app.init';
 // Init the app.
 const rootElt = document.getElementById('root');
 const gqlClient = getGqlClient();
+const history = createBrowserHistory();
 // Complete this function with all services initializations you need to do to bootstrap the app.
 // Example: load server config asap. initAppServices().catch(handleError); }, []);
 initAppServices().catch(handleError);
@@ -42,10 +44,15 @@ if (appConfig.useHotModuleReplacement && module.hot) {
 // Learn more about service workers: http://bit.ly/CRA-PWA
 unregister();
 
+// This render contains all platform-specific code, e.g. what should not be included in tests
+// (a mock is provided instead).
 function renderApp(AppComp: typeof App) {
   return render(
     // Initializes Apollo GraphQL client for child components
     <ApolloProvider client={gqlClient}>
-      <AppComp history={createBrowserHistory()} />
+      {/* Initializes routing for child components */}
+      <Router history={history}>
+        <AppComp />
+      </Router>
     </ApolloProvider>, rootElt);
 }

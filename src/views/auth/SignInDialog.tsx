@@ -1,8 +1,8 @@
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
-import gql from 'graphql-tag';
 import React, { memo } from 'react';
-import { useCache } from '../common/utils/app.utils';
+import { useCache } from '../../common/utils/app.utils';
+import { GET_JWT } from './auth.service';
 import GoogleSignIn from './GoogleSignIn';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -16,8 +16,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
   }),
 );
-
-const GET_JWT = gql`{ jwt @client }`;
 
 function SignInDialog() {
   const classes = useStyles(); // MUI Styles

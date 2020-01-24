@@ -18,7 +18,7 @@ interface Props {
 const Layout: FC<Props> = ({ children }) => {
   const classes = useStyles(); // MUI Styles
   return (
-    <div className={classes.root}>
+    <div className={classes.root} data-testid={'layout'}>
       <ErrorBoundary>
         {children}
       </ErrorBoundary>

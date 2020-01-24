@@ -1,12 +1,9 @@
 import { Button } from '@material-ui/core';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import gql from 'graphql-tag';
 import React, { FC, memo, useState } from 'react';
-import ErrorComp from '../common/components/ErrorComp';
-import { useAsyncHandler, useCache } from '../common/utils/app.utils';
-import { signOut } from './auth.service';
-
-const GET_JWT = gql`{ jwt @client }`;
+import ErrorComp from '../../common/components/ErrorComp';
+import { useAsyncHandler, useCache } from '../../common/utils/app.utils';
+import { GET_JWT, signOut } from './auth.service';
 
 const SignOutButton: FC<{ className?: string }> = props => {
   const { jwt } = useCache(GET_JWT);

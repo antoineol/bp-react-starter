@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs/Tabs';
 import React, { FC, memo } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-import SignOutButton from '../../auth/SignOutButton';
+import SignOutButton from '../../views/auth/SignOutButton';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     appBar: {
@@ -46,7 +46,7 @@ const Header: FC = () => {
   const classes = useStyles(); // MUI Styles
   const { pathname } = useLocation();
   return (
-    <AppBar position="static" classes={{ root: classes.appBar }}>
+    <AppBar position="static" classes={{ root: classes.appBar }} data-testid={'header'}>
       <Tabs value={pathname} classes={{ root: classes.tabs }}>
         {pages.map(p => <LinkTab key={p.path} label={p.label} to={p.path} value={p.path} />)}
       </Tabs>

@@ -1,12 +1,12 @@
 import { AxiosRequestConfig } from 'axios';
+import { defaultOptions } from '../../common/utils/http.utils';
 import {
   changeInput,
   clickElt,
   mockApiGet,
   renderTestAppSignedIn,
   submitInput,
-} from '../common/test/test.utils';
-import { defaultOptions } from '../common/utils/http.utils';
+} from '../../test/test.utils';
 import { TodoItem } from './count.service';
 
 it('should display the home page by default and with / URL', async () => {

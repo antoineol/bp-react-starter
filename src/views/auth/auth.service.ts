@@ -1,9 +1,12 @@
-import { appConfig } from '../common/app.config';
-import { getGqlClient, resetWsConnection } from '../common/graphql.client';
-import { handleError } from '../common/services/error.service';
-import { deleteCookie, getCookie, writeCache } from '../common/utils/app.utils';
-import { apiPost } from '../common/utils/http.utils';
+import gql from 'graphql-tag';
+import { appConfig } from '../../common/app.config';
+import { getGqlClient, resetWsConnection } from '../../common/graphql.client';
+import { handleError } from '../../common/services/error.service';
+import { deleteCookie, getCookie, writeCache } from '../../common/utils/app.utils';
+import { apiPost } from '../../common/utils/http.utils';
 import { scheduleJwtRefresh, signInWithGoogle } from './googleSignIn.service';
+
+export const GET_JWT = gql`{ jwt }`;
 
 export function initAuth() {
   const jwt = getCookie(appConfig.jwtCookieName);

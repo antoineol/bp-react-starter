@@ -1,4 +1,4 @@
-import { LocalStorageMock } from '../common/test/test.utils';
+import { LocalStorageMock } from '../test/test.utils';
 
 declare global {
   interface Window {

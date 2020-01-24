@@ -1,8 +1,8 @@
 import { Button, createStyles, Icon, makeStyles, Theme } from '@material-ui/core';
 import React, { memo, useState } from 'react';
-import ErrorComp from '../common/components/ErrorComp';
-import { useAsyncHandler } from '../common/utils/app.utils';
-import signInIcon from '../resources/btn_google_dark_normal_ios.svg';
+import ErrorComp from '../../common/components/ErrorComp';
+import { useAsyncHandler } from '../../common/utils/app.utils';
+import signInIcon from '../../resources/btn_google_dark_normal_ios.svg';
 import { dialogSignIn } from './auth.service';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({

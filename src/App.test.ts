@@ -1,4 +1,4 @@
-import { renderTestAppSignedIn } from './common/test/test.utils';
+import { renderTestAppSignedIn } from './test/test.utils';
 
 it('renders without crashing', async () => {
   // Tests are mainly functional: they should cover all app features as we would test them

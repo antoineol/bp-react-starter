@@ -1,15 +1,15 @@
 import gql from 'graphql-tag';
 import { ChangeEvent, FormEvent, MouseEvent } from 'react';
-import { appConfig } from '../common/app.config';
-import { readCache, writeCache } from '../common/utils/app.utils';
-import { httpGet } from '../common/utils/http.utils';
+import { appConfig } from '../../common/app.config';
+import { readCache, writeCache } from '../../common/utils/app.utils';
+import { httpGet } from '../../common/utils/http.utils';
 
 export interface TodoItem {
   id: number;
   title: string;
 }
 
-export const GET_COUNT = gql`{ home @client { count } }`;
+export const GET_COUNT = gql`{ home { count } }`;
 
 export async function incrementCount(e: MouseEvent) {
   e.preventDefault();

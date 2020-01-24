@@ -1,5 +1,5 @@
-import { initAuth } from '../auth/auth.service';
 import { initFeatures } from '../common/services/features.service';
+import { initAuth } from '../views/auth/auth.service';
 
 export async function initAppServices() {
   // Synchronous initializations
