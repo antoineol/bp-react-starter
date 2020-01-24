@@ -14,7 +14,6 @@ services:
       - '8080:8080'
     depends_on:
       - "db"
-    restart: always
     volumes:
       - ./hasura/migrations:/hasura-migrations
     env_file: .env
