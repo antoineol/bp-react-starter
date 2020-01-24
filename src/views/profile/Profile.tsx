@@ -59,7 +59,7 @@ const Profile: FC = () => {
       onSubmit={addAuthor(addMutator)}
     >
       <Form className={classes.form}>
-        <AppTextInput id="new-author-name" name="name" label="Name" />
+        <AppTextInput id="new-author-name" name="name" label="Name" autoFocus />
         <Button variant="outlined" color="primary" type="submit" className={classes.submitBtn}>
           Add author
         </Button>
