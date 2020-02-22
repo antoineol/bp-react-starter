@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useState } from 'react';
 import GoogleLogin from 'react-google-login';
+import { appConfig } from '../../common/app.config';
 import { handleError } from '../../common/services/error.service';
 import { useAsyncHandler } from '../../common/utils/app.utils';
 import { env } from '../../environment/env';
@@ -23,7 +24,7 @@ function GoogleSignIn() {
     onFailure={handleFailure}
     onRequest={startSignIn}
     cookiePolicy={'none'}
-    hostedDomain={'earlymetrics.com'}
+    hostedDomain={appConfig.restrictToDomain || undefined}
     // autoLoad
     theme={'dark'}
     disabled={loading}

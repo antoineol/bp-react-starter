@@ -11,7 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { CSSProperties } from '@material-ui/styles';
 import { Form, Formik } from 'formik';
 import React, { FC, memo, useCallback } from 'react';
-import { Mutation_Root, Subscription_Root } from '../../../hasura/gen/types';
+import { Mutation_Root, Subscription_Root } from '../../../generated/schema';
 import ErrorComp from '../../common/components/ErrorComp';
 import AppTextInput from '../../common/components/form/AppTextField';
 import {

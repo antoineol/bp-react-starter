@@ -9,4 +9,5 @@ export const appConfig = {
   jwtSignatureCookieName: 'jwtSignature',
   appName: 'starter-app',
   updateCheckInterval: 30, // seconds
+  restrictToDomain: '',
 };

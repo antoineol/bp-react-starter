@@ -21,7 +21,7 @@ export class GoogleService {
   }
 
   private async validateUserGroups(email: string, domain: string): Promise<string[]> {
-    if (appConfig.authorizedDomain !== domain) {
+    if (appConfig.authorizedDomain && appConfig.authorizedDomain !== domain) {
       throw new ForbiddenException();
     }
     if (!appConfig.authorizedGoogleGroups || !appConfig.authorizedGoogleGroups.length) {

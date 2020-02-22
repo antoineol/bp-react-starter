@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common';
 import { config } from 'dotenv';
 import fetchSchema from 'graphql-fetch-schema';
 import * as mkdirp from 'mkdirp';
+import { appConfig } from '../app.config';
 import { httpPost, wait } from './app.utils';
 
 const rootHasuraUrl = 'http://localhost:8080/v1';
@@ -11,7 +12,7 @@ const root = `${__dirname}/../../../..`;
 config({ path: `${root}/.env` });
 const secret = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
 const apiSchemaName = 'api';
-const generatedDir = `${root}/front-rocket/generated`;
+const generatedDir = `${root}/${appConfig.frontFolder}/generated`;
 const logger = new Logger('hasura.utils');
 
 export async function generateTypes() {
@@ -24,19 +25,21 @@ export async function generateTypes() {
   logger.log('Schema and types extracted.');
 }
 
-const connectionFailedErrorExtract = 'connect ECONNREFUSED';
+const retryCodes = ['ECONNREFUSED', 'ECONNRESET'];
 const retryDelay = 3;
 
 async function withRetry<T>(func: (...args: any[]) => Promise<T>) {
   try {
     return await func();
   } catch (e) {
-    if (e && e.message && (e.message as string).includes(connectionFailedErrorExtract)) {
+    if (e && retryCodes.includes(e.code)) {
       logger.error(
         `Couldn't connect to Hasura. Is Hasura container started? Will retry in ${retryDelay} seconds...`);
       await wait(retryDelay * 1000);
       return await withRetry(func);
     } else {
+      // tslint:disable-next-line:no-console
+      console.warn('Failed with code:', e.code);
       throw e;
     }
   }

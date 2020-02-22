@@ -16,23 +16,25 @@ export enum JwtFields {
 
 export const appConfig = {
   localhostLatency: 400, // ms
-  authorizedDomain: 'earlymetrics.com',
+  authorizedDomain: '',
   // For GSuite to authorize only users in below groups (provide emails). Those group emails
   // will be included in JWT as roles
   authorizedGoogleGroups: [],
+  frontFolder: 'front-starter',
   jwtLifeTime,
   jwtRefreshTime: jwtLifeTime / 2,
   jwtPayloadCookieName: 'jwtHeaderPayload',
   jwtSignatureCookieName: 'jwtSignature',
   jwtSignatureCookieHttpOnly, // Should be true as soon as Hasura supports JWT in cookies
-  jwtIssuer: 'em-starter-app',
+  jwtIssuer: 'aol-starter-app',
   jwtAlgorithm: 'HS256',
-  jwtAudience: 'em-everybody',
+  jwtAudience: 'aol-everybody',
   jwtNamespace: JwtFields.jwtNamespace,
   jwtClaimRoles: JwtFields.jwtClaimRoles,
   jwtClaimDefaultRole: JwtFields.jwtClaimDefaultRole,
   jwtClaimUserId: JwtFields.jwtClaimUserId,
-  securityRequestedByHeader: 'em-starter-app',
+  jwtAnonymousRole: 'anonymous',
+  securityRequestedByHeader: 'aol-starter-app',
   allowCorsApi,
   cookieConfig: {
     secure: !env.isDev,

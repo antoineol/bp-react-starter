@@ -23,10 +23,11 @@ export class AuthService {
   createJwt({ email, name, locale, domain, subject, roles, picture }: JwtData): string {
     // This method extracts profile info and include them in JWT
     const refresh = moment().add(appConfig.jwtRefreshTime, 's').toISOString();
+    const defaultRole = roles[0];
     const fields = {
       email, name, locale, domain, refresh, picture,
-      [appConfig.jwtClaimRoles]: roles,
-      [appConfig.jwtClaimDefaultRole]: roles[0],
+      [appConfig.jwtClaimRoles]: defaultRole ? roles : [appConfig.jwtAnonymousRole],
+      [appConfig.jwtClaimDefaultRole]: defaultRole || appConfig.jwtAnonymousRole,
       [appConfig.jwtClaimUserId]: subject,
     };
     const payload = appConfig.jwtNamespace ? { [appConfig.jwtNamespace]: fields } : fields;

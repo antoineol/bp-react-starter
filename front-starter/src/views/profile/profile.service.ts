@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import { MouseEvent } from 'react';
 import * as yup from 'yup';
-import { Author, Mutation_Root } from '../../../hasura/gen/types';
+import { Author, Mutation_Root } from '../../../generated/schema';
 import { Mutator } from '../../common/models/app.models';
 
 export const AUTHORS_SUB = gql`subscription { author { id, name } }`;

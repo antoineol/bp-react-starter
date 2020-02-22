@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { AuthorsModule } from './author/author.module';
 import { env } from './environment/env';
 
 @Module({
@@ -22,7 +21,6 @@ import { env } from './environment/env';
       // buildSchemaOptions
     }),
     AuthModule,
-    AuthorsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger, AppResolver],

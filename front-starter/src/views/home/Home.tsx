@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import React, { FC, memo, useCallback, useState } from 'react';
-import { Query_Root } from '../../../hasura/gen/types';
+import { Query_Root } from '../../../generated/schema';
 import ErrorComp from '../../common/components/ErrorComp';
 import { GET_JSON_PL_REMOTE } from '../../common/services/features.service';
 import { useAsyncHandler, useCache } from '../../common/utils/app.utils';

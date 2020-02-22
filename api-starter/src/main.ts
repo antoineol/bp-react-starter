@@ -18,4 +18,5 @@ bootstrap().then(() => {
     return generateTypes();
   }
 // tslint:disable-next-line:no-console
-}).catch(err => console.error('Error when starting API:', err));
+}).catch(err => console.error('Error when starting API:',
+  err && err.response && err.response.data || err));
