@@ -6,7 +6,7 @@ import { when } from 'jest-when';
 import React, { FC, ReactElement } from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router';
-import { Features } from '../../hasura/gen/types';
+import { Features } from '../../generated/schema';
 import App from '../App';
 import * as gqlClientModule from '../common/graphql.client';
 import { AppCache, defaultStore } from '../common/localStore';

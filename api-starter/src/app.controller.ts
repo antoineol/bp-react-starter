@@ -3,7 +3,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { Roles } from './auth/role.decorator';
 import { RolesGuard } from './auth/role.guard';
-import { User } from './user/user.entity';
 
 @Controller()
 export class AppController {
@@ -17,24 +16,16 @@ export class AppController {
     return this.appService.isAlive();
   }
 
-  @Get('db')
-  async db(): Promise<{ description: string, user: User }> {
-    return {
-      description: 'User inserted, returned and deleted.',
-      user: await this.appService.testDb(),
-    };
-  }
-
   @UseGuards(AuthGuard('jwt'))
-  @Get('secured1')
+  @Get('secured')
   securedNoRole() {
     return { secured: true, noRole: true };
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('admin')
-  @Get('secured')
-  secured() {
+  @Roles('team@earlymetrics.com')
+  @Get('secured-role')
+  securedWithRole() {
     return { secured: true };
   }
 }

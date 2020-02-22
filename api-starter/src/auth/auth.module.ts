@@ -1,12 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { appConfig } from '../common/app.config';
 import { env } from '../environment/env';
-import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { GoogleStrategy } from './google.strategy';
+import { GoogleService } from './google.service';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
@@ -28,10 +27,9 @@ import { JwtStrategy } from './jwt.strategy';
         issuer: appConfig.jwtIssuer,
       },
     }),
-    UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, JwtStrategy],
+  providers: [AuthService, GoogleService, JwtStrategy, Logger],
 })
 export class AuthModule {
 }

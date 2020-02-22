@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { User } from '../user/user.entity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -14,7 +13,8 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest<{ user: User | null }>();
+    // TODO should re-implement role management
+    const { user } = context.switchToHttp().getRequest<{ user: any/*User*/ | null }>();
 
     if (!user || !user.roles) {
       return false;

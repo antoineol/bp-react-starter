@@ -6,13 +6,20 @@ import { onError } from 'apollo-link-error';
 import { RetryLink } from 'apollo-link-retry';
 import { buildDelayFunction } from 'apollo-link-retry/lib/delayFunction';
 import { WebSocketLink } from 'apollo-link-ws';
-import Observable from 'zen-observable-ts';
+import { Observable } from 'rxjs/internal/Observable';
+import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import ZenObservable from 'zen-observable-ts';
 import { env } from '../environment/env';
-import { addJwtToHeaders, showSignIn } from '../views/auth/auth.service';
+import { addJwtToHeaders, fetchNewJwt } from '../features/auth/auth.service';
 import { defaultStore } from './localStore';
 
 let gqlClient: ApolloClient<NormalizedCacheObject>;
 let wsLink: WebSocketLink;
+
+export enum WsConnectionStatus {offline, connecting, connected}
+
+const connectionStatus = new ReplaySubject<WsConnectionStatus>(1);
 
 function initGqlClient() {
   const delayOptions = {
@@ -31,7 +38,7 @@ function initGqlClient() {
 
   const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      console.error('graphQLErrors:', graphQLErrors);
+      console.error('[GraphQL Errors]:', graphQLErrors);
       for (const err of graphQLErrors) {
         const code = err.extensions?.code;
         if (code === 'invalid-jwt'
@@ -57,10 +64,18 @@ function initGqlClient() {
     options: {
       reconnect: true,
       lazy: true,
-      // reconnectionAttempts: 10,
+      // reconnectionAttempts: 999, // Infinite if not provided
       connectionParams: async () => ({ headers: await addJwtToHeaders({}) }),
-    } as any,
-  });
+    },
+  } as WebSocketLink.Configuration);
+
+  const wsSubscriptionClient = (wsLink as any).subscriptionClient as SubscriptionClient;
+  wsSubscriptionClient.onConnecting(val => connectionStatus.next(WsConnectionStatus.connecting));
+  wsSubscriptionClient.onConnected(val => connectionStatus.next(WsConnectionStatus.connected));
+  wsSubscriptionClient.onReconnecting(val => connectionStatus.next(WsConnectionStatus.connecting));
+  wsSubscriptionClient.onReconnected(val => connectionStatus.next(WsConnectionStatus.connected));
+  wsSubscriptionClient.onDisconnected(val => connectionStatus.next(WsConnectionStatus.offline));
+  wsSubscriptionClient.onError(val => connectionStatus.next(WsConnectionStatus.offline));
 
   // TODO consider cache & network + dedupe:
   //  https://github.com/apollographql/apollo-cache-persist/issues/53#issuecomment-394733564
@@ -84,15 +99,19 @@ export function getGqlClient() {
   return gqlClient;
 }
 
+export function getWsConnectionStatus(): Observable<WsConnectionStatus> {
+  return connectionStatus.asObservable();
+}
+
 // Utilities
 
 export function resetWsConnection() {
   // Reset the WS connection for it to carry the new JWT.
-  (wsLink as any).subscriptionClient.close(false, false);
+  return (wsLink as any).subscriptionClient.close(false, false);
 }
 
-function reauthAndRetry(operation: Operation, forward: NextLink): Observable<FetchResult> {
-  return fromPromise(showSignIn())
+function reauthAndRetry(operation: Operation, forward: NextLink): ZenObservable<FetchResult> {
+  return fromPromise(fetchNewJwt())
     .flatMap(() => {
       return forward(operation);
     });

@@ -3,7 +3,7 @@
 <head>
   <!-- Update this CSP with resources and websites the app needs to reach -->
   <meta
-    content="base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    content="base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://apis.google.com; style-src 'self' 'unsafe-inline'"
     http-equiv="Content-Security-Policy">
   <meta charset="utf-8" />
   <link href="%PUBLIC_URL%/favicon.ico" rel="icon" />
@@ -30,35 +30,9 @@
     Learn how to configure a non-root public URL by running `npm run build`.
   -->
   <title>React App</title>
-  <style>
-    .pace {
-      -webkit-pointer-events: none;
-      pointer-events: none;
-
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-    }
-
-    .pace-inactive {
-      display: none;
-    }
-
-    .pace .pace-progress {
-      background: #29d;
-      position: fixed;
-      z-index: 2000;
-      top: 0;
-      right: 100%;
-      width: 100%;
-      height: 2px;
-    }
-  </style>
   <!-- Eventual polyfills if all users will be on internet (may not apply to intranet users) -->
   <!-- Ensure you don't also use polyfills on top of index.tsx. Only one of them is required. -->
   <!-- <script>if(!(window.Promise&&[].includes&&Object.assign&&window.Map)){document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017"></scr'+'ipt>')}</script> -->
-  <script src="%PUBLIC_URL%/pace/pace.min.js"></script>
-  <script>Pace.options.ajax.trackWebSockets = false;</script>
 </head>
 <body>
 <noscript>You need to enable JavaScript to run this app.</noscript>

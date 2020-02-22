@@ -6,7 +6,7 @@ import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 // ... then in appTheme:
 // typography: { fontFamily: 'Poppins' }
 // Test it well: other components may still use the default font.
-import 'typeface-roboto';
+// Default font: import 'typeface-roboto';
 
 export const appTheme: ThemeOptions = {
   typography: {
@@ -26,18 +26,26 @@ export const appTheme: ThemeOptions = {
   },
   palette: {
     type: 'dark',
-    //   background: {
-    //     default: '#282c34',
-    //   },
-    //   primary: {
-    //     main: '#61dafb',
+    // background: {
+    //   default: '#EEF5FD',
+    // },
+    // primary: {
+    //   main: '#3996D3',
+    // },
+    // secondary: {
+    //   main: '#FFA07A',
+    // },
+  },
+  overrides: {
+    // MuiExpansionPanelSummary: {
+    //   content: {
+    //     fontWeight: 'bold',
     //   },
     // },
-    // overrides: {
-    //   MuiTypography: {
-    //     body1: {
-    //       margin: '1em 0',
-    //     },
+    // MuiTypography: {
+    //   body1: {
+    //     margin: '1em 0',
     //   },
+    // },
   },
 };

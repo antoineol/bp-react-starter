@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { env } from '../../environment/env';
-import { showSignIn } from '../../views/auth/auth.service';
+import { fetchNewJwt } from '../../features/auth/auth.service';
 import { appConfig } from '../app.config';
 import { wait } from './app.utils';
 
@@ -49,10 +49,12 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
     }
     // Retry
     if (err.response.status === 401) {
-      await showSignIn();
+      await fetchNewJwt();
     } else {
       await wait(1000);
     }
+    // tslint:disable-next-line:no-console
+    console.info('Retrying HTTP request...');
     resp = await sendRequest(conf);
   }
   if (!resp) {
@@ -65,7 +67,7 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
 }
 
 // CSRF protection if the server requires this token
-const requiredHeaders = { 'X-Requested-By': appConfig.securityRequestedByHeader };
+const requiredHeaders = { 'X-Requested-By': appConfig.appName };
 export const defaultOptions = { headers: requiredHeaders }; // Useful for tests
 
 function extendConfig(config: AxiosRequestConfig | undefined) {
@@ -76,6 +78,7 @@ function extendConfig(config: AxiosRequestConfig | undefined) {
   const { headers, ...otherConf } = config || {} as AxiosRequestConfig;
   return {
     ...otherConf,
+    withCredentials: appConfig.allowCorsApi,
     headers: {
       ...headers,
       ...requiredHeaders,

@@ -9,3 +9,7 @@ export type RecursivePartial<T> = {
     T[P] extends object ? RecursivePartial<T[P]> :
       T[P];
 };
+
+export interface Dict<T> {
+  [key: string]: T;
+}

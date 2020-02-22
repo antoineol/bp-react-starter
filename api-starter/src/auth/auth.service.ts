@@ -1,27 +1,30 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CookieOptions } from 'express-serve-static-core';
 import * as moment from 'moment';
-import { Repository } from 'typeorm';
 import { appConfig } from '../common/app.config';
 import { env } from '../environment/env';
-import { User } from '../user/user.entity';
-import { fetchGoogleGroup } from './google.service';
+
+export interface JwtData {
+  email: string;
+  name: string;
+  locale: string;
+  domain: string;
+  subject: string;
+  roles: string[];
+  picture: string;
+}
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {
+  constructor(private readonly jwtService: JwtService, private logger: Logger) {
   }
 
-  createJwt({ email, name, locale, hd, subject, roles }: any): string {
+  createJwt({ email, name, locale, domain, subject, roles, picture }: JwtData): string {
     // This method extracts profile info and include them in JWT
     const refresh = moment().add(appConfig.jwtRefreshTime, 's').toISOString();
     const fields = {
-      email, name, locale, hd, refresh,
+      email, name, locale, domain, refresh, picture,
       [appConfig.jwtClaimRoles]: roles,
       [appConfig.jwtClaimDefaultRole]: roles[0],
       [appConfig.jwtClaimUserId]: subject,
@@ -30,22 +33,8 @@ export class AuthService {
     return this.jwtService.sign(payload, {
       subject,
       audience: appConfig.jwtAudience, //  role / scope for validation if useful
+      noTimestamp: env.isDev,
     });
-  }
-
-  async validateGoogleUser(email: string, domain: string): Promise<string[]> {
-    if (appConfig.authorizedDomain !== domain) {
-      throw new ForbiddenException();
-    }
-    // Check that the user belongs to the groups whitelist
-    const groups = await Promise.all(appConfig.authorizedGoogleGroups
-      .map(email => fetchGoogleGroup(email).then(group => ({ email, group }))));
-    // List the groups the user belongs to; they will be used as roles.
-    const userGroups = groups.filter(g => g.group.members.find(member => member.email === email));
-    if (!userGroups || !userGroups.length) {
-      throw new ForbiddenException();
-    }
-    return userGroups.map(group => group.email);
   }
 
   makeJwtCookies(jwt: string): Array<{ name: string, value: string, options: CookieOptions }> {
@@ -57,16 +46,16 @@ export class AuthService {
     //   flaws, e.g. one cannot get the full JWT from JavaScript (if signature is missing, the
     //   server rejects the request)
     const { jwtHeaderAndPayload, jwtSignature } = this.splitJwt(jwt);
-    const options = {
-      secure: !env.isDev,
-      sameSite: true,
-      maxAge: appConfig.jwtLifeTime * 1000,
-    };
+    const options: CookieOptions = appConfig.cookieConfig;
     return [
       // Public part (accessible from browser JavaScript)
-      { name: appConfig.jwtPayloadCookieName, value: jwtHeaderAndPayload, options },
+      {
+        name: appConfig.jwtPayloadCookieName,
+        value: jwtHeaderAndPayload,
+        options: { ...options, httpOnly: false },
+      },
       // Private part (HTTP-only cookie)
-      { name: appConfig.jwtSignatureCookieName, value: jwtSignature, options: { ...options, httpOnly: appConfig.jwtSignatureCookieHttpOnly } },
+      { name: appConfig.jwtSignatureCookieName, value: jwtSignature, options },
     ];
   }
 

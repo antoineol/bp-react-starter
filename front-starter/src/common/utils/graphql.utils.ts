@@ -1,7 +1,7 @@
 import { OperationVariables } from 'apollo-client';
 import { Observable } from 'apollo-client/util/Observable';
 import { DocumentNode } from 'graphql';
-import { Query_Root, Subscription_Root } from '../../../hasura/gen/types';
+import { Query_Root, Subscription_Root } from '../../../generated/schema';
 import { getGqlClient } from '../graphql.client';
 
 // Do we still need those utilities? Maybe to request API in services when initializing some of
@@ -21,7 +21,7 @@ export async function apiQuery<T = Query_Root, TVariables = OperationVariables>(
   return data;
 }
 
-export async function apiMutate<T = any, TVariables = OperationVariables>(
+export async function apiMutate<T = Query_Root, TVariables = OperationVariables>(
   mutation: DocumentNode, variables?: TVariables): Promise<T | null | undefined> {
   const gqlClient = getGqlClient();
   const { data, errors } = await gqlClient.mutate<T, TVariables>({ mutation, variables });

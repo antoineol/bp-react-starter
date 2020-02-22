@@ -23,17 +23,17 @@
     "build:staging": "env-cmd .env.staging npm run build",
     "build:prod": "env-cmd .env.prod npm run build",
     "serve": "serve -s build -c serve.json",
-    "deploy:staging": "yarn migrate:staging && cd api-rocket && yarn deploy:staging",
-    "migrate:staging": "yarn hasura:staging migrate apply --endpoint https://staging-rocket-rating-hasura.herokuapp.com/",
+    "deploy:staging": "yarn migrate:staging && cd api-starter && yarn deploy:staging",
+    "migrate:staging": "yarn hasura:staging migrate apply --endpoint https://staging-aol-starter-hasura.herokuapp.com/",
     "________________ implementation details ________________": "",
     "hasura": "env-cmd .env hasura --project hasura --skip-update-check",
     "hasura:staging": "env-cmd .env.staging hasura --project hasura --skip-update-check",
     "start:front": "cd front-starter && yarn start",
-    "start:api": "cd api-rocket && yarn start",
-    "postinstall": "cd api-rocket && yarn install --production=false && cd ../front-starter && yarn",
+    "start:api": "cd api-starter && yarn start",
+    "postinstall": "cd api-starter && yarn install --production=false && cd ../front-starter && yarn",
     "________________ Heroku ________________": "",
-    "heroku-postbuild": "cd api-rocket && yarn heroku-postbuild",
-    "start:staging": "cd api-rocket && yarn start:staging"
+    "heroku-postbuild": "cd api-starter && yarn heroku-postbuild",
+    "start:staging": "cd api-starter && yarn start:staging"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^1.12.1",

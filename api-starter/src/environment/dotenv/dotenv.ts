@@ -34,7 +34,7 @@ export function config(options: DotenvOptions = {}) {
   const example = options.example || options.sample || '.env.example';
   const allowEmptyValues = options.allowEmptyValues || false;
   const processEnv = maybeRemoveEmpty(process.env, allowEmptyValues);
-  const exampleVars = parse(fs.readFileSync(example));
+  const exampleVars = parse(fs.readFileSync(`${__dirname}/../../../${example}`));
   const missing = difference(Object.keys(exampleVars), Object.keys(processEnv));
 
   if (missing.length > 0) {

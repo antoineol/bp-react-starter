@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { Server } from 'http';
 import { initApp } from './app';
+import { generateTypes } from './common/utils/hasura-schema.utils';
 import { env } from './environment/env';
 
 const port = env.port;
@@ -12,8 +13,9 @@ async function bootstrap(): Promise<Server> {
 }
 
 bootstrap().then(() => {
+  logger.log(`Serving the app at http://localhost:${port}`);
   if (env.isDev) {
-    logger.log(`Serving the app at http://localhost:${port}`);
+    return generateTypes();
   }
 // tslint:disable-next-line:no-console
-}).catch(err => console.error(err));
+}).catch(err => console.error('Error when starting API:', err));

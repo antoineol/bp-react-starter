@@ -8,8 +8,14 @@ directive @client on FIELD
 extend type query_root {
   jwt: String
   home: Home
+  profile: Profile
 }
 
 type Home {
   count: Int
+}
+
+type Profile {
+  name: String,
+  picture: String,
 }

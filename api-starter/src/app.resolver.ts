@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { Features } from '../model/features.model';
+import { Features } from './common/gqlModel/features.model';
 
 @Resolver()
 export class AppResolver {

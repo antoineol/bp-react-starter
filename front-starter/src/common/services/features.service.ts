@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { Features } from '../../../hasura/gen/types';
+import { Features } from '../../../generated/schema';
 import { appConfig } from '../app.config';
 import { writeCache } from '../utils/app.utils';
 

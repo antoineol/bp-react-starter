@@ -7,20 +7,22 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthorsModule } from './author/author.module';
 import { env } from './environment/env';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      retryDelay: 3000,
+      retryAttempts: Number.MAX_VALUE,
+    }),
     GraphQLModule.forRoot({
       debug: env.isDev,
       playground: !env.isProd,
       autoSchemaFile: 'schema.graphql',
+      introspection: true,
       // buildSchemaOptions
     }),
-    UserModule,
     AuthModule,
-    // AuthorsModule,
+    AuthorsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger, AppResolver],

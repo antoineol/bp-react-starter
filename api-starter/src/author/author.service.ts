@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Author } from '../../model/author.model';
-import { Post } from '../../model/post.model';
+import { Author } from '../common/gqlModel/author.model';
+import { Post } from '../common/gqlModel/post.model';
 
 export type PostDb = Post & { authorId: number };
 

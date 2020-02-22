@@ -1,8 +1,8 @@
 import { Args, Mutation, Parent, Query, ResolveProperty, Resolver } from '@nestjs/graphql';
 import { Int } from 'type-graphql';
+import { Author } from '../common/gqlModel/author.model';
+import { Post } from '../common/gqlModel/post.model';
 import { AuthorService } from './author.service';
-import { Author } from '../../model/author.model';
-import { Post } from '../../model/post.model';
 
 @Resolver(of => Author)
 export class AuthorResolver {
@@ -10,7 +10,8 @@ export class AuthorResolver {
   }
 
   @Query(returns => [Author])
-  async authors(@Args({ name: 'id', type: () => Int, nullable: true }) id?: number): Promise<Author[]> {
+  async authors(@Args(
+    { name: 'id', type: () => Int, nullable: true }) id?: number): Promise<Author[]> {
     return this.authorService.findAll(id);
   }
 

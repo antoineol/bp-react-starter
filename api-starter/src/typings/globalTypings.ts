@@ -10,8 +10,9 @@ declare namespace Express {
       email: string;
       name: string;
       locale: string;
-      hd: string;
+      domain: string;
       refresh: string;
+      picture: string;
       'x-hasura-allowed-roles': string[];
       'x-hasura-default-role': string;
       'x-hasura-user-id': string;

@@ -13,6 +13,10 @@ export function errWithStatus(message: string, status: number): ErrorWithStatus 
   return new ErrorWithStatus(message, status);
 }
 
+export async function wait(ms?: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /**
  * Sends a GET request.
  * @param url Remote resource URL
