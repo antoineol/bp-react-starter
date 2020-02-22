@@ -1,3 +1,0 @@
-- args:
-    sql: DROP TABLE "public"."profile"
-  type: run_sql
