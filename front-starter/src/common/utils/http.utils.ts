@@ -68,7 +68,7 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
 
 // CSRF protection if the server requires this token
 const requiredHeaders = { 'X-Requested-By': appConfig.appName };
-export const defaultOptions = { headers: requiredHeaders }; // Useful for tests
+export const defaultOptions = { headers: requiredHeaders, withCredentials: appConfig.allowCorsApi }; // Useful for tests
 
 function extendConfig(config: AxiosRequestConfig | undefined) {
   // For security, it is recommended to rely on secured cookies: keep the JWT
