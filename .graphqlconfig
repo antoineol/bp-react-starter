@@ -1,7 +1,0 @@
-{
-  "name": "Foo",
-  "includes": [
-    "src/**",
-    "hasura/gen/*"
-  ]
-}

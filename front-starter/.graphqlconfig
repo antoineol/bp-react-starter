@@ -1,0 +1,7 @@
+{
+  "name": "Foo",
+  "includes": [
+    "src/**",
+    "generated/*"
+  ]
+}

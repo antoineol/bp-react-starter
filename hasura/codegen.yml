@@ -1,5 +1,5 @@
-schema: ./hasura/gen/schema.graphql
+schema: ./front-starter/generated/schema.graphql
 generates:
-  ./hasura/gen/types.d.ts:
+  ./front-starter/generated/types.d.ts:
     plugins:
       - typescript

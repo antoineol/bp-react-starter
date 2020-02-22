@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Update this CSP with resources and websites the app needs to reach -->
+  <meta
+    content="base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://apis.google.com; style-src 'self' 'unsafe-inline'"
+    http-equiv="Content-Security-Policy">
+  <meta charset="utf-8" />
+  <link href="%PUBLIC_URL%/favicon.ico" rel="icon" />
+  <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+  <meta content="#000000" name="theme-color" />
+  <meta
+    content="Web site created using create-react-app"
+    name="description"
+  />
+  <link href="%PUBLIC_URL%/logo192.png" rel="apple-touch-icon" />
+  <!--
+    manifest.json provides metadata used when your web app is installed on a
+    user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+  -->
+  <link href="%PUBLIC_URL%/manifest.json" rel="manifest" />
+  <!--
+    Notice the use of %PUBLIC_URL% in the tags above.
+    It will be replaced with the URL of the `public` folder during the build.
+    Only files inside the `public` folder can be referenced from the HTML.
+
+    Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+    work correctly both with client-side routing and a non-root public URL.
+    Learn how to configure a non-root public URL by running `npm run build`.
+  -->
+  <title>React App</title>
+  <!-- Eventual polyfills if all users will be on internet (may not apply to intranet users) -->
+  <!-- Ensure you don't also use polyfills on top of index.tsx. Only one of them is required. -->
+  <!-- <script>if(!(window.Promise&&[].includes&&Object.assign&&window.Map)){document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=default%2Ces2015%2Ces2016%2Ces2017"></scr'+'ipt>')}</script> -->
+</head>
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
+
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
+
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+</body>
+</html>

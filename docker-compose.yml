@@ -17,6 +17,7 @@ services:
     volumes:
       - ./hasura/migrations:/hasura-migrations
     env_file: .env
+#    restart: on-failure
   pgadmin:
     image: dpage/pgadmin4:4.17
     container_name: starter_pgadmin
