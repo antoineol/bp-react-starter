@@ -7,8 +7,8 @@
   },
   "cacheDirectories": [
     "node_modules",
-    "front-rocket/node_modules",
-    "api-rocket/node_modules"
+    "front-starter/node_modules",
+    "api-starter/node_modules"
   ],
   "scripts": {
     "________________ development ________________": "",
@@ -18,7 +18,7 @@
     "upgr": "yarn upgrade-interactive --latest",
     "up": "docker-compose up -d db && docker-compose up -d",
     "stop": "docker-compose stop",
-    "types": "yarn hasura metadata reload && (mkdirp front-starter/generated && gq http://localhost:8080/v1/graphql -H \\\\\\\"X-Hasura-Admin-Secret: secret\\\\\\\" --introspect > front-starter/generated/schema.graphql && graphql-codegen --config ./hasura/codegen.yml) || echo WARN: could not regenerate schemas. Maybe hasura is not started?",
+    "types": "yarn hasura metadata reload && (mkdirp front-starter/generated && gq http://localhost:8080/v1/graphql -H \"X-Hasura-Admin-Secret: secret\" --introspect > front-starter/generated/schema.graphql && graphql-codegen --config ./hasura/codegen.yml) || echo WARN: could not regenerate schemas. Maybe hasura is not started?",
     "________________ deployment ________________": "",
     "build:staging": "env-cmd .env.staging npm run build",
     "build:prod": "env-cmd .env.prod npm run build",
@@ -30,7 +30,7 @@
     "hasura:staging": "env-cmd .env.staging hasura --project hasura --skip-update-check",
     "start:front": "cd front-starter && yarn start",
     "start:api": "cd api-rocket && yarn start",
-    "postinstall": "cd api-rocket && yarn install --production=false && cd ../front-rocket && yarn",
+    "postinstall": "cd api-rocket && yarn install --production=false && cd ../front-starter && yarn",
     "________________ Heroku ________________": "",
     "heroku-postbuild": "cd api-rocket && yarn heroku-postbuild",
     "start:staging": "cd api-rocket && yarn start:staging"

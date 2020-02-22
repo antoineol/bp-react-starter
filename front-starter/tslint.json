@@ -24,6 +24,8 @@
     "no-empty": false,
     "function-name": false,
     "no-unnecessary-initializer": true,
-    "object-shorthand-properties-first": false
+    "object-shorthand-properties-first": false,
+    "no-namespace": false,
+    "prefer-array-literal": false
   }
 }

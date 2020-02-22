@@ -1,0 +1,4 @@
+# Netlify redirection rules. This file will be included in front build.
+
+/api/*  https://staging-aol-starter-api.herokuapp.com/:splat  200
+/*  /index.html 200

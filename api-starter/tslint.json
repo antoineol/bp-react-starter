@@ -29,7 +29,11 @@
     ],
     "arrow-parens": false,
     "object-literal-sort-keys": false,
-    "no-shadowed-variable": false
+    "no-shadowed-variable": false,
+    "no-namespace": false,
+    "array-type": {
+      "options": "array-simple"
+    }
   },
   "rulesDirectory": []
 }
