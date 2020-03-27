@@ -3,7 +3,6 @@ import { OperationVariables } from 'apollo-client';
 import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
 import { Mutation_Root } from '../../../generated/schema';
-import { appConfig } from '../app.config';
 import { getGqlClient } from '../graphql.client';
 import { AppCache, defaultStore } from '../localStore';
 import { RecursivePartial } from '../models/app.models';
@@ -98,17 +97,6 @@ export function isObject(obj: any): boolean {
 
 export function wait(ms?: number) {
   return new Promise<void>(resolve => setTimeout(resolve, ms));
-}
-
-export function logRenderForPerfInvestigation() {
-  if (appConfig.enablePerfDebug) {
-    const stack = new Error().stack as string;
-    const firstAtPosition = stack.indexOf(' at ');
-    const startOfCallerNamePosition = stack.indexOf(' at ', firstAtPosition + 1) + 4;
-    const endOfFunctionNamePosition = stack.indexOf(' ', startOfCallerNamePosition + 1);
-    const callerName = stack.substring(startOfCallerNamePosition, endOfFunctionNamePosition);
-    console.log('Render', callerName, 'component');
-  }
 }
 
 // Implementation details

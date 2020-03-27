@@ -6,7 +6,7 @@ import React, { FC, memo } from 'react';
 import { Route, Switch } from 'react-router';
 import Header from './common/components/Header';
 import Layout from './common/components/Layout';
-import { logRenderForPerfInvestigation } from './common/utils/app.utils';
+import { logRenderForPerfInvestigation } from './common/utils/perf.utils';
 import './core/_bootstrap/app.css';
 import { appTheme } from './core/app.theme';
 import SignInDialog from './features/auth/SignInDialog';

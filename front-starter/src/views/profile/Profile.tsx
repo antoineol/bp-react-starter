@@ -45,10 +45,11 @@ const Profile: FC = () => {
     AUTHORS_SUB);
   const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
   const [delMutator, { error: errDel }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
+  const handleAdd = useCallback(addAuthor(addMutator), []);
   const handleDelete = useCallback(deleteAuthor(delMutator), []);
 
   if (!dataAuthors) {
-    return <ErrorComp error={error} />;
+    return <ErrorComp error={error}/>;
   }
   const authors = dataAuthors!.author;
 
@@ -56,26 +57,33 @@ const Profile: FC = () => {
     <Formik
       initialValues={newAuthorSchema.cast()}
       validationSchema={newAuthorSchema}
-      onSubmit={addAuthor(addMutator)}
+      onSubmit={handleAdd}
     >
       <Form className={classes.form}>
-        <AppTextInput id="new-author-name" name="name" label="Name" autoFocus />
-        <Button variant="outlined" color="primary" type="submit" className={classes.submitBtn}>
-          Add author
-        </Button>
+        <div style={{ margin: '10px' }}>
+          <AppTextInput name="name" label="Name" autoFocus/>
+        </div>
+        <div style={{ margin: '10px' }}>
+          <AppTextInput name="age" label="Age" type={'number'}/>
+        </div>
+        <div style={{ margin: '10px' }}>
+          <Button variant="outlined" color="primary" type="submit" className={classes.submitBtn}>
+            Add author
+          </Button>
+        </div>
       </Form>
     </Formik>
     {loadingSub
-      ? <CircularProgress />
+      ? <CircularProgress/>
       : <ul>
         {authors.map(author => <li key={author.id}>{author.name} <IconButton
           aria-label="delete"
           data-id={author.id}
           onClick={handleDelete}>
-          <DeleteIcon />
+          <DeleteIcon/>
         </IconButton></li>)}
       </ul>}
-    <ErrorComp error={[error, errAdd, errDel]} />
+    <ErrorComp error={[error, errAdd, errDel]}/>
   </div>;
 };
 

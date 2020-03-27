@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/api-starter/.idea/api-starter.iml" filepath="$PROJECT_DIR$/api-starter/.idea/api-starter.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/bp-react-starter.iml" filepath="$PROJECT_DIR$/.idea/bp-react-starter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/front-starter/.idea/front-starter.iml" filepath="$PROJECT_DIR$/front-starter/.idea/front-starter.iml" />
     </modules>
   </component>
 </project>

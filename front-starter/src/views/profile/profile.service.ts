@@ -20,6 +20,7 @@ export const newAuthorSchema = yup.object({
   name: yup.string()
     .max(15, 'Must be 15 characters or less')
     .default('John'),
+  age: yup.number().min(10).max(150).default(''),
 });
 
 type NewAuthor = yup.InferType<typeof newAuthorSchema>;
@@ -29,7 +30,7 @@ export function addAuthor(mutator: Mutator<Mutation_Root>) {
     console.log('will mutate');
     const formName = values.name;
     const name = formName ? formName : pickRandom(names);
-    const author: Partial<Author> = { name };
+    const author: Partial<Author> = { name }; // TODO: add age
     return mutator({
       variables: { object: author },
     });
