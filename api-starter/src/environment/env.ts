@@ -18,8 +18,8 @@ if (!isDev && !isStaging && !isProd) {
 
 // Add here non-confidential environment-based configurations (e.g. domains, base URLs)
 const dev = {
-  publicOrigin: 'http://localhost:4141',
-  publicUrl: 'http://localhost:4141',
+  publicOrigin: 'http://localhost:4149',
+  publicUrl: 'http://localhost:4149',
   googleAdminProjectId: '',
   impersonatedAdmin: '', // GSuite admin email
   googleAdminClientEmail: '', // service account impersonating above admin
@@ -52,7 +52,7 @@ export const env = {
   isJest: process.env.JEST_WORKER_ID !== undefined,
   nodeEnv: process.env.NODE_ENV,
   isNodeProduction: process.env.NODE_ENV === 'production',
-  port: process.env.PORT || 4141,
+  port: process.env.PORT || 4149,
   typeOrmUrl: process.env.TYPEORM_URL,
   typeOrmTestUrl: process.env.TYPEORM_TEST_URL,
   secretKey: process.env.SECRET_KEY,

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "________________ development ________________": "",
-    "start": "react-scripts start",
+    "start": "cross-env PORT=3009 react-scripts start",
     "start:staging": "env-cmd .env.staging react-scripts start",
     "start:prod": "env-cmd .env.prod react-scripts start",
     "start:dist": "yarn build && yarn serve",

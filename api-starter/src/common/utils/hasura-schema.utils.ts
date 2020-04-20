@@ -6,7 +6,7 @@ import * as mkdirp from 'mkdirp';
 import { appConfig } from '../app.config';
 import { httpPost, wait } from './app.utils';
 
-const rootHasuraUrl = 'http://localhost:8080/v1';
+const rootHasuraUrl = 'http://localhost:8089/v1';
 
 const root = `${__dirname}/../../../..`;
 config({ path: `${root}/.env` });
