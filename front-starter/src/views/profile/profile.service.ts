@@ -23,6 +23,8 @@ export const newAuthorSchema = yup.object({
   age: yup.number().min(10).max(150).default(''),
 });
 
+export const newAuthorDefaults = newAuthorSchema.default();
+
 type NewAuthor = yup.InferType<typeof newAuthorSchema>;
 
 export function addAuthor(mutator: Mutator<Mutation_Root>) {

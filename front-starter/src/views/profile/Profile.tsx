@@ -20,6 +20,7 @@ import {
   AUTHORS_SUB,
   DELETE_AUTHOR,
   deleteAuthor,
+  newAuthorDefaults,
   newAuthorSchema,
 } from './profile.service';
 
@@ -55,7 +56,7 @@ const Profile: FC = () => {
 
   return <div className={classes.root}>
     <Formik
-      initialValues={newAuthorSchema.cast()}
+      initialValues={newAuthorDefaults}
       validationSchema={newAuthorSchema}
       onSubmit={handleAdd}
     >
