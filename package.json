@@ -13,7 +13,7 @@
   "scripts": {
     "________________ development ________________": "",
     "start": "npm-run-all --parallel up start:front start:api",
-    "console": "yarn hasura console",
+    "console": "yarn hasura console --console-port 9689 --api-port 9699",
     "test": "react-scripts test",
     "upgr": "yarn upgrade-interactive --latest",
     "up": "docker-compose up -d db && docker-compose up -d",

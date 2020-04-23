@@ -1,4 +1,4 @@
-import { QueryHookOptions, useQuery } from '@apollo/react-hooks';
+import { QueryHookOptions, useQuery, useSubscription } from '@apollo/react-hooks';
 import { OperationVariables } from 'apollo-client';
 import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
@@ -63,6 +63,15 @@ export function writeCache(data: RecursivePartial<AppCache>, id?: string) {
 export function useCache<TData extends AppCache, TVariables = OperationVariables>
 (query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
   const { data = {}, error } = useQuery(query, { ...options, fetchPolicy: 'cache-only' });
+  if (error) {
+    console.error('Error when retrieving cache:', error);
+  }
+  return data as TData;
+}
+
+export function useCacheSub<TData extends AppCache, TVariables = OperationVariables>
+(query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
+  const { data = {}, error } = useSubscription(query, { ...options, fetchPolicy: 'cache-only' });
   if (error) {
     console.error('Error when retrieving cache:', error);
   }
