@@ -3,8 +3,10 @@ import { MouseEvent } from 'react';
 import * as yup from 'yup';
 import { Author, Mutation_Root } from '../../../generated/schema';
 import { Mutator } from '../../common/models/app.models';
+import { selectApollo } from '../../core/redux-apollo/redux-apollo.core';
 
-export const AUTHORS_SUB = gql`subscription { author { id, name } }`;
+export const AUTHORS_Q = gql`query myAuthors { author { id, name } }`;
+export const AUTHORS_SUB = gql`subscription myAuthors { author { id, name } }`;
 export const ADD_AUTHOR = gql`mutation insert_author($object: author_insert_input! ) {
   insert_author(objects: [$object]) {
     affected_rows
@@ -18,9 +20,8 @@ export const DELETE_AUTHOR = gql`mutation delete_author($id: uuid) {
 
 export const newAuthorSchema = yup.object({
   name: yup.string()
-    .max(15, 'Must be 15 characters or less')
-    .default('John'),
-  age: yup.number().min(10).max(150).default(''),
+    .max(15, 'Must be 15 characters or less'),
+  age: yup.number().min(10).max(150).default(25),
 });
 
 export const newAuthorDefaults = newAuthorSchema.default();
@@ -35,6 +36,7 @@ export function addAuthor(mutator: Mutator<Mutation_Root>) {
     const author: Partial<Author> = { name }; // TODO: add age
     return mutator({
       variables: { object: author },
+      refetchQueries: [{ query: AUTHORS_Q }],
     });
   };
 }
@@ -42,7 +44,10 @@ export function addAuthor(mutator: Mutator<Mutation_Root>) {
 export function deleteAuthor(mutator: Mutator<Mutation_Root>) {
   return async (e: MouseEvent<HTMLButtonElement>) => {
     const id = e.currentTarget.dataset.id;
-    return mutator({ variables: { id } });
+    return mutator({
+      variables: { id },
+      refetchQueries: [{ query: AUTHORS_Q }],
+    });
   };
 }
 
@@ -51,3 +56,6 @@ const names = ['Parker', 'Stark', 'Herbert', 'Kennedy', 'Hammond', 'Moore', 'Hol
 function pickRandom<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
+
+// Sample redux selector to read data from cache
+export const selectAuthors = selectApollo('myAuthors', 'author');

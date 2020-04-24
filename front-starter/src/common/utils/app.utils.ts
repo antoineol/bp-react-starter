@@ -104,6 +104,15 @@ export function isObject(obj: any): boolean {
   return typeof obj === 'object' && obj !== null;
 }
 
+export function isObjectEmpty(obj: object) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function wait(ms?: number) {
   return new Promise<void>(resolve => setTimeout(resolve, ms));
 }

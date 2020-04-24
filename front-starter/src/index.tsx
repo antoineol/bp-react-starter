@@ -7,24 +7,15 @@
 // react-app-polyfill and polyfill.io.
 // import 'react-app-polyfill/ie11';
 // import 'react-app-polyfill/stable';
-import { ApolloProvider } from '@apollo/react-common';
-import { createBrowserHistory } from 'history';
-import React from 'react';
 import { render } from 'react-dom';
-import { Router } from 'react-router';
 import App from './App';
 import { appConfig } from './common/app.config';
-import { getGqlClient } from './common/graphql.client';
-import { handleError } from './common/services/error.service';
-import { initAppServices } from './core/app.init';
+import { makeApp } from './core/redux/details/core.utils';
 
 // Init the app.
 const rootElt = document.getElementById('root');
-const gqlClient = getGqlClient();
-const history = createBrowserHistory();
 // Complete this function with all services initializations you need to do to bootstrap the app.
 // Example: load server config asap. initAppServices().catch(handleError); }, []);
-initAppServices().catch(handleError);
 renderApp(App);
 
 // Hot Module Replacement (HMR) to update the app content while developing without refreshing the
@@ -42,12 +33,6 @@ if (appConfig.useHotModuleReplacement && module.hot) {
 // This render contains all platform-specific code, e.g. what should not be included in tests
 // (a mock is provided instead).
 function renderApp(AppComp: typeof App) {
-  return render(
-    // Initializes Apollo GraphQL client for child components
-    <ApolloProvider client={gqlClient}>
-      {/* Initializes routing for child components */}
-      <Router history={history}>
-        <AppComp />
-      </Router>
-    </ApolloProvider>, rootElt);
+  const { app } = makeApp(AppComp);
+  return render(app, rootElt);
 }

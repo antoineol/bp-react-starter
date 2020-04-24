@@ -1,4 +1,4 @@
-import { useMutation, useSubscription } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import {
   Button,
   CircularProgress,
@@ -11,13 +11,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { CSSProperties } from '@material-ui/styles';
 import { Form, Formik } from 'formik';
 import React, { FC, memo, useCallback } from 'react';
-import { Mutation_Root, Subscription_Root } from '../../../generated/schema';
+import { Mutation_Root, Query_Root } from '../../../generated/schema';
 import ErrorComp from '../../common/components/ErrorComp';
 import AppTextInput from '../../common/components/form/AppTextField';
 import {
   ADD_AUTHOR,
   addAuthor,
-  AUTHORS_SUB,
+  AUTHORS_Q,
   DELETE_AUTHOR,
   deleteAuthor,
   newAuthorDefaults,
@@ -40,19 +40,20 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const Profile: FC = () => {
+const Profile: FC = memo(() => {
+  // TODO replace subscription with query and use cache (with redux or apollo)
   const classes = useStyles(); // MUI Styles
-  const { data: dataAuthors, loading: loadingSub, error } = useSubscription<Subscription_Root>(
-    AUTHORS_SUB);
+  const { data, loading, error } = useQuery<Query_Root>(AUTHORS_Q);
+  // const { data, loading, error } = useSubscription<Subscription_Root>(AUTHORS_SUB);
+  const authors = data?.author ?? [];
+  // Mutations with refetchQueries will re-trigger the query after the mutation, which will
+  // update the component with updated server data.
   const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
   const [delMutator, { error: errDel }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
   const handleAdd = useCallback(addAuthor(addMutator), []);
   const handleDelete = useCallback(deleteAuthor(delMutator), []);
 
-  if (!dataAuthors) {
-    return <ErrorComp error={error}/>;
-  }
-  const authors = dataAuthors!.author;
+  if (error) return <ErrorComp error={error}/>;
 
   return <div className={classes.root}>
     <Formik
@@ -74,7 +75,7 @@ const Profile: FC = () => {
         </div>
       </Form>
     </Formik>
-    {loadingSub
+    {loading
       ? <CircularProgress/>
       : <ul>
         {authors.map(author => <li key={author.id}>{author.name} <IconButton
@@ -86,6 +87,6 @@ const Profile: FC = () => {
       </ul>}
     <ErrorComp error={[error, errAdd, errDel]}/>
   </div>;
-};
+});
 
-export default memo(Profile);
+export default Profile;

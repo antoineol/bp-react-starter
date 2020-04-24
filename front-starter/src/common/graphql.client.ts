@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import ZenObservable from 'zen-observable-ts';
+import { ReduxLink } from '../core/redux-apollo/redux-apollo.core';
 import { env } from '../environment/env';
 import { addJwtToHeaders, fetchNewJwt } from '../features/auth/auth.service';
 import { defaultStore } from './localStore';
@@ -84,7 +85,8 @@ function initGqlClient() {
   });
   gqlClient = new ApolloClient({
     cache,
-    link: ApolloLink.from([retryLink, errorLink, authLink, wsLink]),
+    link: ApolloLink.from(
+      [new ReduxLink(), retryLink, errorLink, authLink, wsLink]),
     assumeImmutableResults: true,
     // {} So that cache access does not run resolvers functions. Avoids irrelevant network
     // errors when accessing local cache (source: Apollo doc and PR).
@@ -96,6 +98,9 @@ function initGqlClient() {
 }
 
 export function getGqlClient() {
+  if (!gqlClient && !env.isJest) {
+    initGqlClient();
+  }
   return gqlClient;
 }
 
@@ -115,8 +120,4 @@ function reauthAndRetry(operation: Operation, forward: NextLink): ZenObservable<
     .flatMap(() => {
       return forward(operation);
     });
-}
-
-if (!env.isJest) {
-  initGqlClient();
 }

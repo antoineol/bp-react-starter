@@ -13,3 +13,5 @@ export type RecursivePartial<T> = {
 export interface Dict<T> {
   [key: string]: T;
 }
+
+export type ValueOf<T> = T[keyof T];

@@ -1,5 +1,5 @@
 import { MockedResponse } from '@apollo/react-testing';
-import { Query_Root } from '../../generated/schema';
+import { Mutation_Root, Query_Root } from '../../generated/schema';
 import { AppCache } from '../common/localStore';
 import { GET_JSON_PL_REMOTE } from '../common/services/features.service';
 import { ADD_AUTHOR, AUTHORS_SUB } from '../views/profile/profile.service';

@@ -1,0 +1,22 @@
+- args:
+    role: team@earlymetrics.com
+    table:
+      name: author
+      schema: public
+  type: drop_update_permission
+- args:
+    permission:
+      columns:
+      - fields
+      - id
+      - name
+      filter: {}
+      localPresets:
+      - key: ""
+        value: ""
+      set: {}
+    role: team@earlymetrics.com
+    table:
+      name: author
+      schema: public
+  type: create_update_permission
