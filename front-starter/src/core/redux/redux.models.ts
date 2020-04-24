@@ -1,10 +1,8 @@
 import { List, Record } from 'immutable';
-import { COUNT_REDUCER, CountModel } from '../../views/home/count2.service';
 import { REDUX_APOLLO_REDUCER, ReduxApolloModel } from '../redux-apollo/redux-apollo.core';
 
 export interface AppStoreDirectModel {
   [REDUX_APOLLO_REDUCER]: ReduxApolloModel,
-  [COUNT_REDUCER]: CountModel;
 }
 
 export type Primitive = string | number | boolean | symbol | undefined | null;
