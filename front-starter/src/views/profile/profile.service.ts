@@ -5,14 +5,14 @@ import { Author, Mutation_Root } from '../../../generated/schema';
 import { Mutator } from '../../common/models/app.models';
 import { selectApollo } from '../../core/redux-apollo/redux-apollo.core';
 
-export const AUTHORS_Q = gql`query myAuthors { author { id, name } }`;
-export const AUTHORS_SUB = gql`subscription myAuthors { author { id, name } }`;
-export const ADD_AUTHOR = gql`mutation insert_author($object: author_insert_input! ) {
+export const AUTHORS_Q = gql`query { author { id, name } }`;
+export const AUTHORS_SUB = gql`subscription { author { id, name } }`;
+export const ADD_AUTHOR = gql`mutation ($object: author_insert_input! ) {
   insert_author(objects: [$object]) {
     affected_rows
   }
 }`;
-export const DELETE_AUTHOR = gql`mutation delete_author($id: uuid) {
+export const DELETE_AUTHOR = gql`mutation ($id: uuid) {
   delete_author(where: {id: {_eq: $id}}) {
     affected_rows
   }
@@ -30,7 +30,6 @@ type NewAuthor = yup.InferType<typeof newAuthorSchema>;
 
 export function addAuthor(mutator: Mutator<Mutation_Root>) {
   return async (values: NewAuthor) => {
-    console.log('will mutate');
     const formName = values.name;
     const name = formName ? formName : pickRandom(names);
     const author: Partial<Author> = { name }; // TODO: add age
@@ -58,4 +57,4 @@ function pickRandom<T>(array: T[]): T {
 }
 
 // Sample redux selector to read data from cache
-export const selectAuthors = selectApollo('myAuthors', 'author');
+export const selectAuthors = selectApollo('author');

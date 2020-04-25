@@ -38,15 +38,19 @@ type ReduxApolloAction = ActionWithPayload<ReduxApolloAT, { field: string, value
 
 /**
  *
- * @param field The graphql request name or, if undefined in the graphql request definition, the
- * name of the first table requested.
- * @param key Name of the table to select. Auto-completion gives the list of choices. It should
+ * @param table Name of the table to select. Auto-completion gives the list of choices. It should
  * match the table selected in graphql request.
+ * @param graphQlRequestName In case multiple requests of the same table exist, you should name
+ * your graphql requests (e.g. `query myAuthors { ... }`; myAuthors is the request name). This
+ * argument is the name of the request which results should be fetched. If you don't provide a
+ * name in your GraphQL request, it defaults to the first table name you are fetching and this
+ * argument is optional.
  */
 export function selectApollo<F extends keyof ReduxApolloModel, K extends keyof ApolloType>
-(field: F, key: K) {
-  return selectState(REDUX_APOLLO_REDUCER, field,
-    root => (root as ApolloType)?.[key] as ApolloType[K] | undefined);
+(table: K, graphQlRequestName?: F) {
+  const f = graphQlRequestName || table;
+  return selectState(REDUX_APOLLO_REDUCER, f,
+    root => (root as ApolloType)?.[table] as ApolloType[K] | undefined);
 }
 
 // Reducer
