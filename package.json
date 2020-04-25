@@ -13,35 +13,22 @@
   "scripts": {
     "________________ development ________________": "",
     "start": "npm-run-all --parallel up start:front start:api",
-    "console": "yarn hasura console --console-port 9689 --api-port 9699",
+    "console": "cd api-rocket && yarn console",
     "test": "react-scripts test",
     "upgr": "yarn upgrade-interactive --latest",
-    "up": "docker-compose up -d db && docker-compose up -d",
+    "up": "docker-compose up -d db && yarn wait:ws && docker-compose up -d",
     "stop": "docker-compose stop",
-    "types": "yarn hasura metadata reload && (mkdirp front-starter/generated && gq http://localhost:8089/v1/graphql -H \"X-Hasura-Admin-Secret: secret\" --introspect > front-starter/generated/schema.graphql && graphql-codegen --config ./hasura/codegen.yml) || echo WARN: could not regenerate schemas. Maybe hasura is not started?",
     "________________ deployment ________________": "",
-    "build:staging": "env-cmd .env.staging npm run build",
-    "build:prod": "env-cmd .env.prod npm run build",
-    "serve": "serve -s build -c serve.json",
-    "deploy:staging": "yarn migrate:staging && cd api-starter && yarn deploy:staging",
-    "migrate:staging": "yarn hasura:staging migrate apply --endpoint https://staging-aol-starter-hasura.herokuapp.com/",
+    "ssh": "eb ssh AWS-env-staging",
+    "ssh:prod": "eb ssh AWS-env-prod",
     "________________ implementation details ________________": "",
-    "hasura": "env-cmd .env hasura --project hasura --skip-update-check",
-    "hasura:staging": "env-cmd .env.staging hasura --project hasura --skip-update-check",
-    "start:front": "cd front-starter && yarn start",
-    "start:api": "cd api-starter && yarn start",
-    "postinstall": "cd api-starter && yarn install --production=false && cd ../front-starter && yarn",
-    "________________ Heroku ________________": "",
-    "heroku-postbuild": "cd api-starter && yarn heroku-postbuild",
-    "start:staging": "cd api-starter && yarn start:staging"
+    "start:front": "cd front-rocket && yarn start",
+    "start:api": "cd api-rocket && yarn start",
+    "wait:ws": "wait-on http://localhost:4141/",
+    "postinstall": "cd api-starter && yarn install --production=false && cd ../front-starter && yarn"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^1.12.1",
-    "@graphql-codegen/typescript": "^1.12.1",
-    "env-cmd": "8.0.2",
-    "hasura-cli": "1.0.0",
-    "mkdirp": "^1.0.3",
     "npm-run-all": "^4.1.5",
-    "graphql-fetch-schema": "^1.1.0"
+    "wait-on": "^4.0.2"
   }
 }

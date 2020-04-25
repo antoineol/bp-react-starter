@@ -9,19 +9,24 @@
     "node": "12"
   },
   "scripts": {
+    "________________ development ________________": "",
     "start": "ts-node-dev --no-deps --transpile-only --ignore-watch node_modules src/main.ts",
     "start:debug": "ts-node-dev --no-deps --transpile-only --ignore-watch node_modules --inspect src/main.ts",
-    "start:staging": "cd dist && node main.js",
-    "start:staging:local": "cd dist && heroku local web",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "up": "cd .. && yarn up",
-    "________________ Heroku ________________": "",
-    "heroku-postbuild": "rimraf dist && tsc -p tsconfig.build.json && cd .. && yarn migrate:staging",
-    "log:staging": "heroku logs --tail"
+    "console": "yarn hasura console",
+    "________________ Deployment ________________": "",
+    "build": "rimraf dist && tsc -p tsconfig.build.json && cpx \"src/in/Template matrix.xlsm\" \"dist/in\"",
+    "start:prod": "node dist/main.js",
+    "migrate:staging": "yarn hasura:server migrate apply --endpoint https://staging.rating-api.earlymetrics.com/hasura",
+    "migrate:prod": "yarn hasura:server migrate apply --endpoint https://rating-api.earlymetrics.com/hasura",
+    "________________ implementation details ________________": "",
+    "hasura": "env-cmd .env hasura --project hasura --skip-update-check",
+    "hasura:server": "hasura --project hasura --skip-update-check"
   },
   "dependencies": {
     "@nestjs/common": "^6.11.5",
@@ -58,6 +63,8 @@
     "typeorm": "^0.2.22"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.12.1",
+    "@graphql-codegen/typescript": "^1.12.1",
     "@nestjs/testing": "^6.11.5",
     "@types/airtable": "^0.5.7",
     "@types/cookie-parser": "^1.4.2",
@@ -71,6 +78,7 @@
     "@types/supertest": "2.0.8",
     "cpx": "^1.5.0",
     "env-cmd": "8.0.2",
+    "graphql-fetch-schema": "^1.1.0",
     "jest": "25.1.0",
     "move-cli": "^1.2.1",
     "prettier": "1.19.1",

@@ -1,5 +1,0 @@
-schema: ./front-starter/generated/schema.graphql
-generates:
-  ./front-starter/generated/types.d.ts:
-    plugins:
-      - typescript
