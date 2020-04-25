@@ -7,8 +7,8 @@ import { Reducer } from 'redux';
 import Observable from 'zen-observable-ts';
 import { Query_Root, Subscription_Root } from '../../../generated/schema';
 import { isObjectEmpty } from '../../common/utils/app.utils';
-import { StoreOf } from '../redux/redux.models';
-import { ActionWithPayload, dispatchOther, selectState } from '../redux/redux.utils';
+import { StoreOf } from './redux.models';
+import { ActionWithPayload, dispatchOther } from './redux.utils';
 
 // Model
 
@@ -16,7 +16,7 @@ import { ActionWithPayload, dispatchOther, selectState } from '../redux/redux.ut
 
 export const REDUX_APOLLO_REDUCER = 'hasura';
 
-type ApolloType = Omit<Query_Root & Subscription_Root, '__typename'>;
+export type ApolloType = Omit<Query_Root & Subscription_Root, '__typename'>;
 
 export interface ReduxApolloModel {
   [key: string]: ApolloType;
@@ -33,25 +33,6 @@ enum ReduxApolloAT {
 }
 
 type ReduxApolloAction = ActionWithPayload<ReduxApolloAT, { field: string, value?: any }>;
-
-// Selector
-
-/**
- *
- * @param table Name of the table to select. Auto-completion gives the list of choices. It should
- * match the table selected in graphql request.
- * @param graphQlRequestName In case multiple requests of the same table exist, you should name
- * your graphql requests (e.g. `query myAuthors { ... }`; myAuthors is the request name). This
- * argument is the name of the request which results should be fetched. If you don't provide a
- * name in your GraphQL request, it defaults to the first table name you are fetching and this
- * argument is optional.
- */
-export function selectApollo<F extends keyof ReduxApolloModel, K extends keyof ApolloType>
-(table: K, graphQlRequestName?: F) {
-  const f = graphQlRequestName || table;
-  return selectState(REDUX_APOLLO_REDUCER, f,
-    root => (root as ApolloType)?.[table] as ApolloType[K] | undefined);
-}
 
 // Reducer
 

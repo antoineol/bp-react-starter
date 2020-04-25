@@ -11,14 +11,12 @@ const rootHasuraUrl = 'http://localhost:8089/v1';
 const root = `${__dirname}/../../../..`;
 config({ path: `${root}/.env` });
 const secret = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
-const apiSchemaName = 'api';
 const generatedDir = `${root}/${appConfig.frontFolder}/generated`;
 const logger = new Logger('hasura.utils');
 
 export async function generateTypes() {
   logger.log('Extract Hasura schema and types for front...');
   await withRetry(hasuraReloadMetadata);
-  await withRetry(hasuraReloadRemoteSchema);
   await createGeneratedFolder();
   await hasuraExtractSchema();
   await generateTypesFromSchema();
@@ -45,7 +43,7 @@ async function withRetry<T>(func: (...args: any[]) => Promise<T>) {
   }
 }
 
-async function hasuraReloadMetadata(name = apiSchemaName) {
+async function hasuraReloadMetadata() {
   return httpPost(`${rootHasuraUrl}/query`, {
     'type': 'reload_metadata',
     'args': {},
@@ -57,19 +55,19 @@ async function hasuraReloadMetadata(name = apiSchemaName) {
   });
 }
 
-async function hasuraReloadRemoteSchema(name = apiSchemaName) {
-  return httpPost(`${rootHasuraUrl}/query`, {
-    'type': 'reload_remote_schema',
-    'args': {
-      'name': 'api',
-    },
-  }, {
-    headers: {
-      'X-Hasura-Role': 'admin',
-      'X-Hasura-Admin-Secret': secret,
-    },
-  });
-}
+// async function hasuraReloadRemoteSchema(name) {
+//   return httpPost(`${rootHasuraUrl}/query`, {
+//     'type': 'reload_remote_schema',
+//     'args': {
+//       name,
+//     },
+//   }, {
+//     headers: {
+//       'X-Hasura-Role': 'admin',
+//       'X-Hasura-Admin-Secret': secret,
+//     },
+//   });
+// }
 
 async function createGeneratedFolder() {
   return (mkdirp as any)(generatedDir);

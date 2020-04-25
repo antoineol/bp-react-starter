@@ -1,8 +1,25 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useEffect, useState } from 'react';
 import { env } from '../../environment/env';
 import { fetchNewJwt } from '../../features/auth/auth.service';
 import { appConfig } from '../app.config';
 import { wait } from './app.utils';
+
+export function useApiGet<T>(url: string,
+                             config?: AxiosRequestConfig) {
+  const [{ loading, data, error }, setState] = useState<{
+    loading: boolean;
+    data?: T;
+    error?: any;
+  }>(
+    { loading: true, data: undefined, error: undefined });
+  useEffect(() => {
+    apiGet<T>(url, config)
+      .then(data => setState({ loading: false, data, error: undefined }))
+      .catch(error => setState({ loading: false, data: undefined, error }));
+  }, []);
+  return { loading, data, error };
+}
 
 /**
  * Sends a GET request to the app API (REST classic method).
@@ -11,6 +28,9 @@ import { wait } from './app.utils';
  */
 export async function apiGet<T>(url: string,
                                 config?: AxiosRequestConfig): Promise<T> {
+  if (!url.startsWith('/')) {
+    url = `/${url}`;
+  }
   return httpGet(`${env.apiPath}${url}`, config);
 }
 

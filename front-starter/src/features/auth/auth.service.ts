@@ -1,13 +1,14 @@
-import gql from 'graphql-tag';
 import jwtDecode from 'jwt-decode';
 import { appConfig } from '../../common/app.config';
+import { createCacheSelectorTopLevel, writeCache } from '../../common/cache/cache.utils';
 import { getGqlClient, resetWsConnection } from '../../common/graphql.client';
 import { handleError } from '../../common/services/error.service';
-import { deleteCookie, getCookie, writeCache } from '../../common/utils/app.utils';
+import { deleteCookie, getCookie } from '../../common/utils/app.utils';
 import { apiPost } from '../../common/utils/http.utils';
 import { GoogleAuthResponse, JwtClaims, JwtFields, TokenDto } from './auth.model';
 
-export const GET_JWT = gql`{ jwt }`;
+export const selectJwt = createCacheSelectorTopLevel('jwt');
+export const selectProfile = createCacheSelectorTopLevel('profile');
 
 // Finalize authentication & JWT initialization
 
@@ -178,5 +179,5 @@ export function clearLocalJwt() {
   deleteCookie(appConfig.jwtCookieName);
   deleteCookie(appConfig.jwtSignatureCookieName);
   localStorage.removeItem(`${appConfig.appName}_jwt`);
-  writeCache({ profile: null, jwt: null });
+  writeCache({ profile: undefined, jwt: undefined });
 }

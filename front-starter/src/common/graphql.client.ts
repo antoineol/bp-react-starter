@@ -10,10 +10,9 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import ZenObservable from 'zen-observable-ts';
-import { ReduxLink } from '../core/redux-apollo/redux-apollo.core';
+import { ReduxLink } from '../core/redux/redux-apollo.core';
 import { env } from '../environment/env';
 import { addJwtToHeaders, fetchNewJwt } from '../features/auth/auth.service';
-import { defaultStore } from './localStore';
 
 let gqlClient: ApolloClient<NormalizedCacheObject>;
 let wsLink: WebSocketLink;
@@ -92,8 +91,8 @@ function initGqlClient() {
     // errors when accessing local cache (source: Apollo doc and PR).
     resolvers: {},
   });
-  gqlClient.writeData({ data: defaultStore });
-  gqlClient.onResetStore(() => cache.writeData({ data: defaultStore }) as any);
+  // gqlClient.writeData({ data: defaultStore });
+  // gqlClient.onResetStore(() => cache.writeData({ data: defaultStore }) as any);
 
 }
 

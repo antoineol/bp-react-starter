@@ -8,13 +8,13 @@ import {
   Tabs,
   Theme,
 } from '@material-ui/core';
-import gql from 'graphql-tag';
 import React, { FC, memo } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
+import { selectProfile } from '../../features/auth/auth.service';
 import SignOutButton from '../../features/auth/SignOutButton';
 import ConnectionStatus from '../../features/pwa/ConnectionStatus';
-import { useCache } from '../utils/app.utils';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     appBar: {
@@ -50,12 +50,10 @@ function LinkTab(props: LinkTabProps) {
   return <Tab component={Link}{...(props as any)} />;
 }
 
-const GET_PROFILE = gql`{ profile { name, picture } }`;
-
 const Header: FC = () => {
   const classes = useStyles(); // MUI Styles
   const { pathname } = useLocation();
-  const { profile } = useCache(GET_PROFILE);
+  const profile = useSelector(selectProfile);
   const name = profile?.name;
   const picture = profile?.picture;
   return (

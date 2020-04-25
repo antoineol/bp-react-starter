@@ -3,7 +3,7 @@ import { MouseEvent } from 'react';
 import * as yup from 'yup';
 import { Author, Mutation_Root } from '../../../generated/schema';
 import { Mutator } from '../../common/models/app.models';
-import { selectApollo } from '../../core/redux-apollo/redux-apollo.core';
+import { selectApollo } from '../../common/utils/redux-apollo.utils';
 
 export const AUTHORS_Q = gql`query { author { id, name } }`;
 export const AUTHORS_SUB = gql`subscription { author { id, name } }`;

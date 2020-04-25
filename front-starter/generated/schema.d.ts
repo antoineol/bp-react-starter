@@ -144,11 +144,6 @@ export enum Author_Update_Column {
   Name = 'name'
 }
 
-export type Features = {
-  __typename?: 'Features',
-  queryJsonPlaceholder: Scalars['Boolean'],
-};
-
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root',
@@ -196,11 +191,6 @@ export enum Order_By {
   DescNullsLast = 'desc_nulls_last'
 }
 
-export type Query = {
-  __typename?: 'Query',
-  features: Features,
-};
-
 /** query root */
 export type Query_Root = {
   __typename?: 'query_root',
@@ -210,7 +200,6 @@ export type Query_Root = {
   author_aggregate: Author_Aggregate,
   /** fetch data from the table: "author" using primary key columns */
   author_by_pk?: Maybe<Author>,
-  features: Features,
 };
 
 

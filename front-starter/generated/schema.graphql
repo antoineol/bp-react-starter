@@ -163,10 +163,6 @@ enum author_update_column {
   name
 }
 
-type Features {
-  queryJsonPlaceholder: Boolean!
-}
-
 """mutation root"""
 type mutation_root {
   """
@@ -221,10 +217,6 @@ enum order_by {
   desc_nulls_last
 }
 
-type Query {
-  features: Features!
-}
-
 """query root"""
 type query_root {
   """
@@ -269,7 +261,6 @@ type query_root {
 
   """fetch data from the table: "author" using primary key columns"""
   author_by_pk(id: uuid!): author
-  features: Features!
 }
 
 """

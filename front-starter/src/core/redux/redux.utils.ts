@@ -1,10 +1,17 @@
+import memoizeOne from 'memoize-one';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { Action } from 'redux';
 import { put, PutEffect } from 'redux-saga/effects';
 import { createSelector, OutputSelector } from 'reselect';
 import { handleError } from '../../common/services/error.service';
-import { AppStore, AppStoreDirectModel, StoreEntry, StoreOf, ToStoreEntry } from './redux.models';
+import {
+  AppStore,
+  AppStoreDirectModel,
+  ExtractImmutableType,
+  StoreEntry,
+  StoreOf,
+} from './redux.models';
 import { getStore } from './redux.store';
 
 /**
@@ -16,7 +23,7 @@ import { getStore } from './redux.store';
 // (should be inferred)
 // type ExtractGeneric<Type> = Type extends TypeWithGeneric<infer X> ? X : Type;
 // Extra notes: https://itnext.io/typescript-extract-unpack-a-type-from-a-generic-baca7af14e51
-export function toJS<T>(selectorImmutable: ToStoreEntry<T>): Readonly<T> {
+export function toJS<T>(selectorImmutable: T): ExtractImmutableType<T> {
   const record = selectorImmutable;
   if (record && typeof (record as any).toJS === 'function') {
     return (record as any).toJS();
@@ -77,29 +84,39 @@ export function dispatchOther<T, U>(type: T, payload?: U) {
   store.dispatch({ type, payload });
 }
 
-type AppStoreFirstLevelType<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T]> =
+export type AppStoreFirstLevelType<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T]> =
   StoreEntry<AppStoreDirectModel[T][U]>;
 
 export type SelectorReturnType<T extends keyof AppStoreDirectModel, R> =
   OutputSelector<AppStore, R, (res: StoreOf<AppStoreDirectModel[T]>) => R>;
 
 // Typescript function overloads to give types
-export function selectState<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T]>
+export function createAppSelector<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T]>
 (reducer: T,
- key: U): SelectorReturnType<T, AppStoreFirstLevelType<T, U>>;
+ key: U,
+ isObject?: boolean): SelectorReturnType<T, ExtractImmutableType<AppStoreFirstLevelType<T, U>>>;
 
-export function selectState<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T], TransfoRes>
+export function createAppSelector<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T], TransfoRes>
 (reducer: T, key: U,
- transformer?: (value: AppStoreFirstLevelType<T, U>) => TransfoRes): SelectorReturnType<T, TransfoRes>;
+ transformer?: (value: AppStoreFirstLevelType<T, U>) => TransfoRes): SelectorReturnType<T, ExtractImmutableType<TransfoRes>>;
 
 
 // You can then combine states with:
 // `createSelector(select1, select2, (selected1, selected2) => ...)`
-export function selectState<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T], TransfoRes = any>
-(reducer: T, key: U, transformer?: any): any {
+export function createAppSelector<T extends keyof AppStoreDirectModel, U extends keyof AppStoreDirectModel[T], TransfoRes = any>
+(reducer: T, key: U, transformerOrToJs?: any): any {
+  const hasTransformer = typeof transformerOrToJs === 'function';
+  // const useToJs = !hasTransformer && !!transformerOrToJs;
+  const memoizedToJs = memoizeOne(immutableObj => toJS(immutableObj));
   return createSelector(
     (state: AppStore) => state.get(reducer) as StoreOf<AppStoreDirectModel[T]>,
-    state => transformer ? transformer(state.get(key)) : state.get(key),
+    state => {
+      let value = state.get(key);
+      if (hasTransformer) {
+        value = transformerOrToJs(value);
+      }
+      return memoizedToJs(value);
+    },
   );
 }
 

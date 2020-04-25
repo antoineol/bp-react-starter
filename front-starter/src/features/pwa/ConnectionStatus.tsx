@@ -14,10 +14,10 @@ import OfflinePinIcon from '@material-ui/icons/OfflinePin';
 import SignalWifiOffIcon from '@material-ui/icons/SignalWifiOff';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import React, { FC, memo, ReactNode, useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getWsConnectionStatus, WsConnectionStatus } from '../../common/graphql.client';
-import { useCache } from '../../common/utils/app.utils';
 import { env } from '../../environment/env';
-import { GET_JWT } from '../auth/auth.service';
+import { selectJwt } from '../auth/auth.service';
 import {
   checkUpdates,
   installUpdatePromise,
@@ -44,7 +44,7 @@ const isStandalone = !env.isJest && window.matchMedia('(display-mode: standalone
 
 const ConnectionStatus: FC<Partial<TooltipProps>> = props => {
   const classes = useStyles();
-  const { jwt } = useCache(GET_JWT);
+  const jwt = useSelector(selectJwt);
   const [installUpdate, setInstallUpdate] = useState<ServiceWorkerRegistration | null>(null);
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const [updateAvailable, setUpdateAvailable] = useState<ServiceWorkerRegistration | null>(null);

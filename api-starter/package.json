@@ -26,7 +26,6 @@
   "dependencies": {
     "@nestjs/common": "^6.11.5",
     "@nestjs/core": "^6.11.5",
-    "@nestjs/graphql": "^6.5.4",
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "^6.11.5",
@@ -45,8 +44,6 @@
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.0",
     "googleapis": "^47.0.0",
-    "graphql": "^14.6.0",
-    "graphql-tools": "^4.0.6",
     "helmet": "^3.21.2",
     "http-status-codes": "^1.4.0",
     "moment": "^2.24.0",
@@ -58,7 +55,6 @@
     "reflect-metadata": "^0.1.12",
     "rimraf": "^3.0.1",
     "rxjs": "^6.5.4",
-    "type-graphql": "^0.17.6",
     "typeorm": "^0.2.22"
   },
   "devDependencies": {

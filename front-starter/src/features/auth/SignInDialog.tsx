@@ -1,9 +1,9 @@
 import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import React, { memo } from 'react';
-import { useCache } from '../../common/utils/app.utils';
+import { useSelector } from 'react-redux';
 import ConnectionStatus from '../pwa/ConnectionStatus';
-import { GET_JWT } from './auth.service';
+import { selectJwt } from './auth.service';
 import GoogleSignIn from './GoogleSignIn';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 function SignInDialog() {
   const classes = useStyles(); // MUI Styles
-  const { jwt } = useCache(GET_JWT);
+  const jwt = useSelector(selectJwt);
 
   return <Dialog fullScreen disableBackdropClick disableEscapeKeyDown
                  open={!jwt} classes={{ paper: classes.dialog }}>

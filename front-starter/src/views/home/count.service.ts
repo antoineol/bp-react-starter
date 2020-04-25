@@ -1,7 +1,6 @@
-import gql from 'graphql-tag';
 import { ChangeEvent, FormEvent, MouseEvent } from 'react';
 import { appConfig } from '../../common/app.config';
-import { readCache, writeCache } from '../../common/utils/app.utils';
+import { makeCacheSelector, readCache, writeCache } from '../../common/cache/cache.utils';
 import { httpGet } from '../../common/utils/http.utils';
 
 export interface TodoItem {
@@ -9,11 +8,11 @@ export interface TodoItem {
   title: string;
 }
 
-export const GET_COUNT = gql`{ home { count } }`;
+export const selectCount = makeCacheSelector(cache => cache.get('home').get('count'));
 
 export async function incrementCount(e: MouseEvent) {
   e.preventDefault();
-  const { home: { count } } = readCache(GET_COUNT);
+  const count = readCacheCount();
 
   let c: number;
   if (appConfig.useRealWebService) {
@@ -30,11 +29,15 @@ export async function incrementCount(e: MouseEvent) {
 
 export function doubleCount(e: FormEvent) {
   e.preventDefault();
-  const { home: { count } } = readCache(GET_COUNT);
+  const count = readCacheCount();
   writeCache({ home: { count: count * 2 } });
 }
 
 export function changeCount(e: ChangeEvent<HTMLInputElement>, count: number) {
   e.preventDefault();
   writeCache({ home: { count } });
+}
+
+function readCacheCount() {
+  return readCache(cache => cache.get('home').get('count'));
 }

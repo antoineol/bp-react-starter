@@ -1,11 +1,5 @@
-import { QueryHookOptions, useQuery, useSubscription } from '@apollo/react-hooks';
-import { OperationVariables } from 'apollo-client';
-import { DocumentNode } from 'graphql';
 import { useCallback } from 'react';
 import { Mutation_Root } from '../../../generated/schema';
-import { getGqlClient } from '../graphql.client';
-import { AppCache, defaultStore } from '../localStore';
-import { RecursivePartial } from '../models/app.models';
 import { handleError } from '../services/error.service';
 
 /**
@@ -37,58 +31,6 @@ export function useAsyncHandler(
   }, [handler, setError, setLoading]);
 }
 
-/**
- * Write data to Apollo cache. Cache can be read in components with useQuery hook. The cache
- * should remain the source of truth. To enforce this pattern, its values are immutable. Use
- * writeCache to change their value.
- * @param data The partial to write in cache. If the content added cannot be found in queries or
- * you have a weird error, try to add __typename like what is in defaultStore (should match the
- * type name in localStore.graphql schema).
- * @param id Optional id property used to write a fragment to an existing object in the store.
- */
-export function writeCache(data: RecursivePartial<AppCache>, id?: string) {
-  const gqlClient = getGqlClient();
-  addTypeNames(data);
-  gqlClient.writeData({ data, id });
-}
-
-/**
- * Custom hook to read from cache with a slightly improved syntax and typing. The result is not
- * systematically typed with undefined (which does not make sense for local cache and breaks
- * destructuring) but with only the generic type, leaving the type responsibility to the
- * specific model and component.
- * @param query
- * @param options
- */
-export function useCache<TData extends AppCache, TVariables = OperationVariables>
-(query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
-  const { data = {}, error } = useQuery(query, { ...options, fetchPolicy: 'cache-only' });
-  if (error) {
-    console.error('Error when retrieving cache:', error);
-  }
-  return data as TData;
-}
-
-export function useCacheSub<TData extends AppCache, TVariables = OperationVariables>
-(query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
-  const { data = {}, error } = useSubscription(query, { ...options, fetchPolicy: 'cache-only' });
-  if (error) {
-    console.error('Error when retrieving cache:', error);
-  }
-  return data as TData;
-}
-
-/**
- * Same as useCache but outside components (e.g. services).
- * @param query
- * @param options
- */
-export function readCache<TData extends AppCache, TVariables = OperationVariables>
-(query: DocumentNode, options?: QueryHookOptions<TData, TVariables>): TData {
-  const gqlClient = getGqlClient();
-  return gqlClient.readQuery({ query, variables: options?.variables }, true) as TData;
-}
-
 export function getCookie(name: string): string | null {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -115,26 +57,6 @@ export function isObjectEmpty(obj: object) {
 
 export function wait(ms?: number) {
   return new Promise<void>(resolve => setTimeout(resolve, ms));
-}
-
-// Implementation details
-
-function addTypeNames(data: RecursivePartial<AppCache>) {
-  for (const key of Object.keys(data) as (keyof typeof data)[]) {
-    const subObj = data[key] as any;
-    const initialCacheObj = (defaultStore as AppCache)[key] as any;
-    const newObjDoesNotHaveTypeName = !subObj || !subObj.__typename;
-    const shouldHaveTypeNameInStore = isObject(subObj) || isObject(initialCacheObj);
-    const typeNameIsMissingInStore = !isObject(initialCacheObj) || !initialCacheObj.__typename;
-    if (newObjDoesNotHaveTypeName && shouldHaveTypeNameInStore && typeNameIsMissingInStore) {
-      throw new Error(
-        `You are trying to write in cache an object at key \`${key}\` but the default cache content (found in src/common/localStore.ts) does not have a __typename field. Apollo cache requires __typename to be provided with the data you write. writeCache utility adds it for you, but you need to add it in src/common/localStore.ts for that (check existing examples).`);
-    }
-    if (isObject(subObj) && isObject(initialCacheObj) && !subObj.__typename) {
-      subObj.__typename = initialCacheObj.__typename;
-    }
-  }
-  return data;
 }
 
 /**

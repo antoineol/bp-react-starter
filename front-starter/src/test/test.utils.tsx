@@ -6,12 +6,11 @@ import { when } from 'jest-when';
 import React, { FC, ReactElement } from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router';
-import { Features } from '../../generated/schema';
 import App from '../App';
+import { AppCache } from '../common/cache/cache.model';
+import { writeCache } from '../common/cache/cache.utils';
 import * as gqlClientModule from '../common/graphql.client';
-import { AppCache, defaultStore } from '../common/localStore';
 import { featuresMock } from '../common/services/features.service';
-import { writeCache } from '../common/utils/app.utils';
 import { initAppServices } from '../core/app.init';
 import { defaultStoreAdditionsForTests, mockGqlQueries } from './test.mocks';
 
@@ -33,7 +32,6 @@ export async function renderTestApp(url = '/',
   let rendered: RenderResult | null = null;
   await act(async () => {
     const mergedCache: Partial<AppCache> = {
-      ...defaultStore,
       ...defaultStoreAdditionsForTests,
       ...initialCache,
       ...{ features: allFeaturesEnabled() },
@@ -184,7 +182,7 @@ function initialAxiosMock(method: HttpMethod) {
   }
 }
 
-function allFeaturesEnabled(): Features {
+function allFeaturesEnabled() {
   const feats = { ...featuresMock }; // Shallow copy
   for (const featName of Object.keys(feats) as (keyof typeof feats)[]) {
     if (feats[featName] === false) {
