@@ -17,8 +17,27 @@ export function useApiGet<T>(url: string,
     apiGet<T>(url, config)
       .then(data => setState({ loading: false, data, error: undefined }))
       .catch(error => setState({ loading: false, data: undefined, error }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { loading, data, error };
+}
+
+export function useApiPost<T>(url: string,
+                              body?: any,
+                              config?: AxiosRequestConfig) {
+  const [{ loading, error, data }, setState] = useState<{
+    loading: boolean;
+    error?: any;
+    data?: T;
+  }>(
+    { loading: true, error: undefined, data: undefined });
+  useEffect(() => {
+    apiPost<T>(url, body, config)
+      .then(data => setState({ loading: false, error: undefined, data }))
+      .catch(error => setState({ loading: false, error, data: undefined }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return { loading, error, data };
 }
 
 /**
@@ -42,6 +61,9 @@ export async function apiGet<T>(url: string,
  */
 export async function apiPost<T>(url: string, body?: any,
                                  config?: AxiosRequestConfig): Promise<T> {
+  if (!url.startsWith('/')) {
+    url = `/${url}`;
+  }
   return httpPost(`${env.apiPath}${url}`, body, config);
 }
 

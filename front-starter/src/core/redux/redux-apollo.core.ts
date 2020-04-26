@@ -44,7 +44,7 @@ export const apolloReducer: Reducer<ReduxApolloStore, ReduxApolloAction> =
     const { field, value } = payload ?? {};
     switch (type) {
       case ReduxApolloAT.UpdateStore:
-        return state.set(field, value);
+        return state.set(field, fromJS(value));
       default:
         return state;
     }

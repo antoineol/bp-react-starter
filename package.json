@@ -13,7 +13,7 @@
   "scripts": {
     "________________ development ________________": "",
     "start": "npm-run-all --parallel up start:front start:api",
-    "console": "cd api-rocket && yarn console",
+    "console": "cd api-starter && yarn console",
     "test": "react-scripts test",
     "upgr": "yarn upgrade-interactive --latest",
     "up": "docker-compose up -d db && yarn wait:ws && docker-compose up -d",
@@ -22,8 +22,8 @@
     "ssh": "eb ssh AWS-env-staging",
     "ssh:prod": "eb ssh AWS-env-prod",
     "________________ implementation details ________________": "",
-    "start:front": "cd front-rocket && yarn start",
-    "start:api": "cd api-rocket && yarn start",
+    "start:front": "cd front-starter && yarn start",
+    "start:api": "cd api-starter && yarn start",
     "wait:ws": "wait-on http://localhost:4141/",
     "postinstall": "cd api-starter && yarn install --production=false && cd ../front-starter && yarn"
   },

@@ -4,14 +4,14 @@ import { AppCache } from '../../common/cache/cache.model';
 import { REDUX_APOLLO_REDUCER, ReduxApolloModel } from './redux-apollo.core';
 
 export interface AppStoreDirectModel {
-  [REDUX_APOLLO_REDUCER]: ReduxApolloModel,
-  [CACHE_REDUCER]: AppCache,
+  [REDUX_APOLLO_REDUCER]: ReduxApolloModel;
+  [CACHE_REDUCER]: AppCache;
 }
 
 export type Primitive = string | number | boolean | symbol | undefined | null;
 export type ImmutableEntry<T> = Record<T> | StoreOf<T>;
 
-export type StoreEntry<T> = T extends Primitive | ImmutableEntry<any> ? T : T extends (infer U)[] ? List<U> : Record<T>;
+export type StoreEntry<T> = T extends Primitive | ImmutableEntry<any> ? T : T extends (infer U)[] ? List<StoreEntry<U>> : Record<T>;
 
 // If something is wrong in the type below or with toJS, try replacing ImmutableEntry with Record
 export type ExtractImmutableType<T> = T extends Primitive ? T : T extends ImmutableEntry<infer U> ? U :

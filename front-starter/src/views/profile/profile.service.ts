@@ -3,7 +3,10 @@ import { MouseEvent } from 'react';
 import * as yup from 'yup';
 import { Author, Mutation_Root } from '../../../generated/schema';
 import { Mutator } from '../../common/models/app.models';
-import { selectApollo } from '../../common/utils/redux-apollo.utils';
+import {
+  createApolloSelector,
+  createApolloSelectorTopLevel,
+} from '../../common/utils/redux-apollo.utils';
 
 export const AUTHORS_Q = gql`query { author { id, name } }`;
 export const AUTHORS_SUB = gql`subscription { author { id, name } }`;
@@ -57,4 +60,6 @@ function pickRandom<T>(array: T[]): T {
 }
 
 // Sample redux selector to read data from cache
-export const selectAuthors = selectApollo('author');
+export const selectAuthors = createApolloSelectorTopLevel('author');
+export const selectAuthorNames = createApolloSelector('author',
+  val => val.map(elt => elt.get('name')));

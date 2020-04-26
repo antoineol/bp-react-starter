@@ -19,7 +19,7 @@ import { AppCache } from './cache.model';
  * const count = useSelector(selectCount);
  * ```
  */
-export function makeCacheSelector<TransfoRes>(selector: (cache: CacheStore) => TransfoRes) {
+export function createCacheSelector<Selected>(selector: (cache: CacheStore) => Selected) {
   return createSelector(
     (state: AppStore) => state.get(CACHE_REDUCER) as CacheStore,
     selector,

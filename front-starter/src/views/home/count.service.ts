@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, MouseEvent } from 'react';
 import { appConfig } from '../../common/app.config';
-import { makeCacheSelector, readCache, writeCache } from '../../common/cache/cache.utils';
+import { createCacheSelector, readCache, writeCache } from '../../common/cache/cache.utils';
 import { httpGet } from '../../common/utils/http.utils';
 
 export interface TodoItem {
@@ -8,7 +8,7 @@ export interface TodoItem {
   title: string;
 }
 
-export const selectCount = makeCacheSelector(cache => cache.get('home').get('count'));
+export const selectCount = createCacheSelector(cache => cache.get('home').get('count'));
 
 export async function incrementCount(e: MouseEvent) {
   e.preventDefault();
