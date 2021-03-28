@@ -1,10 +1,11 @@
+import { dotEnvDir } from '../root';
 import { config } from './dotenv/dotenv';
 
 config({
-  path: `${__dirname}/../../.env`,
+  path: `${dotEnvDir}/.env`,
   allowEmptyValues: [
     'ALLOWED_HOST',
-    'GOOGLE_ADMIN_PRIVATE_KEY',
+    // 'GOOGLE_ADMIN_PRIVATE_KEY',
   ],
 });
 
@@ -20,26 +21,38 @@ if (!isDev && !isStaging && !isProd) {
 const dev = {
   publicOrigin: 'http://localhost:4149',
   publicUrl: 'http://localhost:4149',
-  googleAdminProjectId: '',
-  impersonatedAdmin: '', // GSuite admin email
-  googleAdminClientEmail: '', // service account impersonating above admin
+  hasuraHttp: 'http://localhost:8089/v1',
   allowedHosts: 'http://localhost:3000,http://localhost:5000',
+  auth0Domain: 'aol-perso.eu.auth0.com',
+  auth0ClientId: 'Edy6xnrhvyDwuIsi3CWNBZSXd6JE7K0p',
+  auth0Audience: 'react-starter',
+  // googleAdminProjectId: '',
+  // impersonatedAdmin: '', // GSuite admin email
+  // googleAdminClientEmail: '', // service account impersonating above admin
 };
 const staging = {
   publicOrigin: 'https://staging-aol-starter-api.herokuapp.com',
   publicUrl: 'https://staging-aol-starter-api.herokuapp.com',
-  googleAdminProjectId: '',
-  impersonatedAdmin: '', // GSuite admin email
-  googleAdminClientEmail: '', // service account impersonating above admin
   allowedHosts: 'https://master--aol-starter.netlify.com',
+  hasuraHttp: 'TODO',
+  auth0Domain: 'TODO',
+  auth0ClientId: 'TODO',
+  auth0Audience: 'TODO',
+  // googleAdminProjectId: '',
+  // impersonatedAdmin: '', // GSuite admin email
+  // googleAdminClientEmail: '', // service account impersonating above admin
 };
 const prod = {
-  publicOrigin: 'http://localhost:3000',
-  publicUrl: 'http://localhost:3000/api',
-  googleAdminProjectId: '',
-  impersonatedAdmin: '', // GSuite admin email
-  googleAdminClientEmail: '', // service account impersonating above admin
+  publicOrigin: 'http://my.api.com',
+  publicUrl: 'http://my.api.com',
   allowedHosts: 'https://aol-starter.netlify.com',
+  hasuraHttp: 'TODO',
+  auth0Domain: 'TODO',
+  auth0ClientId: 'TODO',
+  auth0Audience: 'TODO',
+  // googleAdminProjectId: '',
+  // impersonatedAdmin: '', // GSuite admin email
+  // googleAdminClientEmail: '', // service account impersonating above admin
 };
 
 const nonConfidentialEnv = isDev ? dev : isStaging ? staging : prod;
@@ -56,6 +69,7 @@ export const env = {
   typeOrmUrl: process.env.TYPEORM_URL,
   typeOrmTestUrl: process.env.TYPEORM_TEST_URL,
   secretKey: process.env.SECRET_KEY,
-  googleClientID: process.env.GOOGLE_CLIENT_ID,
-  googleAdminPrivateKey: process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  hasuraAdminSecret: process.env.HASURA_GRAPHQL_ADMIN_SECRET,
+  // googleClientID: process.env.GOOGLE_CLIENT_ID,
+  // googleAdminPrivateKey: process.env.GOOGLE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
 };

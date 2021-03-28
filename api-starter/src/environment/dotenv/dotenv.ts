@@ -1,5 +1,6 @@
 import { config as dotEnvConfig, DotenvConfigOptions, parse } from 'dotenv';
 import * as fs from 'fs';
+import { dotEnvDir } from '../../root';
 import MissingEnvVarsError from './missingEnvVarsError';
 
 function difference<T = unknown>(arrA: T[], arrB: T[]) {
@@ -34,7 +35,7 @@ export function config(options: DotenvOptions = {}) {
   const example = options.example || options.sample || '.env.example';
   const allowEmptyValues = options.allowEmptyValues || false;
   const processEnv = maybeRemoveEmpty(process.env, allowEmptyValues);
-  const exampleVars = parse(fs.readFileSync(`${__dirname}/../../../${example}`));
+  const exampleVars = parse(fs.readFileSync(`${dotEnvDir}/${example}`));
   const missing = difference(Object.keys(exampleVars), Object.keys(processEnv));
 
   if (missing.length > 0) {

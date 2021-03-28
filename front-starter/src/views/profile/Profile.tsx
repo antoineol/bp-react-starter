@@ -1,29 +1,16 @@
-import { useMutation, useQuery } from '@apollo/react-hooks';
-import {
-  Button,
-  CircularProgress,
-  createStyles,
-  IconButton,
-  makeStyles,
-  Theme,
-} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/styles';
-import { Form, Formik } from 'formik';
-import React, { FC, memo, useCallback } from 'react';
-import { Mutation_Root, Query_Root } from '../../../generated/schema';
-import ErrorComp from '../../common/components/ErrorComp';
-import AppTextInput from '../../common/components/form/AppTextField';
-import {
-  ADD_AUTHOR,
-  addAuthor,
-  AUTHORS_Q,
-  DELETE_AUTHOR,
-  deleteAuthor,
-  newAuthorDefaults,
-  newAuthorSchema,
-} from './profile.service';
-import ProfileFooter from './ProfileFooter';
+import React, { FC, memo } from 'react';
+// import {
+//   ADD_AUTHOR,
+//   addAuthor,
+//   AUTHORS_Q,
+//   DELETE_AUTHOR,
+//   deleteAuthor,
+//   newAuthorDefaults,
+//   newAuthorSchema,
+// } from './profile.service';
+// import ProfileFooter from './ProfileFooter';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
@@ -41,31 +28,32 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
 }));
 
-const Profile: FC = memo(() => {
+export const Profile: FC = memo(() => {
   // TODO replace subscription with query and use cache (with redux or apollo)
   const classes = useStyles(); // MUI Styles
-  const { data, loading, error } = useQuery<Query_Root>(AUTHORS_Q);
-  // Subscription equivalent:
-  // const { data, loading, error } = useSubscription<Subscription_Root>(AUTHORS_SUB);
-  const authors = data?.author ?? [];
-
-  // Below mutations are called with refetchQueries  (in profile.service). It will re-trigger the
-  // query after the mutation, which will update the component with updated server data. This is
-  // useful when using queries instead of subscriptions to update local data with latest server
-  // data after the mutation is done.
-  // The interest of useMutation is to get loading status and error directly in the component.
-  // If you don't care getting them here (because you just don't care or you prefer using a
-  // global service), you should use apiMutate instead to avoid useless renderings of this
-  // component.
-  const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
-  const [delMutator, { error: errDel }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
-  const handleAdd = useCallback(addAuthor(addMutator), []);
-  const handleDelete = useCallback(deleteAuthor(delMutator), []);
-
-  if (error) return <ErrorComp error={error}/>;
+  // const { data, loading, error } = useQuery<Query_Root>(AUTHORS_Q);
+  // // Subscription equivalent:
+  // // const { data, loading, error } = useSubscription<Subscription_Root>(AUTHORS_SUB);
+  // const authors = data?.author ?? [];
+  //
+  // // Below mutations are called with refetchQueries  (in profile.service). It will re-trigger the
+  // // query after the mutation, which will update the component with updated server data. This is
+  // // useful when using queries instead of subscriptions to update local data with latest server
+  // // data after the mutation is done.
+  // // The interest of useMutation is to get loading status and error directly in the component.
+  // // If you don't care getting them here (because you just don't care or you prefer using a
+  // // global service), you should use apiMutate instead to avoid useless renderings of this
+  // // component.
+  // const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
+  // const [delMutator, { error: errDel }] = useMutation<Mutation_Root>(DELETE_AUTHOR);
+  // const handleAdd = useCallback(addAuthor(addMutator), []);
+  // const handleDelete = useCallback(deleteAuthor(delMutator), []);
+  //
+  // if (error) return <ErrorComp error={error}/>;
 
   return <div className={classes.root}>
-    <Formik
+    Foo
+    {/*<Formik
       initialValues={newAuthorDefaults}
       validationSchema={newAuthorSchema}
       onSubmit={handleAdd}
@@ -83,22 +71,22 @@ const Profile: FC = memo(() => {
           </Button>
         </div>
       </Form>
-    </Formik>
-    {loading
-      ? <CircularProgress/>
-      : <>
-        <ul>
-          {authors.map(author => <li key={author.id}>{author.name} <IconButton
-            aria-label="delete"
-            data-id={author.id}
-            onClick={handleDelete}>
-            <DeleteIcon/>
-          </IconButton></li>)}
-        </ul>
-        <ProfileFooter/>
-      </>}
-    <ErrorComp error={[error, errAdd, errDel]}/>
+    </Formik>*/}
+    {
+      // loading
+      // ? <CircularProgress/>
+      // : <>
+      //   <ul>
+      //     {authors.map(author => <li key={author.id}>{author.name} <IconButton
+      //       aria-label="delete"
+      //       data-id={author.id}
+      //       onClick={handleDelete}>
+      //       <DeleteIcon/>
+      //     </IconButton></li>)}
+      //   </ul>
+      //   <ProfileFooter/>
+      // </>
+    }
+    {/*<ErrorComp error={[error, errAdd, errDel]}/>*/}
   </div>;
 });
-
-export default Profile;

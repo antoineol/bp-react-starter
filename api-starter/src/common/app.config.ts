@@ -21,14 +21,14 @@ export const appConfig = {
   // will be included in JWT as roles
   authorizedGoogleGroups: [],
   frontFolder: 'front-starter',
-  jwtLifeTime,
-  jwtRefreshTime: jwtLifeTime / 2,
-  jwtPayloadCookieName: 'jwtHeaderPayload',
-  jwtSignatureCookieName: 'jwtSignature',
-  jwtSignatureCookieHttpOnly, // Should be true as soon as Hasura supports JWT in cookies
-  jwtIssuer: 'aol-starter-app',
-  jwtAlgorithm: 'HS256',
-  jwtAudience: 'aol-everybody',
+  // jwtLifeTime,
+  // jwtRefreshTime: jwtLifeTime / 2,
+  // jwtPayloadCookieName: 'jwtHeaderPayload',
+  // jwtSignatureCookieName: 'jwtSignature',
+  // jwtSignatureCookieHttpOnly, // Should be true as soon as Hasura supports JWT in cookies
+  // jwtIssuer: 'aol-starter-app',
+  // jwtAlgorithm: 'HS256',
+  // jwtAudience: 'aol-everybody',
   jwtNamespace: JwtFields.jwtNamespace,
   jwtClaimRoles: JwtFields.jwtClaimRoles,
   jwtClaimDefaultRole: JwtFields.jwtClaimDefaultRole,

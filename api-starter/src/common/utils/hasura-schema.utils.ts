@@ -1,22 +1,29 @@
-import { generate } from '@graphql-codegen/cli';
 import { Logger } from '@nestjs/common';
-import { config } from 'dotenv';
-import fetchSchema from 'graphql-fetch-schema';
-import * as mkdirp from 'mkdirp';
+import { env } from '../../environment/env';
+import { apiDir, rootDir } from '../../root';
 import { appConfig } from '../app.config';
 import { httpPost, wait } from './app.utils';
 
-const rootHasuraUrl = 'http://localhost:8089/v1';
+const rootHasuraUrl = env.hasuraHttp;
 
-const root = `${__dirname}/../../../..`;
-config({ path: `${root}/.env` });
-const secret = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
-const generatedDir = `${root}/${appConfig.frontFolder}/generated`;
-const logger = new Logger('hasura.utils');
+const secret = env.hasuraAdminSecret;
+const frontGeneratedDir = `${rootDir}/${appConfig.frontFolder}/generated`;
+const apiGeneratedDir = `${apiDir}/generated`;
+const logger = new Logger('hasura-schema');
+
+export async function hasuraReloadMetadataAndSchema() {
+  logger.log('Reload Hasura metadata...');
+  await withRetry(hasuraReloadMetadata);
+  // Uncomment if we have remote schema. They should be refreshed as well.
+  // await withRetry(hasuraReloadRemoteSchema);
+  logger.log('Metadata refreshed.');
+}
 
 export async function generateTypes() {
+  if (!env.isDev) {
+    throw new Error('GraphQL types should only be generated in dev environment.');
+  }
   logger.log('Extract Hasura schema and types for front...');
-  await withRetry(hasuraReloadMetadata);
   await createGeneratedFolder();
   await hasuraExtractSchema();
   await generateTypesFromSchema();
@@ -30,9 +37,17 @@ async function withRetry<T>(func: (...args: any[]) => Promise<T>) {
   try {
     return await func();
   } catch (e) {
-    if (e && retryCodes.includes(e.code)) {
-      logger.error(
-        `Couldn't connect to Hasura. Is Hasura container started? Will retry in ${retryDelay} seconds...`);
+    const connectionFailed = retryCodes.includes(e?.code);
+    const inconsistentMetadata = e?.response?.data?.error ===
+      'cannot continue due to newly found inconsistent metadata';
+    if (connectionFailed || inconsistentMetadata) {
+      if (connectionFailed) {
+        logger.error(
+          `Couldn't connect to Hasura. Is Hasura container started? Will retry in ${retryDelay} seconds...`);
+      } else if (inconsistentMetadata) {
+        logger.error(
+          `Couldn't connect to Hasura, inconsistent metadata. Will retry in ${retryDelay} seconds...`);
+      }
       await wait(retryDelay * 1000);
       return await withRetry(func);
     } else {
@@ -55,43 +70,49 @@ async function hasuraReloadMetadata() {
   });
 }
 
-// async function hasuraReloadRemoteSchema(name) {
-//   return httpPost(`${rootHasuraUrl}/query`, {
-//     'type': 'reload_remote_schema',
-//     'args': {
-//       name,
-//     },
-//   }, {
-//     headers: {
-//       'X-Hasura-Role': 'admin',
-//       'X-Hasura-Admin-Secret': secret,
-//     },
-//   });
-// }
-
 async function createGeneratedFolder() {
-  return (mkdirp as any)(generatedDir);
+  const mkdirp = require('mkdirp');
+  return Promise.all([
+    mkdirp(frontGeneratedDir),
+    mkdirp(apiGeneratedDir),
+  ]);
 }
 
 async function hasuraExtractSchema() {
-  return fetchSchema(`${rootHasuraUrl}/graphql`, {
-    json: false,
-    graphql: true,
-    outputPath: generatedDir,
-    headers: {
-      'X-Hasura-Role': 'admin',
-      'X-Hasura-Admin-Secret': secret,
-    },
-  });
+  const fetchSchema = require('graphql-fetch-schema').default;
+  return Promise.all([
+    fetchSchema(`${rootHasuraUrl}/graphql`, {
+      json: false,
+      graphql: true,
+      outputPath: frontGeneratedDir,
+      headers: {
+        'X-Hasura-Role': 'admin',
+        'X-Hasura-Admin-Secret': secret,
+      },
+    }),
+    fetchSchema(`${rootHasuraUrl}/graphql`, {
+      json: false,
+      graphql: true,
+      outputPath: apiGeneratedDir,
+      headers: {
+        'X-Hasura-Role': 'admin',
+        'X-Hasura-Admin-Secret': secret,
+      },
+    }),
+  ]);
 }
 
 async function generateTypesFromSchema() {
+  const { generate } = require('@graphql-codegen/cli');
   return generate(
     {
-      schema: `${generatedDir}/schema.graphql`,
+      schema: `${frontGeneratedDir}/schema.graphql`,
       // documents: './src/**/*.graphql',
       generates: {
-        [`${generatedDir}/schema.d.ts`]: {
+        [`${frontGeneratedDir}/schema.d.ts`]: {
+          plugins: ['typescript'],
+        },
+        [`${apiGeneratedDir}/schema.d.ts`]: {
           plugins: ['typescript'],
         },
       },

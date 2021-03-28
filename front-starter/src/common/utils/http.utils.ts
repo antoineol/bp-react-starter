@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { env } from '../../environment/env';
-import { fetchNewJwt } from '../../features/auth/auth.service';
+import { getAccessTokenWithPopup } from '../../features/auth/auth0-hook-methods';
 import { appConfig } from '../app.config';
 import { wait } from './app.utils';
 
@@ -80,6 +80,8 @@ export async function httpPost<T>(url: string, body?: any,
 async function httpReq<T>(config: AxiosRequestConfig | undefined,
                           url: string,
                           sendRequest: (config: AxiosRequestConfig) => Promise<AxiosResponse<T>>): Promise<T> {
+  const token = await getAccessTokenWithPopup();
+  console.log('[httpReq] token:', token);
   const conf = extendConfig(config);
   let resp: AxiosResponse<T> | undefined;
   try {
@@ -91,7 +93,8 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
     }
     // Retry
     if (err.response.status === 401) {
-      await fetchNewJwt();
+      // TODO refresh Auth0 token
+      // await fetchNewJwt();
     } else {
       await wait(1000);
     }

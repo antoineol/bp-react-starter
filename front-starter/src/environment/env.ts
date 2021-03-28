@@ -18,15 +18,18 @@ export const env = {
   apiPath: processEnv.REACT_APP_API_PATH,
   hasuraPath: processEnv.REACT_APP_HASURA_PATH,
   hasuraWs: processEnv.REACT_APP_HASURA_WS as string,
-  publicOrigin: processEnv.REACT_APP_PUBLIC_ORIGIN,
   isNodeProduction: processEnv.NODE_ENV === 'production',
   isJest: processEnv.JEST_WORKER_ID !== undefined,
   useServiceWorker: toBoolean(processEnv.REACT_APP_USE_SERVICE_WORKER),
-  googleClientID: processEnv.REACT_APP_GOOGLE_CLIENT_ID as string,
+  // googleClientID: processEnv.REACT_APP_GOOGLE_CLIENT_ID as string,
+  auth0Domain: processEnv.REACT_APP_AUTH0_DOMAIN as string,
+  auth0ClientId: processEnv.REACT_APP_AUTH0_CLIENT_ID as string,
+  auth0Audience: processEnv.REACT_APP_AUTH0_AUDIENCE as string,
 };
 
 const requiredFields: (keyof typeof env)[] = [
-  'apiPath', 'hasuraPath', 'hasuraWs', 'googleClientID',
+  'apiPath', 'hasuraPath', 'hasuraWs', 'auth0Domain', 'auth0ClientId', 'auth0Audience',
+  // 'googleClientID',
 ];
 
 if (!env.isJest) { // If not jest

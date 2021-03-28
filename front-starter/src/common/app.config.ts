@@ -1,8 +1,8 @@
 export const appConfig = {
   enablePerfDebug: false,
   useRealWebService: true,
-  useServerFeatures: true,
-  useHotModuleReplacement: false,
+  // useServerFeatures: true,
+  // useHotModuleReplacement: false,
   useLocalStorageJwt: true,
   allowCorsApi: false,
   jwtCookieName: 'jwtHeaderPayload',

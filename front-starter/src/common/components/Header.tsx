@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppBar,
   Avatar,
@@ -9,12 +10,13 @@ import {
   Theme,
 } from '@material-ui/core';
 import React, { FC, memo } from 'react';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-import { selectProfile } from '../../features/auth/auth.service';
-import SignOutButton from '../../features/auth/SignOutButton';
-import ConnectionStatus from '../../features/pwa/ConnectionStatus';
+import { Auth0User } from '../../features/auth/auth.models';
+import { SignInButton } from '../../features/auth/SignInButton';
+import { SignOutButton } from '../../features/auth/SignOutButton2';
+import { Loading } from './Loading';
+// import ConnectionStatus from '../../features/pwa/ConnectionStatus';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     appBar: {
@@ -24,6 +26,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     tabs: {
       flexGrow: 1,
+    },
+    loader: {
+      marginRight: theme.spacing(1),
+      overflow: 'hidden',
     },
     headerElements: {
       margin: theme.spacing(1),
@@ -50,25 +56,35 @@ function LinkTab(props: LinkTabProps) {
   return <Tab component={Link}{...(props as any)} />;
 }
 
-const Header: FC = () => {
+export const Header: FC = memo(() => {
   const classes = useStyles(); // MUI Styles
   const { pathname } = useLocation();
-  const profile = useSelector(selectProfile);
-  const name = profile?.name;
-  const picture = profile?.picture;
+
   return (
     <AppBar position="static" classes={{ root: classes.appBar }} data-testid={'header'}>
       <Tabs value={pathname} classes={{ root: classes.tabs }}>
         {pages.map(p => <LinkTab key={p.path} label={p.label} to={p.path} value={p.path} />)}
       </Tabs>
-      <ConnectionStatus />
-      <div className={classes.headerElements}>
-        {name}
-      </div>
-      <Avatar src={picture} />
+      {/*<ConnectionStatus />*/}
+      <UserAvatar />
+      <SignInButton className={classes.headerElements} />
       <SignOutButton className={classes.headerElements} />
     </AppBar>
   );
-};
+});
 
-export default memo(Header);
+
+const UserAvatar: FC = memo(() => {
+  const classes = useStyles(); // MUI Styles
+  const { isLoading, isAuthenticated, user } = useAuth0();
+  if (isLoading) return <Loading inline color={'inherit'} className={classes.loader} />;
+  if (!isAuthenticated) return null;
+  const { name, picture } = user as Auth0User;
+
+  return <>
+    <div className={classes.headerElements}>
+      {name}
+    </div>
+    <Avatar src={picture} />
+  </>;
+});

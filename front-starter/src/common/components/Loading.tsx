@@ -23,12 +23,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   } as CSSProperties,
 }));
 
-const Loading: FC<Props> = ({ inline, medium, ...others }) => {
+export const Loading: FC<Props> = memo(({ inline, medium, className, ...others }) => {
   const classes = useStyles(); // MUI Styles
   const classBlock = !inline ? classes.withSpace : undefined;
-  return <div className={`${classes.root} ${classBlock}`}><CircularProgress
+  return <div className={`${classes.root} ${classBlock} ${className}`}><CircularProgress
     size={medium ? 30 : undefined} {...others} />
   </div>;
-};
-
-export default memo(Loading);
+});

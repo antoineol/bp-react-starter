@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 interface Props {
 }
 
-const Layout: FC<Props> = ({ children }) => {
+export const Layout: FC<Props> = memo(({ children }) => {
   const classes = useStyles(); // MUI Styles
   return (
     <div className={classes.root} data-testid={'layout'}>
@@ -24,6 +24,4 @@ const Layout: FC<Props> = ({ children }) => {
       </ErrorBoundary>
     </div>
   );
-};
-
-export default memo(Layout);
+});

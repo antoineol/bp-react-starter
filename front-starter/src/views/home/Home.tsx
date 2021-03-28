@@ -1,71 +1,34 @@
-import {
-  Button,
-  CircularProgress,
-  createStyles,
-  Link,
-  makeStyles,
-  TextField,
-  Theme,
-  Typography,
-} from '@material-ui/core';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import React, { FC, memo, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Features } from '../../common/cache/cache.model';
+import { Button, CircularProgress, Link, TextField, Typography } from '@material-ui/core';
+import React, { FC, memo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ErrorComp from '../../common/components/ErrorComp';
-import { useAsyncHandler } from '../../common/utils/app.utils';
-import { useApiGet } from '../../common/utils/http.utils';
-import { changeCount, doubleCount, incrementCount, selectCount } from './count.service';
+import { ApiPublicBox } from './components/ApiPublicBox';
+import { ApiSecuredBox } from './components/ApiSecuredBox';
+import SecretArea from './components/SecretArea';
+import {
+  changeCount,
+  doubleCount,
+  incrementAsync,
+  selectCount,
+  selectCountError,
+  selectCountLoading,
+} from './count.service2';
+import { useHomeStyles } from './home-css';
 import logo from './logo.svg';
-import SecretArea from './secret/SecretArea';
 
-// An issue with TypeScript prevents CSS properties auto-completion. We can
-// hope to have a fix in TypeScript 3.3. Issues to follow up:
-// https://github.com/Microsoft/TypeScript/issues/22077
-// https://github.com/mui-org/material-ui/issues/11693
-// A workaround to have auto-completion is to set CSSProperties type to class values as below.
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  root: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  } as CSSProperties,
-  logo: {
-    animation: 'Home-logo-spin infinite 20s linear',
-    height: '40vmin',
-  },
-  incrButton: {
-    marginTop: '1rem',
-  },
-  loader: {
-    marginLeft: '0.5rem',
-  },
-  '@keyframes Home-logo-spin': {
-    from: {
-      transform: 'rotate(0deg)',
-    },
-    to: {
-      transform: 'rotate(360deg)',
-    },
-  },
-}));
 
-const Home: FC = () => {
-  const classes = useStyles(); // MUI Styles
+export const Home: FC = memo(() => {
+  const classes = useHomeStyles(); // MUI Styles
   const count = useSelector(selectCount);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(undefined);
-  const handleClick = useAsyncHandler(incrementCount, setLoading, setError);
-  const handleSubmit = doubleCount;
-  // Callback optimized to keep the same reference to avoid re-rendering child components
-  const handleChange = useCallback(e => changeCount(e, parseFloat(e.target.value)), []);
-  const { data } = useApiGet<Features>('features');
-  if (!data) {
-    return <div className={classes.root}><CircularProgress /></div>;
-  }
-  const { queryJsonPlaceholder } = data;
+  const loading = useSelector(selectCountLoading);
+  const error = useSelector(selectCountError);
+  const dispatch = useDispatch();
+  const handleClick = useCallback(() => dispatch(incrementAsync()), []);
+  const handleSubmit = useCallback(e => {
+    e.preventDefault();
+    dispatch(doubleCount());
+  }, []);
+  const handleChange = useCallback(e => dispatch(changeCount(Number(e.target.value) || 0)), []);
 
   return (
     <div className={classes.root}>
@@ -87,19 +50,19 @@ const Home: FC = () => {
           disabled={loading}
         />
       </form>
-      {queryJsonPlaceholder && <Button
+      <Button
         variant={'outlined'}
         color={'primary'}
         className={classes.incrButton}
         disabled={loading}
         onClick={handleClick}>
         Fetch n°{isNaN(count) ? '-' : count}
-        {loading && <CircularProgress className={classes.loader} />}
-      </Button>}
+        {loading && <CircularProgress className={classes.loader} size={20} />}
+      </Button>
       <ErrorComp error={error} />
+      <ApiPublicBox />
+      <ApiSecuredBox />
       <SecretArea />
     </div>
   );
-};
-
-export default memo(Home);
+});
