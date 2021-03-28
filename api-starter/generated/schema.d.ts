@@ -29,7 +29,7 @@ export type Author_Aggregate = {
 /** aggregate fields of "author" */
 export type Author_Aggregate_Fields = {
   __typename?: 'author_aggregate_fields';
-  count?: Maybe<Scalars['Int']>;
+  count: Scalars['Int'];
   max?: Maybe<Author_Max_Fields>;
   min?: Maybe<Author_Min_Fields>;
 };
@@ -41,24 +41,11 @@ export type Author_Aggregate_FieldsCountArgs = {
   distinct?: Maybe<Scalars['Boolean']>;
 };
 
-/** order by aggregate values of table "author" */
-export type Author_Aggregate_Order_By = {
-  count?: Maybe<Order_By>;
-  max?: Maybe<Author_Max_Order_By>;
-  min?: Maybe<Author_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "author" */
-export type Author_Arr_Rel_Insert_Input = {
-  data: Array<Author_Insert_Input>;
-  on_conflict?: Maybe<Author_On_Conflict>;
-};
-
 /** Boolean expression to filter rows from the table "author". All fields are combined with a logical 'AND'. */
 export type Author_Bool_Exp = {
-  _and?: Maybe<Array<Maybe<Author_Bool_Exp>>>;
+  _and?: Maybe<Array<Author_Bool_Exp>>;
   _not?: Maybe<Author_Bool_Exp>;
-  _or?: Maybe<Array<Maybe<Author_Bool_Exp>>>;
+  _or?: Maybe<Array<Author_Bool_Exp>>;
   id?: Maybe<Uuid_Comparison_Exp>;
   name?: Maybe<String_Comparison_Exp>;
 };
@@ -82,12 +69,6 @@ export type Author_Max_Fields = {
   name?: Maybe<Scalars['String']>;
 };
 
-/** order by max() on columns of table "author" */
-export type Author_Max_Order_By = {
-  id?: Maybe<Order_By>;
-  name?: Maybe<Order_By>;
-};
-
 /** aggregate min on columns */
 export type Author_Min_Fields = {
   __typename?: 'author_min_fields';
@@ -95,25 +76,13 @@ export type Author_Min_Fields = {
   name?: Maybe<Scalars['String']>;
 };
 
-/** order by min() on columns of table "author" */
-export type Author_Min_Order_By = {
-  id?: Maybe<Order_By>;
-  name?: Maybe<Order_By>;
-};
-
 /** response of any mutation on the table "author" */
 export type Author_Mutation_Response = {
   __typename?: 'author_mutation_response';
-  /** number of affected rows by the mutation */
+  /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
-  /** data of the affected rows by the mutation */
+  /** data from the rows affected by the mutation */
   returning: Array<Author>;
-};
-
-/** input type for inserting object relation for remote table "author" */
-export type Author_Obj_Rel_Insert_Input = {
-  data: Author_Insert_Input;
-  on_conflict?: Maybe<Author_On_Conflict>;
 };
 
 /** on conflict condition type for table "author" */
@@ -123,13 +92,13 @@ export type Author_On_Conflict = {
   where?: Maybe<Author_Bool_Exp>;
 };
 
-/** ordering options when selecting data from "author" */
+/** Ordering options when selecting data from "author". */
 export type Author_Order_By = {
   id?: Maybe<Order_By>;
   name?: Maybe<Order_By>;
 };
 
-/** primary key columns input for table: "author" */
+/** primary key columns input for table: author */
 export type Author_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
@@ -215,21 +184,20 @@ export type Mutation_RootUpdate_Author_By_PkArgs = {
 
 /** column ordering options */
 export enum Order_By {
-  /** in the ascending order, nulls last */
+  /** in ascending order, nulls last */
   Asc = 'asc',
-  /** in the ascending order, nulls first */
+  /** in ascending order, nulls first */
   AscNullsFirst = 'asc_nulls_first',
-  /** in the ascending order, nulls last */
+  /** in ascending order, nulls last */
   AscNullsLast = 'asc_nulls_last',
-  /** in the descending order, nulls first */
+  /** in descending order, nulls first */
   Desc = 'desc',
-  /** in the descending order, nulls first */
+  /** in descending order, nulls first */
   DescNullsFirst = 'desc_nulls_first',
-  /** in the descending order, nulls last */
+  /** in descending order, nulls last */
   DescNullsLast = 'desc_nulls_last'
 }
 
-/** query root */
 export type Query_Root = {
   __typename?: 'query_root';
   /** fetch data from the table: "author" */
@@ -241,7 +209,6 @@ export type Query_Root = {
 };
 
 
-/** query root */
 export type Query_RootAuthorArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -251,7 +218,6 @@ export type Query_RootAuthorArgs = {
 };
 
 
-/** query root */
 export type Query_RootAuthor_AggregateArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -261,31 +227,43 @@ export type Query_RootAuthor_AggregateArgs = {
 };
 
 
-/** query root */
 export type Query_RootAuthor_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
-/** expression to compare columns of type String. All fields are combined with logical 'AND'. */
+/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type String_Comparison_Exp = {
   _eq?: Maybe<Scalars['String']>;
   _gt?: Maybe<Scalars['String']>;
   _gte?: Maybe<Scalars['String']>;
+  /** does the column match the given case-insensitive pattern */
   _ilike?: Maybe<Scalars['String']>;
   _in?: Maybe<Array<Scalars['String']>>;
+  /** does the column match the given POSIX regular expression, case insensitive */
+  _iregex?: Maybe<Scalars['String']>;
   _is_null?: Maybe<Scalars['Boolean']>;
+  /** does the column match the given pattern */
   _like?: Maybe<Scalars['String']>;
   _lt?: Maybe<Scalars['String']>;
   _lte?: Maybe<Scalars['String']>;
   _neq?: Maybe<Scalars['String']>;
+  /** does the column NOT match the given case-insensitive pattern */
   _nilike?: Maybe<Scalars['String']>;
   _nin?: Maybe<Array<Scalars['String']>>;
+  /** does the column NOT match the given POSIX regular expression, case insensitive */
+  _niregex?: Maybe<Scalars['String']>;
+  /** does the column NOT match the given pattern */
   _nlike?: Maybe<Scalars['String']>;
+  /** does the column NOT match the given POSIX regular expression, case sensitive */
+  _nregex?: Maybe<Scalars['String']>;
+  /** does the column NOT match the given SQL regular expression */
   _nsimilar?: Maybe<Scalars['String']>;
+  /** does the column match the given POSIX regular expression, case sensitive */
+  _regex?: Maybe<Scalars['String']>;
+  /** does the column match the given SQL regular expression */
   _similar?: Maybe<Scalars['String']>;
 };
 
-/** subscription root */
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** fetch data from the table: "author" */
@@ -297,7 +275,6 @@ export type Subscription_Root = {
 };
 
 
-/** subscription root */
 export type Subscription_RootAuthorArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -307,7 +284,6 @@ export type Subscription_RootAuthorArgs = {
 };
 
 
-/** subscription root */
 export type Subscription_RootAuthor_AggregateArgs = {
   distinct_on?: Maybe<Array<Author_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -317,13 +293,12 @@ export type Subscription_RootAuthor_AggregateArgs = {
 };
 
 
-/** subscription root */
 export type Subscription_RootAuthor_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-/** expression to compare columns of type uuid. All fields are combined with logical 'AND'. */
+/** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
 export type Uuid_Comparison_Exp = {
   _eq?: Maybe<Scalars['uuid']>;
   _gt?: Maybe<Scalars['uuid']>;

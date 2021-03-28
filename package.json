@@ -25,12 +25,11 @@
     "start:front": "cd front-starter && yarn start",
     "start:api": "cd api-starter && yarn start",
     "postinstall": "cd api-starter && yarn install --production=false && cd ../front-starter && yarn",
-    "hasura": "env-cmd .env hasura --project db/hasura --skip-update-check",
+    "hasura": "hasura --project db/hasura --envfile ../../.env --skip-update-check",
     "hasura:server": "hasura --project db/hasura --skip-update-check"
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5",
-    "hasura-cli": "1.3.3",
-    "env-cmd": "8.0.2"
+    "hasura-cli": "2.0.0-alpha.7",
+    "npm-run-all": "^4.1.5"
   }
 }

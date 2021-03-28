@@ -30,7 +30,7 @@ export const TextFieldBase: FC<TextFieldBaseProps & { isFocused?: boolean }> = m
     // const { errors: { [name]: error } } = useFormState({ control });
 
     const errorMessage = error?.message;
-    console.log(`[${name}] render - error:`, error?.message);
+    // console.log(`[${name}] render - error:`, error?.message);
 
     return <TextField
       id={id || name}
