@@ -1,3 +1,3 @@
-export function handleError(err: any) {
-  console.error(err);
+export function handleError(...err: any) {
+  console.error(...err);
 }

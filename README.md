@@ -17,6 +17,11 @@ Start project:
 - `yarn start`: starts database, API, hasura and front
 - `yarn console`: opens the Hasura console. Useful to check the database and create migrations.
 
+## Setup
+
+- Update .env at the root and in front-starter to match your configuration
+- The starter uses an Auth0 rule to define the Hasura claims in JWT, following this guide: https://hasura.io/docs/latest/graphql/core/guides/integrations/auth0-jwt.html
+
 ## Deployment
 
 Suggested deployment:
@@ -28,9 +33,8 @@ Suggested deployment:
 
 ## Upgrade steps
 
-- Continue on the front: src/features/auth/auth0-hook-methods.ts
-- Ensure the token is renewed well
-- Ensure the API recognizes the token
+- Hasura on page Profile
+- Form on page Profile
 
 ## Tooling that can be added
 

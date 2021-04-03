@@ -1,15 +1,11 @@
+import { useSubscription } from '@apollo/client';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/styles';
 import React, { FC, memo } from 'react';
-// import {
-//   ADD_AUTHOR,
-//   addAuthor,
-//   AUTHORS_Q,
-//   DELETE_AUTHOR,
-//   deleteAuthor,
-//   newAuthorDefaults,
-//   newAuthorSchema,
-// } from './profile.service';
+import { Subscription_Root } from '../../../generated/schema';
+import { AUTHORS_SUB } from './profile.service';
+
+
 // import ProfileFooter from './ProfileFooter';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -29,8 +25,14 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 export const Profile: FC = memo(() => {
-  // TODO replace subscription with query and use cache (with redux or apollo)
-  const classes = useStyles(); // MUI Styles
+  const { loading, error, data } = useSubscription<Subscription_Root>(AUTHORS_SUB);
+  console.log('loading', loading);
+  console.log('error', error);
+  console.log('data', data);
+  return <>Foo</>;
+
+  // // TODO replace subscription with query and use cache (with redux or apollo)
+  // const classes = useStyles(); // MUI Styles
   // const { data, loading, error } = useQuery<Query_Root>(AUTHORS_Q);
   // // Subscription equivalent:
   // // const { data, loading, error } = useSubscription<Subscription_Root>(AUTHORS_SUB);
@@ -49,44 +51,44 @@ export const Profile: FC = memo(() => {
   // const handleAdd = useCallback(addAuthor(addMutator), []);
   // const handleDelete = useCallback(deleteAuthor(delMutator), []);
   //
-  // if (error) return <ErrorComp error={error}/>;
-
-  return <div className={classes.root}>
-    Foo
-    {/*<Formik
-      initialValues={newAuthorDefaults}
-      validationSchema={newAuthorSchema}
-      onSubmit={handleAdd}
-    >
-      <Form className={classes.form}>
-        <div style={{ margin: '10px' }}>
-          <AppTextInput name="name" label="Name" autoFocus/>
-        </div>
-        <div style={{ margin: '10px' }}>
-          <AppTextInput name="age" label="Age" type={'number'}/>
-        </div>
-        <div style={{ margin: '10px' }}>
-          <Button variant="outlined" color="primary" type="submit" className={classes.submitBtn}>
-            Add author
-          </Button>
-        </div>
-      </Form>
-    </Formik>*/}
-    {
-      // loading
-      // ? <CircularProgress/>
-      // : <>
-      //   <ul>
-      //     {authors.map(author => <li key={author.id}>{author.name} <IconButton
-      //       aria-label="delete"
-      //       data-id={author.id}
-      //       onClick={handleDelete}>
-      //       <DeleteIcon/>
-      //     </IconButton></li>)}
-      //   </ul>
-      //   <ProfileFooter/>
-      // </>
-    }
-    {/*<ErrorComp error={[error, errAdd, errDel]}/>*/}
-  </div>;
+  // if (error) return <ErrorComp error={error} />;
+  //
+  // return <div className={classes.root}>
+  //   Foo
+  //   <Formik
+  //     initialValues={newAuthorDefaults}
+  //     validationSchema={newAuthorSchema}
+  //     onSubmit={handleAdd}
+  //   >
+  //     <Form className={classes.form}>
+  //       <div style={{ margin: '10px' }}>
+  //         <AppTextField name="name" label="Name" autoFocus />
+  //       </div>
+  //       <div style={{ margin: '10px' }}>
+  //         <AppTextField name="age" label="Age" type={'number'} />
+  //       </div>
+  //       <div style={{ margin: '10px' }}>
+  //         <Button variant="outlined" color="primary" type="submit" className={classes.submitBtn}>
+  //           Add author
+  //         </Button>
+  //       </div>
+  //     </Form>
+  //   </Formik>
+  //   {
+  //     // loading
+  //     // ? <CircularProgress/>
+  //     // : <>
+  //     //   <ul>
+  //     //     {authors.map(author => <li key={author.id}>{author.name} <IconButton
+  //     //       aria-label="delete"
+  //     //       data-id={author.id}
+  //     //       onClick={handleDelete}>
+  //     //       <DeleteIcon/>
+  //     //     </IconButton></li>)}
+  //     //   </ul>
+  //     //   <ProfileFooter/>
+  //     // </>
+  //   }
+  //   {/*<ErrorComp error={[error, errAdd, errDel]}/>*/}
+  // </div>;
 });

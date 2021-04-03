@@ -12,7 +12,7 @@ import {
   selectCount,
   selectCountError,
   selectCountLoading,
-} from './count.service2';
+} from './count.service';
 import { useHomeStyles } from './home-css';
 import logo from './logo.svg';
 
@@ -34,7 +34,8 @@ export const Home: FC = memo(() => {
     <div className={classes.root}>
       <img src={logo} className={classes.logo} alt="logo" />
       <Typography variant="body1">
-        Edit <code>src/home/Home.tsx</code> and save to reload.
+        Home page that does not require any authentication. Sign in (or sign up) to get access to
+        private sections.
       </Typography>
       <Link href='https://reactjs.org' target='_blank' rel='noopener noreferrer'
             color={'primary'}>

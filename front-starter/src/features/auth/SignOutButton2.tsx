@@ -19,7 +19,6 @@ export const SignOutButton: FC<{ className?: string }> = memo(props => {
     return null;
   }
   // TODO remove loading? Doesn't make sense here?
-  console.log('Sign out isLoading:', isLoading);
   return <>
     <Button
       variant="outlined"

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { env } from '../../environment/env';
-import { getAccessTokenWithPopup } from '../../features/auth/auth0-hook-methods';
+import { getToken } from '../../features/auth/get-auth0-token';
 import { appConfig } from '../app.config';
 import { wait } from './app.utils';
 
@@ -80,9 +80,7 @@ export async function httpPost<T>(url: string, body?: any,
 async function httpReq<T>(config: AxiosRequestConfig | undefined,
                           url: string,
                           sendRequest: (config: AxiosRequestConfig) => Promise<AxiosResponse<T>>): Promise<T> {
-  const token = await getAccessTokenWithPopup();
-  console.log('[httpReq] token:', token);
-  const conf = extendConfig(config);
+  const conf = await extendConfig(config);
   let resp: AxiosResponse<T> | undefined;
   try {
     resp = await sendRequest(conf);
@@ -115,7 +113,7 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
 const requiredHeaders = { 'X-Requested-By': appConfig.appName };
 export const defaultOptions = { headers: requiredHeaders, withCredentials: appConfig.allowCorsApi }; // Useful for tests
 
-function extendConfig(config: AxiosRequestConfig | undefined) {
+async function extendConfig(config: AxiosRequestConfig | undefined) {
   // For security, it is recommended to rely on secured cookies: keep the JWT
   // in 2 cookies (1 normal with header + payload, 1 httpOnly with signature). The server
   // concatenates the 2 cookie values to rebuild the full JWT. Server-side logout removes the 2
@@ -123,8 +121,9 @@ function extendConfig(config: AxiosRequestConfig | undefined) {
   const { headers, ...otherConf } = config || {} as AxiosRequestConfig;
   return {
     ...otherConf,
-    withCredentials: appConfig.allowCorsApi,
+    ...(!appConfig.useJwtInHeader && { withCredentials: appConfig.allowCorsApi }),
     headers: {
+      ...(appConfig.useJwtInHeader && { Authorization: `Bearer ${await getToken()}` }),
       ...headers,
       ...requiredHeaders,
     },

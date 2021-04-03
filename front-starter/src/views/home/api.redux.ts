@@ -13,8 +13,6 @@ export const fetchSecured = createAsyncThunk(
   'api/secured',
   (a, b) => {
     const state = b.getState() as AppStateModel;
-    console.log('state:', state);
-    console.log('extra:', b.extra);
     return apiGet('/secured');
   },
 );

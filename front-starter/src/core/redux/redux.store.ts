@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { apiReducer } from '../../views/home/api.redux';
-import { countReducer } from '../../views/home/count.service2';
+import { countReducer } from '../../views/home/count.service';
+import { hasuraReducer } from './redux-apollo.core';
 import { ReducerToAppState } from './redux.models';
 
 const reducer = {
   counter: countReducer,
   api: apiReducer,
+  hasura: hasuraReducer,
 };
 
 export type AppStateModel = ReducerToAppState<typeof reducer>

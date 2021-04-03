@@ -9,16 +9,22 @@ export const SignInButton: FC<{ className?: string }> = memo(props => {
     isAuthenticated,
     loginWithRedirect,
   } = useAuth0();
-  // const handleClick = useCallback(() => logout({
-  //   returnTo: window.location.origin,
-  //   client_id: auth0ProviderConfig.clientId,
-  // }), []);
+
+  // loginWithPopup blocks loading. The app has no way to know when the popup is closed.
+  // So we favor loginWithRedirect here.
+  // Example attempt to make it work, still failing, not catching when the popup is closed.
+  // We could work around it by providing our own popup, but is it worth the effort?
+  // const [loading, setLoading] = useState(false);
+  // const handleClick = useCallback(() => {
+  //   setLoading(true);
+  //   loginWithPopup()
+  //     .then(() => setLoading(false))
+  //     .catch(() => setLoading(false));
+  // }, []);
 
   if (isAuthenticated) {
     return null;
   }
-  // TODO remove loading? Doesn't make sense here?
-  console.log('Sign in isLoading:', isLoading);
   return <>
     <Button
       variant="outlined"

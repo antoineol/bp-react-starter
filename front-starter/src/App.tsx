@@ -6,12 +6,11 @@ import React, { FC, memo } from 'react';
 import { Route, Switch } from 'react-router';
 import { Header } from './common/components/Header';
 import { Layout } from './common/components/Layout';
-import { logRenderForPerfInvestigation } from './common/utils/perf.utils';
 import './core/_bootstrap/app.css';
 import { appTheme } from './core/app.theme';
-import { Auth0ErrorHandler } from './features/auth/auth-init';
-import { Auth0SetMethods, Auth0WatchToken } from './features/auth/auth0-hook-methods';
+import { Auth0ErrorHandler } from './features/auth/init-auth';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
+import { InitApolloProvider } from './features/hasura/init-hasura';
 // import SignInDialog from './features/auth/SignInDialog';
 import { Home } from './views/home/Home';
 import { Profile } from './views/profile/Profile';
@@ -24,28 +23,27 @@ interface Props {
 }
 
 export const App: FC<Props> = memo(() => {
-  logRenderForPerfInvestigation();
   return (
     // Initializes the theme for child components
     <MuiThemeProvider theme={muiTheme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         {/* A few CSS defaults provided by Material UI */}
         <CssBaseline />
-        <Auth0SetMethods />
-        <Auth0WatchToken />
         <Auth0ErrorHandler />
-        {/* Sign in dialog showed when the user is not authenticated */}
-        {/*<SignInDialog />*/}
-        {/* Header bar */}
-        <Header />
-        {/* Page content wrapper (except header) to ensure the scrollbar/header are correct */}
-        <Layout>
-          <Switch>
-            {/* List of pages - add new pages here. */}
-            <Route exact path="/" component={Home} />
-            <ProtectedRoute path="/profile" component={Profile} />
-          </Switch>
-        </Layout>
+        <InitApolloProvider>
+          {/* Sign in dialog showed when the user is not authenticated */}
+          {/*<SignInDialog />*/}
+          {/* Header bar */}
+          <Header />
+          {/* Page content wrapper (except header) to ensure the scrollbar/header are correct */}
+          <Layout>
+            <Switch>
+              {/* List of pages - add new pages here. */}
+              <Route exact path="/" component={Home} />
+              <ProtectedRoute path="/profile" component={Profile} />
+            </Switch>
+          </Layout>
+        </InitApolloProvider>
       </MuiPickersUtilsProvider>
     </MuiThemeProvider>
   );

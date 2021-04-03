@@ -16,7 +16,7 @@ export const useHomeStyles = makeStyles((theme: Theme) => /*(theme: Theme) => cr
   } as CSSProperties,
   logo: {
     animation: 'Home-logo-spin infinite 20s linear',
-    height: '40vmin',
+    height: 150,
   },
   incrButton: {
     marginTop: '1rem',

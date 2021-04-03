@@ -16,7 +16,8 @@ import { App } from './App';
 import { handleError } from './common/services/error.service';
 import { initAppServices } from './core/app.init';
 import { store } from './core/redux/redux.store';
-import { InitAuth0Provider } from './features/auth/auth-init';
+import { Auth0SetMethods } from './features/auth/get-auth0-token';
+import { InitAuth0Provider } from './features/auth/init-auth';
 
 // Init the app.
 
@@ -29,6 +30,7 @@ render(
       {/* Initializes routing for child components */}
       <BrowserRouter>
         <InitAuth0Provider>
+          <Auth0SetMethods />
           {/* Initializes Apollo GraphQL client for child components */}
           {/*<ApolloProvider client={getGqlClient()}>*/}
           <App />
