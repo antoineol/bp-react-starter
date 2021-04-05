@@ -44,8 +44,8 @@ export const { setHasuraLoading, setHasuraError, setHasuraValues } = hasuraSlice
 
 export const hasuraReducer = hasuraSlice.reducer;
 
-export function createCountSelector<Selected>(selector: (state: HasuraModel) => Selected) {
+export function createHasuraSelector<Selected>(selector: (state: HasuraModel) => Selected) {
   return createAppSelector('hasura', selector);
 }
 
-export const selectHasuraValues = createCountSelector(state => state.values);
+export const selectHasuraValues = createHasuraSelector(state => state.values);

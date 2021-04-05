@@ -11,10 +11,8 @@ import { appTheme } from './core/app.theme';
 import { Auth0ErrorHandler } from './features/auth/init-auth';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import { InitApolloProvider } from './features/hasura/init-hasura';
-// import SignInDialog from './features/auth/SignInDialog';
 import { Home } from './views/home/Home';
 import { Profile } from './views/profile/Profile';
-// import Profile from './views/profile/Profile';
 
 
 const muiTheme = responsiveFontSizes(createMuiTheme(appTheme));
@@ -30,9 +28,8 @@ export const App: FC<Props> = memo(() => {
         {/* A few CSS defaults provided by Material UI */}
         <CssBaseline />
         <Auth0ErrorHandler />
+        {/* Initializes Apollo GraphQL client for child components */}
         <InitApolloProvider>
-          {/* Sign in dialog showed when the user is not authenticated */}
-          {/*<SignInDialog />*/}
           {/* Header bar */}
           <Header />
           {/* Page content wrapper (except header) to ensure the scrollbar/header are correct */}

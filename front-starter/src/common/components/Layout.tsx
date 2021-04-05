@@ -1,8 +1,8 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',

@@ -1,14 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import {
-  AppBar,
-  Avatar,
-  ButtonBaseProps,
-  createStyles,
-  makeStyles,
-  Tab,
-  Tabs,
-  Theme,
-} from '@material-ui/core';
+import { AppBar, Avatar, ButtonBaseProps, makeStyles, Tab, Tabs, Theme } from '@material-ui/core';
 import React, { FC, memo } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -18,17 +9,17 @@ import { SignOutButton } from '../../features/auth/SignOutButton2';
 import { Loading } from './Loading';
 // import ConnectionStatus from '../../features/pwa/ConnectionStatus';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-    appBar: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'space-between',
-    },
-    tabs: {
-      flexGrow: 1,
-    },
-    loader: {
-      marginRight: theme.spacing(1),
+const useStyles = makeStyles((theme: Theme) => ({
+  appBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'space-between',
+  },
+  tabs: {
+    flexGrow: 1,
+  },
+  loader: {
+    marginRight: theme.spacing(1),
       overflow: 'hidden',
     },
     headerElements: {

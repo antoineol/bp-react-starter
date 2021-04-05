@@ -1,5 +1,4 @@
 import {
-  createStyles,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -16,7 +15,7 @@ import React, { memo, useCallback, useState } from 'react';
 // https://github.com/Microsoft/TypeScript/issues/22077
 // https://github.com/mui-org/material-ui/issues/11693
 // A workaround to have auto-completion is to set CSSProperties type to class values as below.
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     margin: theme.spacing(3),
   },

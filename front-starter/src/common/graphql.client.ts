@@ -53,4 +53,23 @@ export const foo = true;
 // await addJwtToHeaders({}) }), }, } as WebSocketLink.Configuration);  const wsSubscriptionClient
 // = (wsLink as any).subscriptionClient as SubscriptionClient;
 // wsSubscriptionClient.onConnecting(val => connectionStatus.next(WsConnectionStatus.connecting));
-// wsSubscriptionClient.onConnected(val => connectionStatus.next(WsConnectionStatus.connected)); wsSubscriptionClient.onReconnecting(val => connectionStatus.next(WsConnectionStatus.connecting)); wsSubscriptionClient.onReconnected(val => connectionStatus.next(WsConnectionStatus.connected)); wsSubscriptionClient.onDisconnected(val => connectionStatus.next(WsConnectionStatus.offline)); wsSubscriptionClient.onError(val => connectionStatus.next(WsConnectionStatus.offline));  // TODO consider cache & network + dedupe: //  https://github.com/apollographql/apollo-cache-persist/issues/53#issuecomment-394733564 const cache = new InMemoryCache({ freezeResults: true, }); gqlClient = new ApolloClient({ cache, link: ApolloLink.from( [new ReduxLink(), retryLink, errorLink, authLink, wsLink]), assumeImmutableResults: true, // {} So that cache access does not run resolvers functions. Avoids irrelevant network // errors when accessing local cache (source: Apollo doc and PR). resolvers: {}, }); // gqlClient.writeData({ data: defaultStore }); // gqlClient.onResetStore(() => cache.writeData({ data: defaultStore }) as any);  }  export function getGqlClient() { if (!gqlClient && !env.isJest) { initGqlClient(); } return gqlClient; }  export function getWsConnectionStatus(): Observable<WsConnectionStatus> { return connectionStatus.asObservable(); }  // Utilities  export function resetWsConnection() { // Reset the WS connection for it to carry the new JWT. return (wsLink as any).subscriptionClient.close(false, false); }  function reauthAndRetry(operation: Operation, forward: NextLink): ZenObservable<FetchResult> { return fromPromise(fetchNewJwt()) .flatMap(() => { return forward(operation); }); }
+// wsSubscriptionClient.onConnected(val => connectionStatus.next(WsConnectionStatus.connected));
+// wsSubscriptionClient.onReconnecting(val =>
+// connectionStatus.next(WsConnectionStatus.connecting)); wsSubscriptionClient.onReconnected(val =>
+// connectionStatus.next(WsConnectionStatus.connected)); wsSubscriptionClient.onDisconnected(val =>
+// connectionStatus.next(WsConnectionStatus.offline)); wsSubscriptionClient.onError(val =>
+// connectionStatus.next(WsConnectionStatus.offline));  // TODO consider cache & network + dedupe:
+// //  https://github.com/apollographql/apollo-cache-persist/issues/53#issuecomment-394733564 const
+// cache = new InMemoryCache({ freezeResults: true, }); gqlClient = new ApolloClient({ cache, link:
+// ApolloLink.from( [new ReduxLink(), retryLink, errorLink, authLink, wsLink]),
+// assumeImmutableResults: true, // {} So that cache access does not run resolvers functions.
+// Avoids irrelevant network // errors when accessing local cache (source: Apollo doc and PR).
+// resolvers: {}, }); // gqlClient.writeData({ data: defaultStore }); // gqlClient.onResetStore(()
+// => cache.writeData({ data: defaultStore }) as any);  }  export function getGqlClient() { if
+// (!gqlClient && !env.isJest) { initGqlClient(); } return gqlClient; }  export function
+// getWsConnectionStatus(): Observable<WsConnectionStatus> { return
+// connectionStatus.asObservable(); }  // Utilities  export function resetWsConnection() { // Reset
+// the WS connection for it to carry the new JWT. return (wsLink as
+// any).subscriptionClient.close(false, false); }  function reauthAndRetry(operation: Operation,
+// forward: NextLink): ZenObservable<FetchResult> { return fromPromise(fetchNewJwt()) .flatMap(()
+// => { return forward(operation); }); }

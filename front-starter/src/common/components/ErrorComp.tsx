@@ -1,5 +1,4 @@
-import { createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import React, { FC, memo, PropsWithChildren } from 'react';
 import { isObject } from '../utils/app.utils';
@@ -9,11 +8,11 @@ const errorLabels: any = {
   unknownError: 'An unknown error occurred.',
 };
 
-export const useStyles = makeStyles((theme: Theme) => createStyles({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     alignSelf: 'center',
     marginTop: theme.spacing(3),
-  } as CSSProperties,
+  },
 }));
 
 interface Props {

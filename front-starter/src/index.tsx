@@ -12,7 +12,6 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
-// import { getGqlClient } from './common/graphql.client';
 import { handleError } from './common/services/error.service';
 import { initAppServices } from './core/app.init';
 import { store } from './core/redux/redux.store';
@@ -31,10 +30,7 @@ render(
       <BrowserRouter>
         <InitAuth0Provider>
           <Auth0SetMethods />
-          {/* Initializes Apollo GraphQL client for child components */}
-          {/*<ApolloProvider client={getGqlClient()}>*/}
           <App />
-          {/*</ApolloProvider>*/}
         </InitAuth0Provider>
       </BrowserRouter>
     </Provider>
