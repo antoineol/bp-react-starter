@@ -12,6 +12,7 @@
     "up": "cd .. && yarn up",
     "stop": "cd .. && yarn stop",
     "console": "cd .. && yarn console",
+    "fixtime": "cd .. && yarn fixtime",
     "________________ deployment ________________": "",
     "build:staging": "env-cmd -f .env.staging npm run build && ncp ../devops/_redirects.staging build/_redirects",
     "build:prod": "env-cmd -f .env.prod npm run build && ncp ../devops/_redirects.prod build/_redirects",

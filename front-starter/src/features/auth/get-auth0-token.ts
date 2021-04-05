@@ -12,7 +12,7 @@ export async function getToken(force = false) {
   // Wrapper with local state to cover the case when getToken is called twice concurrently. We
   // don't want to run 2 requests to Auth0. Only one request should be sent and the 2 requesters
   // will get the same token.
-  console.log('Get a token'/*, new Error().stack*/);
+  // console.log('Get a token'/*, new Error().stack*/);
   try {
     if (tokenPromise) return tokenPromise;
     tokenPromise = _getToken(force);

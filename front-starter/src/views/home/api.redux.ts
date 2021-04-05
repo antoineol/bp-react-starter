@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { apiGet } from '../../common/utils/http.utils';
 import { createAppSelector } from '../../core/redux/redux-selector-util';
 import { RejectedAction } from '../../core/redux/redux.models';
-import { AppStateModel } from '../../core/redux/redux.store';
 
 export const fetchPublic = createAsyncThunk(
   'api/',
@@ -11,8 +10,8 @@ export const fetchPublic = createAsyncThunk(
 
 export const fetchSecured = createAsyncThunk(
   'api/secured',
-  (a, b) => {
-    const state = b.getState() as AppStateModel;
+  (/*a, b*/) => {
+    // const state = b.getState() as AppStateModel;
     return apiGet('/secured');
   },
 );

@@ -14,6 +14,7 @@
     "upgr": "yarn upgrade-interactive --latest",
     "up": "docker-compose up -d db && docker-compose up -d",
     "stop": "docker-compose stop",
+    "fixtime": "sudo ntpdate -sb time.nist.gov",
     "________________ deployment ________________": "",
     "migrate:dev": "yarn hasura migrate apply --endpoint http://localhost:8080/",
     "migrate:staging": "yarn hasura:server migrate apply --endpoint https://staging.rating-hasura.earlymetrics.com",

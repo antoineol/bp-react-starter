@@ -23,12 +23,13 @@ export const Home: FC = memo(() => {
   const loading = useSelector(selectCountLoading);
   const error = useSelector(selectCountError);
   const dispatch = useDispatch();
-  const handleClick = useCallback(() => dispatch(incrementAsync()), []);
+  const handleClick = useCallback(() => dispatch(incrementAsync()), [dispatch]);
   const handleSubmit = useCallback(e => {
     e.preventDefault();
     dispatch(doubleCount());
-  }, []);
-  const handleChange = useCallback(e => dispatch(changeCount(Number(e.target.value) || 0)), []);
+  }, [dispatch]);
+  const handleChange = useCallback(e => dispatch(changeCount(Number(e.target.value) || 0)),
+    [dispatch]);
 
   return (
     <div className={classes.root}>

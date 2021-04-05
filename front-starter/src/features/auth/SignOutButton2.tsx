@@ -13,7 +13,7 @@ export const SignOutButton: FC<{ className?: string }> = memo(props => {
   const handleClick = useCallback(() => logout({
     returnTo: window.location.origin,
     client_id: env.auth0ClientId,
-  }), []);
+  }), [logout]);
 
   if (!isAuthenticated) {
     return null;

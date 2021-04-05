@@ -1,4 +1,3 @@
-import React from 'react';
 import { initServiceWorker } from '../features/pwa/sw.service';
 
 export async function initAppServices() {

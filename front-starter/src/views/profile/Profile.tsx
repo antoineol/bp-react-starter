@@ -1,8 +1,10 @@
-import { useSubscription } from '@apollo/client';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/styles';
 import React, { FC, memo } from 'react';
+import { useSelector } from 'react-redux';
 import { Subscription_Root } from '../../../generated/schema';
+import { useReduxSub } from '../../common/utils/graphql.utils';
+import { selectHasuraValues } from '../../features/hasura/redux-apollo-slice';
 import { AUTHORS_SUB } from './profile.service';
 
 
@@ -25,10 +27,26 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 export const Profile: FC = memo(() => {
-  const { loading, error, data } = useSubscription<Subscription_Root>(AUTHORS_SUB);
-  console.log('loading', loading);
-  console.log('error', error);
-  console.log('data', data);
+  // // const { loading, error, data } = useSubscription<Subscription_Root>(AUTHORS_SUB);
+  // const { loading, error, data } = useSub<Subscription_Root>(AUTHORS_SUB);
+  // console.log('[loading]', loading, '[error]', error, '[data]', data?.author[1].name);
+  useReduxSub<Subscription_Root>(AUTHORS_SUB);
+  // console.log('[Profile render]');
+  const values = useSelector(selectHasuraValues);
+  // console.log('Profile values:', values);
+  console.log('Profile values:', values?.author?.[1]?.name);
+
+  // const subscription = AUTHORS_SUB;
+  // const query = subscriptionToQuery(subscription);
+  // console.log('sub:', subscription.loc!.source.body);
+  // console.log('query:', query.loc!.source.body);
+  // const { loading, error, data, subscribeToMore, networkStatus, previousData, called,  } =
+  // useQuery<Subscription_Root>(query); useEffect(() => { subscribeToMore({ document:
+  // subscription, updateQuery: (prev, { subscriptionData }) => subscriptionData?.data ?
+  // subscriptionData.data : prev }) }, []); console.log('[loading]', loading, '[error]', error,
+  // '[data]', data?.author[1].name, '[networkStatus]', networkStatus, '[previousData]',
+  // previousData?.author[1].name, '[called]', called);
+
   return <>Foo</>;
 
   // // TODO replace subscription with query and use cache (with redux or apollo)

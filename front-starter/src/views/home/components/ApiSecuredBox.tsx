@@ -16,7 +16,7 @@ export const ApiSecuredBox: FC = memo(() => {
   const securedLoading = useSelector(selectSecuredLoading);
   const securedError = useSelector(selectSecuredError);
   const dispatch = useDispatch();
-  const handleClick = useCallback(() => dispatch(fetchSecured()), []);
+  const handleClick = useCallback(() => dispatch(fetchSecured()), [dispatch]);
 
   return <>
     <Button

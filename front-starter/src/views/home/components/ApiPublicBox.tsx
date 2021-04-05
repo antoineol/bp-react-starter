@@ -11,7 +11,7 @@ export const ApiPublicBox: FC = memo(() => {
   const isAliveLoading = useSelector(selectIsAliveLoading);
   const isAliveError = useSelector(selectIsAliveError);
   const dispatch = useDispatch();
-  const handleClick = useCallback(() => dispatch(fetchPublic()), []);
+  const handleClick = useCallback(() => dispatch(fetchPublic()), [dispatch]);
 
   return <>
     <Button

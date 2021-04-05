@@ -38,6 +38,7 @@ render(
         </InitAuth0Provider>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>,
+  </React.StrictMode>
+  ,
   document.getElementById('root'),
 );
