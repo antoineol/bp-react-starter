@@ -24,35 +24,18 @@ type author_aggregate {
 aggregate fields of "author"
 """
 type author_aggregate_fields {
-  count(columns: [author_select_column!], distinct: Boolean): Int
+  count(columns: [author_select_column!], distinct: Boolean): Int!
   max: author_max_fields
   min: author_min_fields
-}
-
-"""
-order by aggregate values of table "author"
-"""
-input author_aggregate_order_by {
-  count: order_by
-  max: author_max_order_by
-  min: author_min_order_by
-}
-
-"""
-input type for inserting array relation for remote table "author"
-"""
-input author_arr_rel_insert_input {
-  data: [author_insert_input!]!
-  on_conflict: author_on_conflict
 }
 
 """
 Boolean expression to filter rows from the table "author". All fields are combined with a logical 'AND'.
 """
 input author_bool_exp {
-  _and: [author_bool_exp]
+  _and: [author_bool_exp!]
   _not: author_bool_exp
-  _or: [author_bool_exp]
+  _or: [author_bool_exp!]
   id: uuid_comparison_exp
   name: String_comparison_exp
 }
@@ -79,14 +62,6 @@ type author_max_fields {
   name: String
 }
 
-"""
-order by max() on columns of table "author"
-"""
-input author_max_order_by {
-  id: order_by
-  name: order_by
-}
-
 """aggregate min on columns"""
 type author_min_fields {
   id: uuid
@@ -94,30 +69,14 @@ type author_min_fields {
 }
 
 """
-order by min() on columns of table "author"
-"""
-input author_min_order_by {
-  id: order_by
-  name: order_by
-}
-
-"""
 response of any mutation on the table "author"
 """
 type author_mutation_response {
-  """number of affected rows by the mutation"""
+  """number of rows affected by the mutation"""
   affected_rows: Int!
 
-  """data of the affected rows by the mutation"""
+  """data from the rows affected by the mutation"""
   returning: [author!]!
-}
-
-"""
-input type for inserting object relation for remote table "author"
-"""
-input author_obj_rel_insert_input {
-  data: author_insert_input!
-  on_conflict: author_on_conflict
 }
 
 """
@@ -129,17 +88,13 @@ input author_on_conflict {
   where: author_bool_exp
 }
 
-"""
-ordering options when selecting data from "author"
-"""
+"""Ordering options when selecting data from "author"."""
 input author_order_by {
   id: order_by
   name: order_by
 }
 
-"""
-primary key columns input for table: "author"
-"""
+"""primary key columns input for table: author"""
 input author_pk_columns_input {
   id: uuid!
 }
@@ -234,26 +189,25 @@ type mutation_root {
 
 """column ordering options"""
 enum order_by {
-  """in the ascending order, nulls last"""
+  """in ascending order, nulls last"""
   asc
 
-  """in the ascending order, nulls first"""
+  """in ascending order, nulls first"""
   asc_nulls_first
 
-  """in the ascending order, nulls last"""
+  """in ascending order, nulls last"""
   asc_nulls_last
 
-  """in the descending order, nulls first"""
+  """in descending order, nulls first"""
   desc
 
-  """in the descending order, nulls first"""
+  """in descending order, nulls first"""
   desc_nulls_first
 
-  """in the descending order, nulls last"""
+  """in descending order, nulls last"""
   desc_nulls_last
 }
 
-"""query root"""
 type query_root {
   """
   fetch data from the table: "author"
@@ -300,27 +254,58 @@ type query_root {
 }
 
 """
-expression to compare columns of type String. All fields are combined with logical 'AND'.
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
 """
 input String_comparison_exp {
   _eq: String
   _gt: String
   _gte: String
+
+  """does the column match the given case-insensitive pattern"""
   _ilike: String
   _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
   _is_null: Boolean
+
+  """does the column match the given pattern"""
   _like: String
   _lt: String
   _lte: String
   _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
   _nilike: String
   _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
   _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
   _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
   _similar: String
 }
 
-"""subscription root"""
 type subscription_root {
   """
   fetch data from the table: "author"
@@ -369,7 +354,7 @@ type subscription_root {
 scalar uuid
 
 """
-expression to compare columns of type uuid. All fields are combined with logical 'AND'.
+Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
 """
 input uuid_comparison_exp {
   _eq: uuid
