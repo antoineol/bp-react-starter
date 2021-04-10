@@ -7,7 +7,7 @@ import { register, unregister } from './serviceWorker';
 // to the default CRA version (it was slightly modified to handle more events).
 
 interface Resolver<T> {
-  (value?: T): void;
+  (value: T | PromiseLike<T>): void;
 }
 
 let resolveUpdateAvailable: Resolver<ServiceWorkerRegistration>;

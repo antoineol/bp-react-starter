@@ -7,8 +7,7 @@ import * as helmet from 'helmet';
 import { AppModule } from './app.module';
 import { CsrfGuard } from './auth/csrf.guard';
 import { appConfig } from './common/app.config';
-import { EntityNotFoundFilter } from './core/exception/entity-not-found.filter';
-import { QueryFailedFilter } from './core/exception/query-failed.filter';
+import { UnknownExceptionFilter } from './core/exception/unknown-exception.filter';
 import { env } from './environment/env';
 import morgan = require('morgan');
 
@@ -50,7 +49,6 @@ export async function initApp(): Promise<INestApplication> {
   // Unless, with realtime, we skip client-side validation...
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useGlobalFilters(new EntityNotFoundFilter());
-  app.useGlobalFilters(new QueryFailedFilter());
+  app.useGlobalFilters(new UnknownExceptionFilter());
   return app;
 }

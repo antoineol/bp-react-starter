@@ -47,9 +47,9 @@ const SelectField: FC<TextFieldProps & ExtraProps> = props => {
       autoHighlight
       onChange={handleChange}
       onKeyDown={onEnterFocusNextField}
-      renderInput={params => (
+      renderInput={({ id: idParam, ...params }) => (
         <TextField
-          id={id || others.name}
+          id={id || idParam || others.name}
           {...others}
           {...params}
           variant="standard"

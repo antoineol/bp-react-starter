@@ -1,4 +1,4 @@
-import { createStyles, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -12,7 +12,7 @@ interface Option {
   value: any;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     margin: theme.spacing(3),
   },

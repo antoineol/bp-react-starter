@@ -2,32 +2,34 @@ version: '3.4'
 
 services:
   db:
-    image: postgres:10.6-alpine
+    image: library/postgres:13.2-alpine
     container_name: starter_db
     env_file: .env
     ports:
       - '5439:5432'
   hasura:
-    image: hasura/graphql-engine:v1.0.0.cli-migrations
+    image: hasura/graphql-engine:v2.0.0-alpha.6.cli-migrations-v2
     container_name: starter_hasura
     ports:
       - '8089:8080'
     depends_on:
       - "db"
     volumes:
-      - ./hasura/migrations:/hasura-migrations
+      - ./db/hasura/migrations:/hasura-migrations
     env_file: .env
-#    restart: on-failure
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+  #    restart: on-failure
   pgadmin:
-    image: dpage/pgadmin4:4.17
+    image: dpage/pgadmin4:5.1
     container_name: starter_pgadmin
     env_file: .env
     ports:
       - "5409:80"
     # Tried to predefine the DB server, which didn't work well on Windows
     # https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
-#    volumes:
-#      - "./utils/pgadmin-servers.json:/servers.json"
+  #    volumes:
+  #      - "./utils/pgadmin-servers.json:/servers.json"
 
 ## It takes too long to compile (more than twice as long), we had better run it on host OS
 ## You would start it with command:

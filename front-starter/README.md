@@ -1,9 +1,5 @@
 Ce projet est basé sur [Create React App](https://facebook.github.io/create-react-app/docs/getting-started) (CRA) et [Material UI](https://material-ui.com/getting-started/installation/) (MUI) dont la lecture de la documentation est fortement recommandée, surtout pour les Tech Leads et Dev Leads.
 
-## Requirements
-
-- [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
-
 ## Usage
 
 Tous exemples sont basés sur yarn, qui est recommandé : `npm install -g yarn`
@@ -26,6 +22,5 @@ Pour mettre à jour les bibliothèques (node modules) : `yarn upgrade-interactiv
 
 ## Améliorations possibles
 
-- Re-enable hmr: appConfig.useHotModuleReplacement
 - Follow-up hasura JWT over cookies instead of headers ([github issue](https://github.com/hasura/graphql-engine/issues/2183), [another issue](https://github.com/hasura/graphql-engine/issues/2205))
 - Use react snapshots or an equivalent

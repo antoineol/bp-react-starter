@@ -2,9 +2,10 @@
 /node_modules
 
 # Env
-/.env.*
+/.env
 
 # Logs
+.log*
 logs
 *.log
 npm-debug.log*

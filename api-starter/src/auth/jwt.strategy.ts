@@ -1,31 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Request } from 'express';
-import { Strategy, StrategyOptions } from 'passport-jwt';
-import { appConfig } from '../common/app.config';
+import { passportJwtSecret } from 'jwks-rsa';
+import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import { env } from '../environment/env';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
+
+const logger = new Logger('jwt.strategy.ts');
+
+if (
+  !env.auth0Domain ||
+  !env.auth0Audience ||
+  env.auth0Audience === 'YOUR_API_IDENTIFIER'
+) {
+  logger.error(
+    'Exiting: Please make sure that auth_config.json is in place and populated with valid domain and audience values',
+  );
+  process.exit();
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: cookieExtractor,
-      // May be replaced with PEM to be safer in production
-      secretOrKey: env.secretKey,
-      issuer: appConfig.jwtIssuer,
-      algorithms: [appConfig.jwtAlgorithm],
-      // passReqToCallback // To add req as first param in validate()
+      secretOrKeyProvider: passportJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `https://${env.auth0Domain}/.well-known/jwks.json`,
+      }),
+
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      audience: env.auth0Audience,
+      issuer: `https://${env.auth0Domain}/`,
+      algorithms: ['RS256'],
     } as StrategyOptions);
   }
 
-  async validate(payload: JwtPayload) {
+  validate(payload: unknown): unknown {
     // token revocation can be checked here.
     return payload;
   }
-}
-
-function cookieExtractor(req: Request): string | null {
-  return req && req.cookies && req.cookies.jwtSignature ?
-    `${req.cookies.jwtHeaderPayload}.${req.cookies.jwtSignature}` : null;
 }

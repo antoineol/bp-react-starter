@@ -4,7 +4,7 @@ import React, { FC, memo } from 'react';
 import { onEnterFocusNextField } from '../../utils/form.utils';
 import { logRenderForPerfInvestigation } from '../../utils/perf.utils';
 
-const AppTextField: FC<TextFieldProps> = props => <FastField name={props.name}>
+export const AppTextField: FC<TextFieldProps> = memo(props => <FastField name={props.name}>
   {({
       field,
       meta: { touched, error },
@@ -28,6 +28,4 @@ const AppTextField: FC<TextFieldProps> = props => <FastField name={props.name}>
       />
     );
   }
-  }</FastField>;
-
-export default memo(AppTextField);
+  }</FastField>);
