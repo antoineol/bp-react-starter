@@ -26,12 +26,10 @@ export function makeYupNumber(fieldConfig: NumberFieldConfig): yup.AnySchema {
 }
 
 export function makeFieldNumber(name: string, fieldConfig: NumberFieldConfig,
-                                register: UseFormRegister<any>,
-                                errors: any): JSX.Element {
+                                register: UseFormRegister<any>): JSX.Element {
   return <TextFieldBase
     key={name}
     name={name}
-    errorMessage={errors[name]?.message}
     register={register}
     label={fieldConfig.label}
     type={'number'}

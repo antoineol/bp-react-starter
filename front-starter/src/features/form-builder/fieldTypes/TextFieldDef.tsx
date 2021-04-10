@@ -26,12 +26,10 @@ export function makeYupText(fieldConfig: TextFieldConfig): yup.AnySchema {
 }
 
 export function makeFieldText(name: string, fieldConfig: TextFieldConfig,
-                              register: UseFormRegister<any>,
-                              errors: any): JSX.Element {
+                              register: UseFormRegister<any>): JSX.Element {
   return <TextFieldBase
     key={name}
     name={name}
-    errorMessage={errors[name]?.message}
     register={register}
     label={fieldConfig.label}
     autoFocus={fieldConfig.autoFocus}

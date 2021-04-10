@@ -2,6 +2,7 @@ import { ApolloClient } from '@apollo/client';
 import { gql } from '@apollo/client/core';
 import { MouseEvent } from 'react';
 import { Author } from '../../../generated/schema';
+import { handleError } from '../../common/services/error.service';
 import { createHasuraSelector } from '../../features/hasura/redux-apollo-slice';
 
 export const AUTHORS_Q = gql`query { author { id, name } }`;
@@ -22,22 +23,30 @@ export interface NewAuthor {
   age: number;
 }
 
-export function addAuthor(client: ApolloClient<any>, values: NewAuthor) {
-  const formName = values.name;
-  const name = formName ? formName : pickRandom(names);
-  const author: Partial<Author> = { name }; // TODO: add age
-  return client.mutate({
-    mutation: ADD_AUTHOR,
-    variables: { object: author },
-  });
+export async function addAuthor(client: ApolloClient<any>, values: NewAuthor) {
+  try {
+    const formName = values.name;
+    const name = formName ? formName : pickRandom(names);
+    const author: Partial<Author> = { name }; // TODO: add age
+    return await client.mutate({
+      mutation: ADD_AUTHOR,
+      variables: { object: author },
+    });
+  } catch (e) {
+    handleError(e);
+  }
 }
 
-export function deleteAuthor(client: ApolloClient<any>, e: MouseEvent<HTMLButtonElement>) {
-  const id = e.currentTarget.dataset.id;
-  return client.mutate({
-    mutation: DELETE_AUTHOR,
-    variables: { id },
-  });
+export async function deleteAuthor(client: ApolloClient<any>, e: MouseEvent<HTMLButtonElement>) {
+  try {
+    const id = e.currentTarget.dataset.id;
+    return await client.mutate({
+      mutation: DELETE_AUTHOR,
+      variables: { id },
+    });
+  } catch (e) {
+    handleError(e);
+  }
 }
 
 const names = ['Parker', 'Stark', 'Herbert', 'Kennedy', 'Hammond', 'Moore', 'Holland'];

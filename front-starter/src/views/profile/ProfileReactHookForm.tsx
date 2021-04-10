@@ -1,10 +1,8 @@
 import { useApolloClient } from '@apollo/client';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, makeStyles, Theme } from '@material-ui/core';
-import React, { FC, memo, useCallback, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import { formConfigToFields, formConfigToYup } from '../../features/form-builder/form-builder';
+import React, { FC, memo, useCallback } from 'react';
 import { FormConfig } from '../../features/form-builder/form-builder.model';
+import { FormBuilder } from '../../features/form-builder/FormBuilder';
 import { addAuthor, NewAuthor } from './profile.service';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,40 +18,43 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const formConfig: FormConfig = {
   name: { type: 'text', label: 'Name', autoFocus: true },
-  job: { type: 'text', label: 'Job' },
+  job: { type: 'text', label: 'Job', max: 3 },
   age: { type: 'number', label: 'Age', min: 10, max: 150, default: 25 },
 };
 
+// Perf test with many fields
+// for (let i = 1; i <= 100; i++) {
+//   formConfig[`age${i}`] = { type: 'number', label: 'Age', min: 10, max: 150, default: 255 };
+// }
+
 export const ProfileReactHookForm: FC = memo(() => {
   const classes = useStyles(); // MUI Styles
+  const formConf = formConfig; // To simulate a dynamic config loaded from an API
 
-  const [schema, defaults] = useMemo(() => formConfigToYup(formConfig), []);
-
-  const { handleSubmit, register, formState: { errors } } = useForm({
-    defaultValues: defaults,
-    resolver: yupResolver(schema),
-    mode: 'onChange',
-    // reValidateMode: 'onChange',
-  });
-
-  // TODO make a useReduxMutation to avoid useless renderings?
+  // TODO make a useReduxMutation to avoid useless renderings when we are not interested in
+  //  loading and errors in the component itself?
   // const [addMutator, { error: errAdd }] = useMutation<Mutation_Root>(ADD_AUTHOR);
   // if (errAdd) {
   //   console.error(errAdd);
   // }
   const client = useApolloClient();
   const onSubmit = useCallback((values: NewAuthor) => addAuthor(client, values), [client]);
-  console.log('errors:', errors);
-  // TODO when a validation disappears on the 2nd component, the first should not re-render.
-  //  Let's see how we can only re-render the components that need to for this case.
 
-  const fields = useMemo(() => formConfigToFields(formConfig, register, errors),
-    [errors, register]);
-
-  return <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
-    {fields}
+  return <FormBuilder formConfig={formConf} onSubmit={onSubmit} className={classes.form}>
     <Button variant="outlined" color="default" type="submit">
       Add author
     </Button>
-  </form>;
+  </FormBuilder>;
 });
+
+// TODO warning from Apollo
+// react_devtools_backend.js:2430 Cache data may be lost when replacing the author field of a
+// Subscription object.  To address this problem (which is not a bug in Apollo Client), define a
+// custom merge function for the Subscription.author field, so InMemoryCache can safely merge these
+// objects:  existing:
+// [{"__ref":"author:0618b680-006f-4654-b2ed-7df3a4fc1c47"},{"__ref":"author:ea8268de-8b03-4b8f-b338-e3d9b23543fa"},{"__ref":"author:c599d264-61dc-457f-9e2f-35b79ddc2cb9"},{"__ref":"author:40e3542d-4720-459a-8e20-31a118da4c59"},{"__ref":"author:520a98d4-db4c-4932-8a2f-ae5b6747ca7b"}]
+// incoming:
+// [{"__ref":"author:0618b680-006f-4654-b2ed-7df3a4fc1c47"},{"__ref":"author:ea8268de-8b03-4b8f-b338-e3d9b23543fa"},{"__ref":"author:c599d264-61dc-457f-9e2f-35b79ddc2cb9"},{"__ref":"author:520a98d4-db4c-4932-8a2f-ae5b6747ca7b"}]
+// For more information about these options, please refer to the documentation:  * Ensuring entity
+// objects have IDs: https://go.apollo.dev/c/generating-unique-identifiers * Defining custom merge
+// functions: https://go.apollo.dev/c/merging-non-normalized-objects
