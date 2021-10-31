@@ -1,4 +1,4 @@
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
+import { ThemeOptions } from '@material-ui/core';
 // Use a different typeface font if you want your bundle to include a different font.
 // You can then refer to this fond directly in CSS.
 // Example:

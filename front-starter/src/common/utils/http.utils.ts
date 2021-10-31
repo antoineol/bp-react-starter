@@ -1,40 +1,40 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react';
-import { env } from '../../environment/env';
-import { getToken } from '../../features/auth/get-auth0-token';
-import { appConfig } from '../app.config';
-import { wait } from './app.utils';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
+import { env } from "../../environment/env";
+import { getToken } from "../../features/auth/get-auth0-token";
+import { appConfig } from "../app.config";
+import { wait } from "./app.utils";
 
-export function useApiGet<T>(url: string,
-                             config?: AxiosRequestConfig) {
+export interface ApiRequestConfig extends AxiosRequestConfig {
+  noRetry?: boolean;
+  isPublic?: boolean;
+}
+
+export function useApiGet<T>(url: string, config?: ApiRequestConfig) {
   const [{ loading, data, error }, setState] = useState<{
     loading: boolean;
     data?: T;
     error?: any;
-  }>(
-    { loading: true, data: undefined, error: undefined });
+  }>({ loading: true, data: undefined, error: undefined });
   useEffect(() => {
     apiGet<T>(url, config)
-      .then(data => setState({ loading: false, data, error: undefined }))
-      .catch(error => setState({ loading: false, data: undefined, error }));
+      .then((data) => setState({ loading: false, data, error: undefined }))
+      .catch((error) => setState({ loading: false, data: undefined, error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { loading, data, error };
 }
 
-export function useApiPost<T>(url: string,
-                              body?: any,
-                              config?: AxiosRequestConfig) {
+export function useApiPost<T>(url: string, body?: any, config?: ApiRequestConfig) {
   const [{ loading, error, data }, setState] = useState<{
     loading: boolean;
     error?: any;
     data?: T;
-  }>(
-    { loading: true, error: undefined, data: undefined });
+  }>({ loading: true, error: undefined, data: undefined });
   useEffect(() => {
     apiPost<T>(url, body, config)
-      .then(data => setState({ loading: false, error: undefined, data }))
-      .catch(error => setState({ loading: false, error, data: undefined }));
+      .then((data) => setState({ loading: false, error: undefined, data }))
+      .catch((error) => setState({ loading: false, error, data: undefined }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { loading, error, data };
@@ -46,11 +46,11 @@ export function useApiPost<T>(url: string,
  * @param config eventual Axios config, e.g. to add custom HTTP headers
  */
 export async function apiGet<T>(url: string,
-                                config?: AxiosRequestConfig): Promise<T> {
-  if (!url.startsWith('/')) {
+                                config?: ApiRequestConfig): Promise<T> {
+  if (!url.startsWith("/")) {
     url = `/${url}`;
   }
-  return httpGet(`${env.apiPath}${url}`, config);
+  return httpGet(`${env.apiP"/"}${url}`, config);
 }
 
 /**
@@ -60,33 +60,34 @@ export async function apiGet<T>(url: string,
  * @param config eventual Axios config, e.g. to add custom HTTP headers
  */
 export async function apiPost<T>(url: string, body?: any,
-                                 config?: AxiosRequestConfig): Promise<T> {
-  if (!url.startsWith('/')) {
+                                 config?: ApiRequestConfig): Promise<T> {
+  if (!url.startsWith("/")) {
     url = `/${url}`;
   }
   return httpPost(`${env.apiPath}${url}`, body, config);
 }
 
 export async function httpGet<T>(url: string,
-                                 config?: AxiosRequestConfig): Promise<T> {
+                                 config?: ApiRequestConfig): Promise<T> {
   return httpReq(config, url, config => axios.get<T>(url, config));
 }
 
 export async function httpPost<T>(url: string, body?: any,
-                                  config?: AxiosRequestConfig): Promise<T> {
+                                  config?: ApiRequestConfig): Promise<T> {
   return httpReq(config, url, config => axios.post<T>(url, body, config));
 }
 
-async function httpReq<T>(config: AxiosRequestConfig | undefined,
+async function httpReq<T>(config: ApiRequestConfig | undefined,
                           url: string,
                           sendRequest: (config: AxiosRequestConfig) => Promise<AxiosResponse<T>>): Promise<T> {
-  const conf = await extendConfig(config);
+  const { noRetry, ...config2 } = config || {};
+  const conf = await extendConfig(config2);
   let resp: AxiosResponse<T> | undefined;
   try {
     resp = await sendRequest(conf);
-  } catch (e) {
+  } catch (e: any) {
     const err: AxiosError = e;
-    if (!err || !err.isAxiosError || !err.response) {
+    if (noRetry || !err || !err.isAxiosError || !err.response) {
       throw err;
     }
     // Retry
@@ -113,19 +114,19 @@ async function httpReq<T>(config: AxiosRequestConfig | undefined,
 const requiredHeaders = { 'X-Requested-By': appConfig.appName };
 export const defaultOptions = { headers: requiredHeaders, withCredentials: appConfig.allowCorsApi }; // Useful for tests
 
-async function extendConfig(config: AxiosRequestConfig | undefined) {
+async function extendConfig(config: ApiRequestConfig | undefined) {
   // For security, it is recommended to rely on secured cookies: keep the JWT
   // in 2 cookies (1 normal with header + payload, 1 httpOnly with signature). The server
   // concatenates the 2 cookie values to rebuild the full JWT. Server-side logout removes the 2
   // cookies, client-side logout removes the public cookie only.
-  const { headers, ...otherConf } = config || {} as AxiosRequestConfig;
+  const { headers, isPublic, ...otherConf } = config || {} as ApiRequestConfig;
   return {
     ...otherConf,
-    ...(!appConfig.useJwtInHeader && { withCredentials: appConfig.allowCorsApi }),
+    ...(!isPublic && !appConfig.useJwtInHeader && { withCredentials: appConfig.allowCorsApi }),
     headers: {
-      ...(appConfig.useJwtInHeader && { Authorization: `Bearer ${await getToken()}` }),
+      ...(!isPublic && appConfig.useJwtInHeader && { Authorization: `Bearer ${await getToken()}` }),
       ...headers,
-      ...requiredHeaders,
-    },
+      ...requiredHeaders
+    }
   };
 }

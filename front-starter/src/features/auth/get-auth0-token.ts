@@ -32,7 +32,7 @@ async function _getToken(force = false) {
 
   try {
     return await getAccessTokenSilently({ ignoreCache: force });
-  } catch (e) {
+  } catch (e: any) {
     if (e?.error === 'consent_required') {
       return await getAccessTokenWithPopup();
     } else if (e?.error === 'login_required') {

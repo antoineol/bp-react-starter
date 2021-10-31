@@ -1,5 +1,9 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { createMuiTheme, CssBaseline, responsiveFontSizes } from '@material-ui/core';
+import {
+  createTheme,
+  CssBaseline,
+  responsiveFontSizes,
+} from '@material-ui/core';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
@@ -14,8 +18,7 @@ import { InitApolloProvider } from './features/hasura/init-hasura';
 import { Home } from './views/home/Home';
 import { Profile } from './views/profile/Profile';
 
-
-const muiTheme = responsiveFontSizes(createMuiTheme(appTheme));
+const muiTheme = responsiveFontSizes(createTheme(appTheme));
 
 interface Props {
 }

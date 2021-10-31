@@ -7,12 +7,12 @@
   },
   "scripts": {
     "________________ development ________________": "",
-    "install:all": "yarn && yarn install:rr && yarn install:smart",
+    "install:all": "yarn && yarn install:api && yarn install:front",
     "start": "npm-run-all --parallel up start:front start:api",
     "console": "yarn hasura console",
     "test": "react-scripts test",
     "upgr": "yarn upgrade-interactive --latest",
-    "up": "docker-compose up -d db && docker-compose up -d",
+    "up": "docker-compose up -d",
     "stop": "docker-compose stop",
     "fixtime": "sudo ntpdate -sb time.nist.gov",
     "________________ deployment ________________": "",
@@ -29,7 +29,7 @@
     "hasura:server": "hasura --project db/hasura --skip-update-check"
   },
   "devDependencies": {
-    "hasura-cli": "2.0.0-alpha.7",
+    "hasura-cli": "2.0.9",
     "npm-run-all": "^4.1.5"
   }
 }

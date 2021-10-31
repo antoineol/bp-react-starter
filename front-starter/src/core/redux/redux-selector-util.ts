@@ -1,20 +1,17 @@
 import { createSelector, OutputSelector } from 'reselect';
-import { AppStateModel } from './redux.store';
+import { RootState } from './redux.store';
 
-export type SelectorReturnType<T extends keyof AppStateModel, R> =
-  OutputSelector<AppStateModel, R, (res: AppStateModel[T]) => R>;
+export type SelectorReturnType<T extends keyof RootState, R> = OutputSelector<
+  RootState,
+  R,
+  (res: RootState[T]) => R
+>;
 
-export function createAppSelector<T extends keyof AppStateModel, TransfoRes>
-(reducerKey: T, selector: (value: AppStateModel[T]) => TransfoRes):
-  SelectorReturnType<T, TransfoRes> {
-  return createSelector(
-    (state: AppStateModel) => state[reducerKey],
-    // createRootSelector(reducerKey),
-    // state => {
-    //   let value: AppStateModel[T] | TransfoRes = state;
-    //   value = selector(value) as TransfoRes;
-    //   return value;
-    // },
-    selector,
-  );
+// Is it worth it? Now we use redux toolkit, the syntax is much simpler.
+// It's not even sure perf are better with this wrapper. So should we drop it?
+export function createAppSelector<T extends keyof RootState, TransfoRes>(
+  reducerKey: T,
+  selector: (value: RootState[T]) => TransfoRes
+): SelectorReturnType<T, TransfoRes> {
+  return createSelector((state: RootState) => state[reducerKey], selector);
 }

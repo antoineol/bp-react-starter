@@ -2,29 +2,29 @@ table:
   name: author
   schema: public
 insert_permissions:
-  - permission:
-      backend_only: false
-      check: { }
-      columns:
-        - id
-        - name
-    role: team@earlymetrics.com
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+  role: team@earlymetrics.com
 select_permissions:
-  - permission:
-      columns:
-        - name
-        - id
-      filter: { }
-    role: team@earlymetrics.com
+- permission:
+    columns:
+    - name
+    - id
+    filter: {}
+  role: team@earlymetrics.com
 update_permissions:
-  - permission:
-      check: { }
-      columns:
-        - name
-        - id
-      filter: { }
-    role: team@earlymetrics.com
+- permission:
+    check: {}
+    columns:
+    - name
+    - id
+    filter: {}
+  role: team@earlymetrics.com
 delete_permissions:
-  - permission:
-      filter: { }
-    role: team@earlymetrics.com
+- permission:
+    filter: {}
+  role: team@earlymetrics.com

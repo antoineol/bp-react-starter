@@ -8,7 +8,9 @@ services:
     ports:
       - '5439:5432'
   hasura:
-    image: hasura/graphql-engine:v2.0.0-alpha.7.cli-migrations-v3
+    # When updating the image version here, also update in db/hasura/Dockerfile (for deployed
+    # version) and the package hasura-cli in package.json.
+    image: hasura/graphql-engine:v2.0.10.cli-migrations-v3
     container_name: starter_hasura
     ports:
       - '8089:8080'
@@ -19,11 +21,17 @@ services:
     env_file: .env
     environment:
       HASURA_GRAPHQL_DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: anonymous
+      HASURA_GRAPHQL_NO_OF_RETRIES: 1000
+      HASURA_GRAPHQL_JWT_SECRET: "{\"jwk_url\": \"https://${REACT_APP_AUTH0_DOMAIN}/.well-known/jwks.json\", \"type\": \"RS256\", \"audience\": \"${REACT_APP_AUTH0_AUDIENCE}\", \"issuer\": \"https://${REACT_APP_AUTH0_DOMAIN}/\"}"
   #    restart: on-failure
   pgadmin:
     image: dpage/pgadmin4:5.1
     container_name: starter_pgadmin
     env_file: .env
+    depends_on:
+      - "em-db"
     ports:
       - "5409:80"
     # Tried to predefine the DB server, which didn't work well on Windows

@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
-import { Mutation_Root } from '../../../generated/schema';
-import { handleError } from '../services/error.service';
+import { useCallback } from "react";
+import { Mutation_Root } from "../../../generated/schema";
+import { handleError } from "../services/error.service";
 
 /**
  * Use it to wrap functions, e.g. components handlers to add loading and error
@@ -22,7 +22,7 @@ export function useAsyncHandler(
     if (setLoading) setLoading(true);
     try {
       return await handler(...args);
-    } catch (e) {
+    } catch (e: any) {
       handleError(e);
       if (setError && (!e || e.message !== 'CANCELED')) setError(e);
     } finally {
