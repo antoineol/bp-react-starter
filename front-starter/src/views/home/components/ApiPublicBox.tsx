@@ -1,10 +1,15 @@
-import { Button, CircularProgress } from "@material-ui/core";
-import React, { FC, memo, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import ErrorComp from "../../../common/components/ErrorComp";
-import { fetchIsAlive, selectIsAlive, selectIsAliveError, selectIsAliveLoading } from "../api.redux";
-import { useHomeStyles } from "../home-css";
-import { useAppSelector } from "../../../core/redux/hooks";
+import { Button, CircularProgress } from '@material-ui/core';
+import React, { FC, memo, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import ErrorComp from '../../../common/components/ErrorComp';
+import { useAppSelector } from '../../../core/redux/hooks';
+import {
+  fetchIsAlive,
+  selectIsAlive,
+  selectIsAliveError,
+  selectIsAliveLoading,
+} from '../api.redux';
+import { useHomeStyles } from '../home-css';
 
 export const ApiPublicBox: FC = memo(() => {
   const classes = useHomeStyles(); // MUI Styles
@@ -17,29 +22,20 @@ export const ApiPublicBox: FC = memo(() => {
   return (
     <>
       <Button
-        variant="outlined"'}
-        color="primary"'}
-className = { classes.incrButton };
-disabled = { isAliveLoading };
-onClick = { handleClick }
-  >
-  Fetch;
-API;
-public
-route;
-{
-  isAliveLoading && (
-    <CircularProgress className={classes.loader} size={20} />
+        variant={'outlined'}
+        color={'primary'}
+        className={classes.incrButton}
+        disabled={isAliveLoading}
+        onClick={handleClick}
+      >
+        Fetch API public route
+        {isAliveLoading && (
+          <CircularProgress className={classes.loader} size={20} />
+        )}
+      </Button>
+      {isAlive != null &&
+        (isAlive ? <>API is alive.</> : <>API is not alive.</>)}
+      <ErrorComp error={isAliveError} />
+    </>
   );
-}
-</Button>
-{
-  isAlive != null &&
-  (isAlive ? <>API is alive.</> : <>API is not alive.</>);
-}
-<ErrorComp error={isAliveError} />;
-</>
-)
-;
-})
-;
+});

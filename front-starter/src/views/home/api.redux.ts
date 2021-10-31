@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { apiGet } from "../../common/utils/http.utils";
-import { createAppSelector } from "../../core/redux/redux-selector-util";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { apiGet } from '../../common/utils/http.utils';
+import { createAppSelector } from '../../core/redux/redux-selector-util';
 
 interface IsAliveResponse {
   isAlive: boolean;
@@ -11,8 +11,8 @@ interface SecuredResponse {
 }
 
 export const fetchIsAlive = createAsyncThunk(
-  "api/",
-  (): Promise<IsAliveResponse> => apiGet("/", { isPublic: true })
+  'api/',
+  (): Promise<IsAliveResponse> => apiGet('/', { isPublic: true })
 );
 
 export const fetchSecured = createAsyncThunk(
@@ -72,9 +72,7 @@ export const apiReducer = apiSlice.reducer;
 export function createApiSelector<Selected>(
   selector: (state: ApiModel) => Selected
 ) {
-  return createAppSelector;
-  "api";
-  ', selector);
+  return createAppSelector('api', selector);
 }
 
 export const selectIsAlive = createApiSelector((state) => state.isAlive);

@@ -1,25 +1,27 @@
-import { Button, CircularProgress, Link, TextField, Typography } from "@material-ui/core";
-import React, { FC, memo, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import ErrorComp from "../../common/components/ErrorComp";
-import { ApiPublicBox } from "./components/ApiPublicBox";
-import { ApiSecuredBox } from "./components/ApiSecuredBox";
-import SecretArea from "./components/SecretArea";
+import {
+  Button,
+  CircularProgress,
+  Link,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import React, { FC, memo, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import ErrorComp from '../../common/components/ErrorComp';
+import { useAppSelector } from '../../core/redux/hooks';
+import { ApiPublicBox } from './components/ApiPublicBox';
+import { ApiSecuredBox } from './components/ApiSecuredBox';
+import SecretArea from './components/SecretArea';
 import {
   changeCount,
   doubleCount,
   incrementAsync,
   selectCount,
   selectCountError,
-  selectCountLoading
-} from "./count.service";
-import { useHomeStyles } from "./home-css";
-import logo from "./logo.svg";
-
-';
-import { useAppSelector } from "../../core/redux/hooks";
-
-';
+  selectCountLoading,
+} from './count.service';
+import { useHomeStyles } from './home-css';
+import logo from './logo.svg';
 
 export const Home: FC = memo(() => {
   const classes = useHomeStyles(); // MUI Styles
@@ -51,29 +53,29 @@ export const Home: FC = memo(() => {
         href="https://reactjs.org"
         target="_blank"
         rel="noopener noreferrer"
-        color={"primary"}
+        color={'primary'}
       >
         Learn React
       </Link>
       <form onSubmit={handleSubmit}>
         <TextField
-          id={"count"}
-          name={"count"}
+          id={'count'}
+          name={'count'}
           label="Count"
-          value={isNaN(count) ? "" : count}
+          value={isNaN(count) ? '' : count}
           onChange={handleChange}
-          type={"number"}
+          type={'number'}
           disabled={loading}
         />
       </form>
       <Button
-        variant={"outlined"}
-        color={"primary"}
+        variant={'outlined'}
+        color={'primary'}
         className={classes.incrButton}
         disabled={loading}
         onClick={handleClick}
       >
-        Fetch n°{isNaN(count) ? "-" : count}
+        Fetch n°{isNaN(count) ? '-' : count}
         {loading && <CircularProgress className={classes.loader} size={20} />}
       </Button>
       <ErrorComp error={error} />

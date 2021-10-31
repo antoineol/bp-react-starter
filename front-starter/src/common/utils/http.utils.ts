@@ -1,9 +1,9 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import { env } from "../../environment/env";
-import { getToken } from "../../features/auth/get-auth0-token";
-import { appConfig } from "../app.config";
-import { wait } from "./app.utils";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useEffect, useState } from 'react';
+import { env } from '../../environment/env';
+import { getToken } from '../../features/auth/get-auth0-token';
+import { appConfig } from '../app.config';
+import { wait } from './app.utils';
 
 export interface ApiRequestConfig extends AxiosRequestConfig {
   noRetry?: boolean;
@@ -50,7 +50,7 @@ export async function apiGet<T>(url: string,
   if (!url.startsWith("/")) {
     url = `/${url}`;
   }
-  return httpGet(`${env.apiP"/"}${url}`, config);
+  return httpGet(`${env.apiPath}${url}`, config);
 }
 
 /**

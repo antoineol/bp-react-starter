@@ -4,7 +4,7 @@ import {
   CssBaseline,
   responsiveFontSizes,
 } from '@material-ui/core';
-import { MuiThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { FC, memo } from 'react';
 import { Route, Switch } from 'react-router';
@@ -26,7 +26,7 @@ interface Props {
 export const App: FC<Props> = memo(() => {
   return (
     // Initializes the theme for child components
-    <MuiThemeProvider theme={muiTheme}>
+    <ThemeProvider theme={muiTheme}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         {/* A few CSS defaults provided by Material UI */}
         <CssBaseline />
@@ -45,6 +45,6 @@ export const App: FC<Props> = memo(() => {
           </Layout>
         </InitApolloProvider>
       </MuiPickersUtilsProvider>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 });
