@@ -8,12 +8,12 @@ export const foo = true;
 //   Theme,
 //   Tooltip,
 //   TooltipProps,
-// } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
-// import ControlPointIcon from '@material-ui/icons/ControlPoint';
-// import OfflinePinIcon from '@material-ui/icons/OfflinePin';
-// import SignalWifiOffIcon from '@material-ui/icons/SignalWifiOff';
-// import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+// } from '@mui/material';
+// import { makeStyles } from '@mui/material/styles';
+// import ControlPointIcon from '@mui/icons-material/ControlPoint';
+// import OfflinePinIcon from '@mui/icons-material/OfflinePin';
+// import SignalWifiOffIcon from '@mui/icons-material/SignalWifiOff';
+// import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 // import React, { FC, memo, ReactNode, useCallback, useEffect, useState } from 'react';
 // import { useSelector } from 'react-redux';
 // import { getWsConnectionStatus, WsConnectionStatus } from '../../common/graphql.client';

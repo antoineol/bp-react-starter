@@ -1,6 +1,7 @@
 import { useApolloClient } from '@apollo/client';
-import { IconButton, makeStyles, Theme } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { FC, memo, useCallback } from 'react';
 import { Subscription_Root } from '../../../generated/schema';
 import { Loading } from '../../common/components/Loading';
@@ -14,46 +15,58 @@ import {
 } from './profile.service';
 import { ProfileReactHookForm } from './ProfileReactHookForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+const PREFIX = 'Profile';
+
+const classes = {
+  root: `${PREFIX}-root`,
+};
+
+const Root = styled('div')(({ theme }) => ({
+  [`&.${classes.root}`]: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'start',
+    alignItems: 'center',
     padding: theme.spacing(2),
   },
 }));
 
 export const Profile: FC = memo(() => {
-  const classes = useStyles(); // MUI Styles
   useReduxSub<Subscription_Root>(AUTHORS_SUB);
   const loading = useAppSelector(selectAuthorsLoading);
   const authors = useAppSelector(selectAuthors);
   const client = useApolloClient();
-  const handleDelete = useCallback((e) => deleteAuthor(client, e), [client]);
+  const handleDelete = useCallback(e => deleteAuthor(client, e), [client]);
 
   return (
-    <div className={classes.root}>
+    <Root className={classes.root}>
       <ProfileReactHookForm />
       {loading ? (
         <Loading />
       ) : (
         <>
           <ul>
-            {authors?.map((author) => (
+            {authors?.map(author => (
               <li key={author.id}>
                 {author.name}{' '}
                 <IconButton
-                  aria-label="delete"
+                  aria-label='delete'
                   data-id={author.id}
                   onClick={handleDelete}
+                  size='large'
                 >
                   <DeleteIcon />
                 </IconButton>
               </li>
             ))}
           </ul>
+          {!authors?.length && (
+            <>
+              <p>No author in the list yet. You can start adding some.</p>
+              <p>Leave the name empty to get a random one.</p>
+            </>
+          )}
         </>
       )}
-    </div>
+    </Root>
   );
 });

@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
 import React, { FC, memo } from 'react';
 import { useWatchErrors } from '../../../features/form-builder/WatchErrors';
 import { onEnterFocusNextField } from '../../utils/form.utils';

@@ -1,38 +1,28 @@
-import { Button, CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import React, { FC, memo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import ErrorComp from '../../../common/components/ErrorComp';
+import { useAppDispatch, useAppSelector } from '../../../core/redux/hooks';
 import {
   fetchSecured,
   selectSecured,
   selectSecuredError,
   selectSecuredLoading,
 } from '../api.redux';
-import { useHomeStyles } from '../home-css';
-import { useAppSelector } from '../../../core/redux/hooks';
+import { IncrButton } from '../home-css';
 
 export const ApiSecuredBox: FC = memo(() => {
-  const classes = useHomeStyles(); // MUI Styles
   const secured = useAppSelector(selectSecured);
   const securedLoading = useAppSelector(selectSecuredLoading);
   const securedError = useAppSelector(selectSecuredError);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleClick = useCallback(() => dispatch(fetchSecured()), [dispatch]);
 
   return (
     <>
-      <Button
-        variant={'outlined'}
-        color={'primary'}
-        className={classes.incrButton}
-        disabled={securedLoading}
-        onClick={handleClick}
-      >
+      <IncrButton disabled={securedLoading} onClick={handleClick}>
         Fetch API secured route
-        {securedLoading && (
-          <CircularProgress className={classes.loader} size={20} />
-        )}
-      </Button>
+        {securedLoading && <CircularProgress size={20} />}
+      </IncrButton>
       {secured != null &&
         (secured ? (
           <>API secured route fetched successfully.</>

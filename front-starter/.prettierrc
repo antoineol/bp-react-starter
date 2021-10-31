@@ -1,6 +1,9 @@
 {
   "singleQuote": true,
-  "trailingComma": "es5",
-  "endOfLine": "lf",
-  "proseWrap": "always"
+  "trailingComma": "all",
+  "proseWrap": "always",
+  "jsxSingleQuote": true,
+  "tabWidth": 2,
+  "arrowParens": "avoid",
+  "bracketSpacing": true
 }

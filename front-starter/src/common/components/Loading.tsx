@@ -1,31 +1,38 @@
-import { CircularProgress, makeStyles, Theme } from '@material-ui/core';
-import { CircularProgressProps } from '@material-ui/core/CircularProgress/CircularProgress';
+import { CircularProgress } from '@mui/material';
+import { CircularProgressProps } from '@mui/material/CircularProgress/CircularProgress';
+import { styled } from '@mui/material/styles';
 import React, { FC, memo } from 'react';
+
+const PREFIX = 'Loading';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  withSpace: `${PREFIX}-withSpace`,
+};
+
+const Root = styled('div')(({ theme }) => ({
+  [`& .${classes.root}`]: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
+  [`& .${classes.withSpace}`]: {
+    marginTop: theme.spacing(4),
+  },
+}));
 
 interface Props extends CircularProgressProps {
   inline?: boolean;
   medium?: boolean;
 }
 
-// An issue with TypeScript prevents CSS properties auto-completion. We can
-// hope to have a fix in TypeScript 3.3. Issues to follow up:
-// https://github.com/Microsoft/TypeScript/issues/22077
-// https://github.com/mui-org/material-ui/issues/11693
-// A workaround to have auto-completion is to set CSSProperties type to class values as below.
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'center',
+export const Loading: FC<Props> = memo(
+  ({ inline, medium, className, ...others }) => {
+    const classBlock = !inline ? classes.withSpace : undefined;
+    return (
+      <Root className={`${classes.root} ${classBlock} ${className}`}>
+        <CircularProgress size={medium ? 30 : undefined} {...others} />
+      </Root>
+    );
   },
-  withSpace: {
-    marginTop: theme.spacing(4),
-  },
-}));
-
-export const Loading: FC<Props> = memo(({ inline, medium, className, ...others }) => {
-  const classes = useStyles(); // MUI Styles
-  const classBlock = !inline ? classes.withSpace : undefined;
-  return <div className={`${classes.root} ${classBlock} ${className}`}><CircularProgress
-    size={medium ? 30 : undefined} {...others} />
-  </div>;
-});
+);

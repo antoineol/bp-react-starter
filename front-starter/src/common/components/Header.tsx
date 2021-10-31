@@ -1,5 +1,15 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { AppBar, Avatar, ButtonBaseProps, makeStyles, Tab, Tabs, Theme } from '@material-ui/core';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  ButtonBaseProps,
+  buttonClasses,
+  Stack,
+  Tab,
+  Tabs,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { FC, memo } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -7,26 +17,6 @@ import { Auth0User } from '../../features/auth/auth.models';
 import { SignInButton } from '../../features/auth/SignInButton';
 import { SignOutButton } from '../../features/auth/SignOutButton2';
 import { Loading } from './Loading';
-// import ConnectionStatus from '../../features/pwa/ConnectionStatus';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  appBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'space-between',
-  },
-  tabs: {
-    flexGrow: 1,
-  },
-  loader: {
-    marginRight: theme.spacing(1),
-      overflow: 'hidden',
-    },
-    headerElements: {
-      margin: theme.spacing(1),
-    },
-  }),
-);
 
 interface Page {
   path: string;
@@ -44,38 +34,55 @@ interface LinkTabProps extends ButtonBaseProps {
 }
 
 function LinkTab(props: LinkTabProps) {
-  return <Tab component={Link}{...(props as any)} />;
+  return <Tab component={Link} {...(props as any)} />;
 }
 
+export const AppBarStyled = styled(AppBar)(({ theme }) => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  [`& .${buttonClasses.root}`]: {
+    margin: theme.spacing(0, 1),
+  },
+}));
+
 export const Header: FC = memo(() => {
-  const classes = useStyles(); // MUI Styles
   const { pathname } = useLocation();
 
   return (
-    <AppBar position="static" classes={{ root: classes.appBar }} data-testid={'header'}>
-      <Tabs value={pathname} classes={{ root: classes.tabs }}>
-        {pages.map(p => <LinkTab key={p.path} label={p.label} to={p.path} value={p.path} />)}
+    <AppBarStyled position='static' data-testid={'header'}>
+      <Tabs value={pathname} sx={{ flexGrow: 1 }}>
+        {pages.map(p => (
+          <LinkTab key={p.path} label={p.label} to={p.path} value={p.path} />
+        ))}
       </Tabs>
-      {/*<ConnectionStatus />*/}
-      <UserAvatar />
-      <SignInButton className={classes.headerElements} />
-      <SignOutButton className={classes.headerElements} />
-    </AppBar>
+      <Stack direction={'row'}>
+        {/*<ConnectionStatus />*/}
+        <UserAvatar />
+        <SignInButton />
+        <SignOutButton />
+      </Stack>
+    </AppBarStyled>
   );
 });
 
-
 const UserAvatar: FC = memo(() => {
-  const classes = useStyles(); // MUI Styles
   const { isLoading, isAuthenticated, user } = useAuth0();
-  if (isLoading) return <Loading inline color={'inherit'} className={classes.loader} />;
+  if (isLoading)
+    return (
+      <Loading
+        inline
+        color={'inherit'}
+        sx={{ marginRight: 1, overflow: 'hidden' }}
+      />
+    );
   if (!isAuthenticated) return null;
   const { name, picture } = user as Auth0User;
 
-  return <>
-    <div className={classes.headerElements}>
-      {name}
-    </div>
-    <Avatar src={picture} />
-  </>;
+  return (
+    <>
+      <Box sx={{ margin: 1 }}>{name}</Box>
+      <Avatar src={picture} />
+    </>
+  );
 });

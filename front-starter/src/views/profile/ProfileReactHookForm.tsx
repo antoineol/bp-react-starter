@@ -1,12 +1,19 @@
 import { useApolloClient } from '@apollo/client';
-import { Button, makeStyles, Theme } from '@material-ui/core';
+import { Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { FC, memo, useCallback } from 'react';
 import { FormConfig } from '../../features/form-builder/form-builder.model';
 import { FormBuilder } from '../../features/form-builder/FormBuilder';
 import { addAuthor, NewAuthor } from './profile.service';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  form: {
+const PREFIX = 'ProfileReactHookForm';
+
+const classes = {
+  form: `${PREFIX}-form`,
+};
+
+const StyledFormBuilder = styled(FormBuilder)(({ theme }) => ({
+  [`&.${classes.form}`]: {
     display: 'flex',
     flexDirection: 'column',
     '& > *': {
@@ -28,7 +35,6 @@ const formConfig: FormConfig = {
 // }
 
 export const ProfileReactHookForm: FC = memo(() => {
-  const classes = useStyles(); // MUI Styles
   const formConf = formConfig; // To simulate a dynamic config loaded from an API
 
   // TODO make a useReduxMutation to avoid useless renderings when we are not interested in
@@ -38,13 +44,22 @@ export const ProfileReactHookForm: FC = memo(() => {
   //   console.error(errAdd);
   // }
   const client = useApolloClient();
-  const onSubmit = useCallback((values: NewAuthor) => addAuthor(client, values), [client]);
+  const onSubmit = useCallback(
+    (values: NewAuthor) => addAuthor(client, values),
+    [client],
+  );
 
-  return <FormBuilder formConfig={formConf} onSubmit={onSubmit} className={classes.form}>
-    <Button variant="outlined" color="default" type="submit">
-      Add author
-    </Button>
-  </FormBuilder>;
+  return (
+    <StyledFormBuilder
+      formConfig={formConf}
+      onSubmit={onSubmit}
+      className={classes.form}
+    >
+      <Button variant='outlined' type='submit'>
+        Add author
+      </Button>
+    </StyledFormBuilder>
+  );
 });
 
 // TODO warning from Apollo

@@ -1,14 +1,10 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button } from '@material-ui/core';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { Button } from '@mui/material';
 import React, { FC, memo } from 'react';
 
 export const SignInButton: FC<{ className?: string }> = memo(props => {
-  const {
-    isLoading,
-    isAuthenticated,
-    loginWithRedirect,
-  } = useAuth0();
+  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
 
   // loginWithPopup blocks loading. The app has no way to know when the popup is closed.
   // So we favor loginWithRedirect here.
@@ -25,16 +21,18 @@ export const SignInButton: FC<{ className?: string }> = memo(props => {
   if (isAuthenticated) {
     return null;
   }
-  return <>
-    <Button
-      variant="outlined"
-      size={'medium'}
-      disabled={isLoading}
-      startIcon={<VpnKeyIcon />}
-      onClick={loginWithRedirect}
-      {...props}
-    >
-      Sign in
-    </Button>
-  </>;
+  return (
+    <>
+      <Button
+        variant='outlined'
+        size={'medium'}
+        disabled={isLoading}
+        startIcon={<VpnKeyIcon />}
+        onClick={loginWithRedirect}
+        {...props}
+      >
+        Sign in
+      </Button>
+    </>
+  );
 });
