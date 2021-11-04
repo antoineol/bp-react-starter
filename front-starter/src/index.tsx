@@ -14,7 +14,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { handleError } from './common/services/error.service';
 import { initAppServices } from './core/app.init';
-import { store } from './core/redux/redux.store';
+import { store } from './core/redux/store';
 import { Auth0SetMethods } from './features/auth/get-auth0-token';
 import { InitAuth0Provider } from './features/auth/init-auth';
 
@@ -34,7 +34,6 @@ render(
         </InitAuth0Provider>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
-  ,
+  </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -1,5 +1,5 @@
 import { AnyAction, configureStore } from '@reduxjs/toolkit';
-import { RootState } from './redux.store';
+import { RootState } from './store';
 
 // Wrapper to specify the type parameter of configureStore in below typing.
 const csForType = (options: any) => configureStore<RootState>(options);

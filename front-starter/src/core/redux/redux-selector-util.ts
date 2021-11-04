@@ -1,5 +1,5 @@
 import { createSelector, OutputSelector } from 'reselect';
-import { RootState } from './redux.store';
+import { RootState } from './store';
 
 export type SelectorReturnType<T extends keyof RootState, R> = OutputSelector<
   RootState,

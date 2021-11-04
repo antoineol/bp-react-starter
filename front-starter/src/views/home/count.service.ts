@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppThunk, RootState } from '../../core/redux/redux.store';
 import { wait } from '../../common/utils/app.utils';
+import { AppThunk, RootState } from '../../core/redux/store';
 
 interface CountState {
   value: number;
@@ -85,4 +85,5 @@ export const incrementIfOdd = (amount: number): AppThunk => (
   }
 };
 
+// To add to src/core/redux/store.ts
 export const countReducer = countSlice.reducer;
